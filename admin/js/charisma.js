@@ -40,17 +40,7 @@ $(document).ready(function () {
         switchTheme(currentTheme);
     });
 
-    function myFunction(sender)
-    {
-         alert("okS");
-        var CurrentRow = $(sender).closest("tr");
-
-        $('.modal-body').html(CurrentRow);
-       
-        var ItemId = $("td:eq(0)", $(CurrentRow)).html();  // Can Trim also if needed
-
-
-    }
+   
     function switchTheme(themeName) {
         if (themeName == 'classic') {
             $('#bs-css').attr('href', 'bower_components/bootstrap/dist/css/bootstrap.min.css');
