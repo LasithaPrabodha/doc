@@ -21,11 +21,11 @@ $(document).ready(function () {
     // Hide responsive navbar on clicking outside
     $(document).mouseup(function (e) {
         if (!$sidebarNav.is(e.target) // if the target of the click isn't the container...
-            && $sidebarNav.has(e.target).length === 0
-            && !$('.navbar-toggle').is(e.target)
-            && $('.navbar-toggle').has(e.target).length === 0
-            && $sidebarNav.hasClass('active')
-            )// ... nor a descendant of the container
+                && $sidebarNav.has(e.target).length === 0
+                && !$('.navbar-toggle').is(e.target)
+                && $('.navbar-toggle').has(e.target).length === 0
+                && $sidebarNav.hasClass('active')
+                )// ... nor a descendant of the container
         {
             e.stopPropagation();
             $('.navbar-toggle').click();
@@ -40,7 +40,17 @@ $(document).ready(function () {
         switchTheme(currentTheme);
     });
 
+    function myFunction(sender)
+    {
+         alert("okS");
+        var CurrentRow = $(sender).closest("tr");
 
+        $('.modal-body').html(CurrentRow);
+       
+        var ItemId = $("td:eq(0)", $(CurrentRow)).html();  // Can Trim also if needed
+
+
+    }
     function switchTheme(themeName) {
         if (themeName == 'classic') {
             $('#bs-css').attr('href', 'bower_components/bootstrap/dist/css/bootstrap.min.css');
@@ -76,9 +86,9 @@ $(document).ready(function () {
 
     //establish history variables
     var
-        History = window.History, // Note: We are using a capital H instead of a lower h
-        State = History.getState(),
-        $log = $('#log');
+            History = window.History, // Note: We are using a capital H instead of a lower h
+            State = History.getState(),
+            $log = $('#log');
 
     //bind to State Change
     History.Adapter.bind(window, 'statechange', function () { // Note: We are using statechange instead of popstate
@@ -98,8 +108,10 @@ $(document).ready(function () {
 
     //ajaxify menus
     $('a.ajax-link').click(function (e) {
-        if (msie) e.which = 1;
-        if (e.which != 1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active')) return;
+        if (msie)
+            e.which = 1;
+        if (e.which != 1 || !$('#is-ajax').prop('checked') || $(this).parent().hasClass('active'))
+            return;
         e.preventDefault();
         $('.sidebar-nav').removeClass('active');
         $('.navbar-toggle').removeClass('active');
@@ -115,8 +127,10 @@ $(document).ready(function () {
         e.preventDefault();
         var $ul = $(this).siblings('ul');
         var $li = $(this).parent();
-        if ($ul.is(':visible')) $li.removeClass('active');
-        else                    $li.addClass('active');
+        if ($ul.is(':visible'))
+            $li.removeClass('active');
+        else
+            $li.addClass('active');
         $ul.slideToggle();
     });
 
@@ -173,7 +187,7 @@ function docReady() {
     $('#file_upload').uploadify({
         'swf': 'misc/uploadify.swf',
         'uploader': 'misc/uploadify.php'
-        // Put your options here
+                // Put your options here
     });
 
     //gallery controls container animation
@@ -181,8 +195,8 @@ function docReady() {
         $('img', this).fadeToggle(1000);
         $(this).find('.gallery-controls').remove();
         $(this).append('<div class="well gallery-controls">' +
-            '<p><a href="#" class="gallery-edit btn"><i class="glyphicon glyphicon-edit"></i></a> <a href="#" class="gallery-delete btn"><i class="glyphicon glyphicon-remove"></i></a></p>' +
-            '</div>');
+                '<p><a href="#" class="gallery-edit btn"><i class="glyphicon glyphicon-edit"></i></a> <a href="#" class="gallery-delete btn"><i class="glyphicon glyphicon-remove"></i></a></p>' +
+                '</div>');
         $(this).find('.gallery-controls').stop().animate({'margin-top': '-1'}, 400);
     }, function () {
         $('img', this).fadeToggle(1000);
@@ -223,21 +237,21 @@ function docReady() {
             $('#thumbnails').addClass('modal-fullscreen');
             if (root.webkitRequestFullScreen) {
                 root.webkitRequestFullScreen(
-                    window.Element.ALLOW_KEYBOARD_INPUT
-                );
+                        window.Element.ALLOW_KEYBOARD_INPUT
+                        );
             } else if (root.mozRequestFullScreen) {
                 root.mozRequestFullScreen();
             }
         } else {
             $('#thumbnails').removeClass('modal-fullscreen');
             (document.webkitCancelFullScreen ||
-                document.mozCancelFullScreen ||
-                $.noop).apply(document);
+                    document.mozCancelFullScreen ||
+                    $.noop).apply(document);
         }
     });
 
     //tour
-    if ($('.tour').length && typeof(tour) == 'undefined') {
+    if ($('.tour').length && typeof (tour) == 'undefined') {
         var tour = new Tour();
         tour.addStep({
             element: "#content", /* html element next to which the step popover should be shown */
@@ -286,15 +300,22 @@ function docReady() {
     $('.btn-minimize').click(function (e) {
         e.preventDefault();
         var $target = $(this).parent().parent().next('.box-content');
-        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        else                       $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        if ($target.is(':visible'))
+            $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else
+            $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
         $target.slideToggle();
     });
     $('.btn-setting').click(function (e) {
         e.preventDefault();
+
+
         $('#myModal').modal('show');
     });
-
+    $('.btn-info').click(function (e) {
+        e.preventDefault();
+        $('#editModal').modal('show');
+    });
 
     $('#calendar').fullCalendar({
         header: {
@@ -371,16 +392,15 @@ $.extend($.fn.dataTableExt.oPagination, {
             };
 
             $(nPaging).addClass('pagination').append(
-                '<ul class="pagination">' +
+                    '<ul class="pagination">' +
                     '<li class="prev disabled"><a href="#">&larr; ' + oLang.sPrevious + '</a></li>' +
                     '<li class="next disabled"><a href="#">' + oLang.sNext + ' &rarr; </a></li>' +
                     '</ul>'
-            );
+                    );
             var els = $('a', nPaging);
-            $(els[0]).bind('click.DT', { action: "previous" }, fnClickHandler);
-            $(els[1]).bind('click.DT', { action: "next" }, fnClickHandler);
+            $(els[0]).bind('click.DT', {action: "previous"}, fnClickHandler);
+            $(els[1]).bind('click.DT', {action: "next"}, fnClickHandler);
         },
-
         "fnUpdate": function (oSettings, fnDraw) {
             var iListLength = 5;
             var oPaging = oSettings.oInstance.fnPagingInfo();
@@ -410,12 +430,12 @@ $.extend($.fn.dataTableExt.oPagination, {
                 for (j = iStart; j <= iEnd; j++) {
                     sClass = (j == oPaging.iPage + 1) ? 'class="active"' : '';
                     $('<li ' + sClass + '><a href="#">' + j + '</a></li>')
-                        .insertBefore($('li:last', an[i])[0])
-                        .bind('click', function (e) {
-                            e.preventDefault();
-                            oSettings._iDisplayStart = (parseInt($('a', this).text(), 10) - 1) * oPaging.iLength;
-                            fnDraw(oSettings);
-                        });
+                            .insertBefore($('li:last', an[i])[0])
+                            .bind('click', function (e) {
+                                e.preventDefault();
+                                oSettings._iDisplayStart = (parseInt($('a', this).text(), 10) - 1) * oPaging.iLength;
+                                fnDraw(oSettings);
+                            });
                 }
 
                 // add / remove disabled classes from the static elements
