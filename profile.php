@@ -1,8 +1,6 @@
 
-
-        <!--=========== BEGIN HEADER SECTION ================-->
-        <?php include("../header.php"); ?>
-        <?php include("../sql.php"); ?>
+        <?php include("includes/header.php"); ?>
+        <?php include("includes/sql.php"); ?>
         <!--=========== END HEADER SECTION ================-->  
         <style>
     #details-table td{
@@ -65,7 +63,19 @@
         </section>
         <div class="col-md-12">
           <div class="row">
- 
+              <?php
+                    $conexion = db_connect();
+
+                    $sql = "SELECT * FROM user";
+                    $result = $conexion->query($sql);
+                    if($result->num_rows>0){
+
+                    while($row = $result->fetch_array()){
+                        
+                       echo $row['email'];
+                    }}
+        
+    ?>
         <div class="col-md-3"   style="background-color: rgba(210, 210, 210, 0.09);  min-height: 553px" >
             <div class="col-md-offset-1 col-md-10" ><h3 class="text-center">Arun Thomas</h3></div>
             <div class="col-md-offset-1 col-md-10" style="padding-bottom: 25px; border-bottom: 1px solid #ddd; ">
@@ -169,24 +179,6 @@
 
         </div>
 
-        <?php include 'footer.php'; ?>
+        <?php include 'includes/footer.php'; ?>
 
-        <!-- jQuery Library  -->
-        <script src="js/jquery.js"></script>    
-        <!-- Bootstrap default js -->
-        <script src="js/bootstrap.min.js"></script>
-        <!-- slick slider -->
-        <script src="js/slick.min.js"></script>    
-        <script type="text/javascript" src="js/modernizr.custom.79639.js"></script>      
-        <!-- counter -->
-        <script src="js/waypoints.min.js"></script>
-        <script src="js/jquery.counterup.min.js"></script>
-        <!-- Doctors hover effect -->
-        <script src="js/snap.svg-min.js"></script>
-        <script src="js/hovers.js"></script>
-
-        <!-- Custom JS -->
-        <script src="js/custom.js"></script>
-
-    </body>
-</html>
+       
