@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!--=============================================== 
-    Template Design By WpFreeware Team.
-    Author URI : http://www.wpfreeware.com/
-    ====================================================-->
 
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-     <title>WpF Medinova : Home</title>
+     <title>Medinova - Home</title>
 
     <!-- Mobile Specific Metas
     ================================================== -->
@@ -74,10 +70,9 @@
             <img src="images/14.jpg" alt="">
           </div>
           <div class="slider-text">
-            <h2>An <strong>Excellent Theme</strong> for your Health Related Project</h2>
-            <p><strong>WpF Medinova</strong> Theme suitable for any health and medical related projets or business</p>
+            <h2>Make <strong>Doctor's Appointments</strong> Faster and Efficiently..</h2>
             <div class="readmore_area">
-              <a data-hover="Read More" href="#"><span>Read More</span></a>                
+              <a data-hover="Read More" href="#"><span>Book Now</span></a>
             </div>
           </div>
         </div>

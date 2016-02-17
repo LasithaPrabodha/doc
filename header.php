@@ -13,16 +13,16 @@
               </button>
               <!-- LOGO -->              
               <!-- TEXT BASED LOGO -->
-              <a class="navbar-brand" href="index.php"><i class="fa fa-heartbeat"></i>WpF <span>Medinova</span></a>              
+              <a class="navbar-brand" href="index.php"><i class="fa fa-heartbeat"></i><span>Medinova</span></a>
               <!-- IMG BASED LOGO  -->
               <!--  <a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="logo"></a>   -->                    
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
                 <li class="active"><a href="index.php">Home</a></li>
-                <li><a href="features.php">Features</a></li>
-                <li><a href="about-us.php">About Us</a></li>
+                <li><a href="doctors.php">Doctors</a></li>
                 <li><a href="blood-bank.php">Blood Bank </a></li>
+                  <li><a href="about-us.php">About Us</a></li>
                 <!--                <li class="dropdown">-->
     <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Blood Bank <span class="fa fa-angle-down"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -43,15 +43,15 @@
                     <li><a href="blog-single-with-right-sidebar.html">Blog Single with Right Sidebar</a></li>           
                   </ul>
                 </li>-->
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Page <span class="fa fa-angle-down"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="404.php">404 Page</a></li>
-                    <li><a href="#">Link Two</a></li>
-                    <li><a href="#">Link Three</a></li>               
-                  </ul>
-                </li>               
-                <li><a href="contact.php">Contact</a></li>
+<!--                <li class="dropdown">-->
+<!--                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Page <span class="fa fa-angle-down"></span></a>-->
+<!--                  <ul class="dropdown-menu" role="menu">-->
+<!--                    <li><a href="404.php">404 Page</a></li>-->
+<!--                    <li><a href="#">Link Two</a></li>-->
+<!--                    <li><a href="#">Link Three</a></li>               -->
+<!--                  </ul>-->
+<!--                </li>               -->
+                <li><a href="contact.php">Contact Us</a></li>
                 <li><a href="signin.php">Sign In</a></li>
               </ul>           
             </div><!--/.nav-collapse -->
