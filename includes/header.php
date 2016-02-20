@@ -1,10 +1,8 @@
+<?php require_once("functions.php"); ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!--=============================================== 
-        Template Design By WpFreeware Team.
-        Author URI : http://www.wpfreeware.com/
-        ====================================================-->
 
         <!-- Basic Page Needs
         ================================================== -->
@@ -55,7 +53,7 @@
         <!-- SCROLL TOP BUTTON -->
         <a class="scrollToTop" href="#"><i class="fa fa-heartbeat"></i></a>
         <!-- END SCROLL TOP BUTTON -->    
-<header id="header">
+
       <!-- BEGIN MENU -->
       <div class="menu_area">
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">  
@@ -109,11 +107,24 @@
 <!--                  </ul>-->
 <!--                </li>               -->
                 <li><a href="contact.php">Contact Us</a></li>
-                <li><a href="signin.php">Sign In</a></li>
-              </ul>           
+                  <?PHP
+                  if(loggedin()){ ?>
+                <li>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?PHP echo $_SESSION['email']; ?> <span class="fa fa-angle-down"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="profile.php">Profile</a></li>
+                    <li><a href="signout.php">Sign out</a></li>
+                  </ul>
+                </li>
+
+                  <?php }else{ ?>
+                  <li><a href="signin.php">Sign In</a></li>
+                  <?PHP } ?>
+
+
+              </ul>
             </div><!--/.nav-collapse -->
           </div>     
         </nav>  
       </div>
       <!-- END MENU -->    
-    </header>

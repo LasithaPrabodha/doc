@@ -1,6 +1,6 @@
 
    <?php include("includes/header.php");?>
-   <?php include("includes/sql.php");?>
+
     <!--=========== END HEADER SECTION ================-->   
 
     <!--=========== BEGIN SLIDER SECTION ================-->
