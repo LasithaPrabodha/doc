@@ -76,13 +76,12 @@ require_once("includes/header.php");
             </div>      
         </section>
         <div class="col-md-12">
-            <div class="col-md-offset-4" style="height: 500px;"> 
 
-                <div class='outer-div'>
-                    <div class='middle-div'>
-                        <form id="loginForm" action="" method="post" style="margin:auto">
+
+                        <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+                            <div class="col-md-6">
                             <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                                     <label class="control-label">Email<span class="required">*</span>
                                     </label>
                                     <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
@@ -90,7 +89,7 @@ require_once("includes/header.php");
 
                             </div>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                                     <label class="control-label">Password <span class="required">*</span>
                                     </label>
                                     <input type="text" name="password" id="password" class="wp-form-control wpcf7-text" placeholder="Your password">
@@ -99,15 +98,17 @@ require_once("includes/header.php");
 
                             </div>
                              <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                 <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                                     <label class="control-label">Email<span class="required">*</span>
                                     </label>
                                     <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
                                 </div>
 
                             </div>
+                                </div>
+                            <div class="col-md-6">
                              <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                 <div class="col-md-10 col-sm-10">
                                     <label class="control-label">Email<span class="required">*</span>
                                     </label>
                                     <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
@@ -115,7 +116,7 @@ require_once("includes/header.php");
 
                             </div>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-10 col-sm-10">
                                     <label class="control-label">Email<span class="required">*</span>
                                     </label>
                                     <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
@@ -123,19 +124,17 @@ require_once("includes/header.php");
 
                             </div>
                             <div class="row">
-                                <div class="col-md-6 col-sm-6">
+                                <div class="col-md-10 col-sm-10 ">
                                     <label class="control-label">Email<span class="required">*</span>
                                     </label>
                                     <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
                                 </div>
 
                             </div>
-
+                            </div>
                             <button class="wpcf7-submit button--itzel" type="submit"><i class="button__icon fa fa-share"></i><span>Sign In</span></button>
                         </form>
                     </div>
-                </div>
-            </div>
 
         </div>
 
