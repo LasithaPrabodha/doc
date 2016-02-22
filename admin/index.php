@@ -80,47 +80,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class=" row">
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <a data-toggle="tooltip" title="6 new members." class="well top-block" href="totusers.php">
-                                <i class="glyphicon glyphicon-user blue"></i>
-
-                                <div>Total Users</div>
-                                <div>507</div>
-                                <span class="notification">6</span>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <a data-toggle="tooltip" title="4 new pro members." class="well top-block" href="#">
-                                <i class="glyphicon glyphicon-user red"></i>
-
-                                <div>Doctors</div>
-                                <div>28</div>
-                                <span class="notification green">4</span>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <a data-toggle="tooltip" title="$34 new sales." class="well top-block" href="#">
-                                <i class="glyphicon glyphicon-user yellow"></i>
-
-                                <div>General Physicians</div>
-                                <div>20</div>
-                                <span class="notification yellow">34</span>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-3 col-xs-6">
-                            <a data-toggle="tooltip" title="12 new messages." class="well top-block" href="#">
-                                <i class="glyphicon glyphicon-user green"></i>
-
-                                <div>Users/Patients</div>
-                                <div>25</div>
-                                <span class="notification red">12</span>
-                            </a>
-                        </div>
-                    </div>
+                   <?php include 'users.php'; ?>
 
                     <div class="row">
                         <div class="box col-md-12">
@@ -156,31 +116,7 @@
                                                     class="glyphicon glyphicon-download-alt"></i> Download Page</a>
                                         </p>
                                     </div>
-                                    <!-- Ads, you can remove these -->
-                                    <div class="col-lg-5 col-md-12 hidden-xs center-text">
-                                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                                        <!-- Charisma Demo 4 -->
-                                        <ins class="adsbygoogle"
-                                             style="display:inline-block;width:336px;height:280px"
-                                             data-ad-client="ca-pub-5108790028230107"
-                                             data-ad-slot="9467443105"></ins>
-                                        <script>
-                                            (adsbygoogle = window.adsbygoogle || []).push({});
-                                        </script>
-                                    </div>
-
-                                    <div class="col-lg-5 col-md-12 visible-xs center-text">
-                                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                                        <!-- Charisma Demo 5 -->
-                                        <ins class="adsbygoogle"
-                                             style="display:inline-block;width:250px;height:250px"
-                                             data-ad-client="ca-pub-5108790028230107"
-                                             data-ad-slot="8957582309"></ins>
-                                        <script>
-                                            (adsbygoogle = window.adsbygoogle || []).push({});
-                                        </script>
-                                    </div>
-                                    <!-- Ads end -->
+                                    
 
                                 </div>
                             </div>
@@ -525,37 +461,7 @@
                 </div><!--/#content.col-md-0-->
             </div><!--/fluid-row-->
 
-            <!-- Ad, you can remove it -->
-            <div class="row">
-                <div class="col-md-9 col-lg-9 col-xs-9 hidden-xs">
-                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- Charisma Demo 2 -->
-                    <ins class="adsbygoogle"
-                         style="display:inline-block;width:728px;height:90px"
-                         data-ad-client="ca-pub-5108790028230107"
-                         data-ad-slot="3193373905"></ins>
-                    <script>
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-                <div class="col-md-2 col-lg-3 col-sm-12 col-xs-12 email-subscription-footer">
-                    <div class="mc_embed_signup">
-                        <form action="//halalit.us3.list-manage.com/subscribe/post?u=444b176aa3c39f656c66381f6&amp;id=eeb0c04e84" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                            <div>
-                                <label>Keep up with my work</label>
-                                <input type="email" value="" name="EMAIL" class="email" placeholder="Email address" required>
-
-                                <div class="power_field"><input type="text" name="b_444b176aa3c39f656c66381f6_eeb0c04e84" tabindex="-1" value=""></div>
-                                <div class="clear"><input type="submit" value="Subscribe" name="subscribe" class="button"></div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!--End mc_embed_signup-->
-                </div>
-
-            </div>
-            <!-- Ad ends -->
+            
 
             <hr>
 
@@ -579,14 +485,7 @@
                 </div>
             </div>
 
-            <footer class="row">
-                <p class="col-md-9 col-sm-9 col-xs-12 copyright">&copy; <a href="http://usman.it" target="_blank">Muhammad
-                        Usman</a> 2012 - 2015</p>
-
-                <p class="col-md-3 col-sm-3 col-xs-12 powered-by">Powered by: <a
-                        href="http://usman.it/free-responsive-admin-template">Charisma</a></p>
-            </footer>
-
+           
         </div><!--/.fluid-container-->
 
         <!-- external javascript -->

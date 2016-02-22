@@ -61,13 +61,13 @@ require_once("includes/header.php");
                     <div class="blog-breadcrumbs-area">
                         <div class="container">
                             <div class="blog-breadcrumbs-left">
-                                <h2>Sign In</h2>
+                                <h2>Register</h2>
                             </div>
                             <div class="blog-breadcrumbs-right">
                                 <ol class="breadcrumb">
                                     <li>You are here</li>
                                     <li><a href="#">Home</a></li>                  
-                                    <li class="active">Sign In</li>
+                                    <li class="active">Register</li>
                                 </ol>
                             </div>
                         </div>
@@ -95,8 +95,38 @@ require_once("includes/header.php");
                                     </label>
                                     <input type="text" name="password" id="password" class="wp-form-control wpcf7-text" placeholder="Your password">
 
-                                    <div class="col-md-6"> <a href="#"><u>Forgot password?</u>  </a></div>
-                                    <div class="col-md-6" > New user?  <a href="register.php"><u>SignUp</u> </a></div>
+                                </div>
+
+                            </div>
+                             <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <label class="control-label">Email<span class="required">*</span>
+                                    </label>
+                                    <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
+                                </div>
+
+                            </div>
+                             <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <label class="control-label">Email<span class="required">*</span>
+                                    </label>
+                                    <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <label class="control-label">Email<span class="required">*</span>
+                                    </label>
+                                    <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <label class="control-label">Email<span class="required">*</span>
+                                    </label>
+                                    <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
                                 </div>
 
                             </div>

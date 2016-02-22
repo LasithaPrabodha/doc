@@ -4,11 +4,15 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/xampp/htdocs/doc/style.css</file>
-            <file>file:/D:/xampp/htdocs/doc/footer.php</file>
-            <file>file:/D:/xampp/htdocs/doc/header.php</file>
-            <file>file:/D:/xampp/htdocs/doc/about-us.php</file>
-            <file>file:/D:/xampp/htdocs/doc/index.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/users.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/index.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/totusers.php</file>
+            <file>file:/D:/xampp/htdocs/doc/signout.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/genp.php</file>
+            <file>file:/D:/xampp/htdocs/doc/includes/header.php</file>
             <file>file:/D:/xampp/htdocs/doc/signin.php</file>
+            <file>file:/D:/xampp/htdocs/doc/register.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/docs.php</file>
         </group>
     </open-files>
 </project-private>

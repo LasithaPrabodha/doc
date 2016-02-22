@@ -118,7 +118,7 @@
                 </li>
 
                   <?php }else{ ?>
-                  <li><a href="signin.php">Sign In</a></li>
+                  <li><a href="signin.php">Sign In/Sign Up</a></li>
                   <?PHP } ?>
 
 
