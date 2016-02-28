@@ -117,7 +117,7 @@ window.location.href = 'signin.php';
                 }
             } else {
                 //if user doesn't enter first name or last name
-                echo "<div class='alert alert-danger'>First name and Last name cannot be empty.</div>";
+                echo "<div class='alert alert-danger'>*All the feilds are mandatory</div>";
             }
         }
         ?>
