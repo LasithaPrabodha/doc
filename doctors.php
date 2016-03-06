@@ -54,7 +54,7 @@
 
                                 <!-- Select Basic -->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="speciality">Speciality</label>
+                                    <label class="col-md-4 control-label" for="speciality">Specialization</label>
                                     <div class="col-md-5">
                                         <select id="speciality" name="speciality" class="form-control">
                                             <option value="0">Any</option>
@@ -82,51 +82,64 @@
 
     <!--=========== End find doctors SECTION ================-->
 
-    <?php if(isset($_GET)){
-        if(isset($_GET['name']) || isset($_GET['speciality'])){
+    <?php if(isset($_GET)) {
 
-            $name = "'%".$_GET['name']."%'";
-            $spec = $_GET['speciality'];
-            if($_GET['speciality'] == "0"){
-                $spec = "'%%'";
-            }
+        if (isset($_GET['name']) && isset($_GET['speciality'] )) {
+            if ($_GET['name'] == "" && $_GET['speciality'] == "0") {
+                ?>
+                <div class="col-lg-12 col-md-12">
+                    <div class="section-heading">
+                        <h4 style="color: #d80000">Please Enter doctor's name and/or select a specialization</h4>
+
+                    </div>
+                </div>
+            <?php
+            } else {
+
+                $name = "'%" . $_GET['name'] . "%'";
+                $spec = $_GET['speciality'];
+                if ($_GET['speciality'] == "0") {
+                    $spec = "'%%'";
+                }
 
 
-            $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization FROM `doctor`,`user` WHERE doctor.user_id = user.user_id AND CONCAT(user.first_name, ' ', user.last_name) like ".$name." AND specialization like ".$spec;
-            $rs  = $conexion->query($sql);
-            $rows = $rs->fetch_all();
-            ?>
-            <section id="searchDoctors">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12">
-                                <div class="section-heading">
-                                    <h2>We Found these Doctors for you!</h2>
-                                    <div class="line"></div>
-                                </div>
+                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization FROM `doctor`,`user` WHERE doctor.user_id = user.user_id AND CONCAT(user.first_name, ' ', user.last_name) like " . $name . " AND specialization like " . $spec;
+                $rs = $conexion->query($sql);
+                $rows = $rs->fetch_all();
+                if (!empty($rows)) {
+                    ?>
+                    <section id="searchDoctors">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="section-heading">
+                                        <h2>We Found these Doctors for you!</h2>
+
+                                        <div class="line"></div>
+                                    </div>
                                     <div class="doctors-area">
                                         <ul class="doctors-nav">
                                             <?php
-                                            foreach($rows as $row){ ?>
+                                            foreach ($rows as $row) {
+                                                ?>
                                                 <li>
                                                     <div class="single-doctor">
-                                                        <a class="tdoctor" href="#" data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
+                                                        <a class="tdoctor" href="#"
+                                                           data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
                                                             <figure>
-                                                                <img src="images/doctor-1.jpg" />
-                                                                <svg viewBox="0 0 180 320" preserveAspectRatio="none"><path d="M 180,160 0,218 0,0 180,0 z"/></svg>
+                                                                <img src="images/doctor-1.jpg"/>
+                                                                <svg viewBox="0 0 180 320" preserveAspectRatio="none">
+                                                                    <path d="M 180,160 0,218 0,0 180,0 z"/>
+                                                                </svg>
                                                                 <figcaption>
-                                                                    <h2><?php echo "Dr.". $row[0] ?></h2>
+                                                                    <h2><?php echo "Dr." . $row[0] ?></h2>
+
                                                                     <p><?php echo $row[1] ?></p>
                                                                     <button>View</button>
                                                                 </figcaption>
                                                             </figure>
                                                         </a>
-                                                        <div class="single-doctor-social">
-                                                            <a href="#"><span class="fa fa-facebook"></span></a>
-                                                            <a href="#"><span class="fa fa-twitter"></span></a>
-                                                            <a href="#"><span class="fa fa-google-plus"></span></a>
-                                                            <a href="#"><span class="fa fa-linkedin"></span></a>
-                                                        </div>
+
                                                     </div>
                                                 </li>
                                             <?php } ?>
@@ -134,18 +147,25 @@
                                         </ul>
                                     </div>
 
+                                </div>
                             </div>
                         </div>
+                    </section>
+
+                <?php
+                } else {
+                    ?>
+                    <div class="col-lg-12 col-md-12">
+                        <div class="section-heading">
+                            <h4 style="color: #d80000">Sorry! we Couldn't find any matching doctors</h4>
+
+                        </div>
                     </div>
-        </section>
-
-            <?php
+                <?php
+                }
+            }
         }
-
-        }else{
-            echo "Please select doctors name and/or specialization";
-
-        }
+    }
 
 
     ?>
@@ -164,7 +184,7 @@
                         <div class="doctors-area">
                             <ul class="doctors-nav">
                                 <?php
-                                $sql = "SELECT first_name,last_name,specialization FROM `doctor`,`user` WHERE doctor.user_id = user.user_id ";
+                                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization FROM doctor,user WHERE doctor.user_id = user.user_id ";
                                 $rs  = $conexion->query($sql);
                                 $rows = $rs->fetch_all();
 
@@ -182,12 +202,6 @@
                                                 </figcaption>
                                             </figure>
                                         </a>
-                                        <div class="single-doctor-social">
-                                            <a href="#"><span class="fa fa-facebook"></span></a>
-                                            <a href="#"><span class="fa fa-twitter"></span></a>
-                                            <a href="#"><span class="fa fa-google-plus"></span></a>
-                                            <a href="#"><span class="fa fa-linkedin"></span></a>
-                                        </div>
                                     </div>
                                 </li>
                                 <?php } ?>
