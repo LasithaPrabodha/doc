@@ -40,6 +40,51 @@ function getuser($field)
     }else{ echo "e2";}
 }
 
+function register($str)
+{
+    $conexion = db_connect();
+    
+    if($conexion->query($str)==true){
+        $result = array($conexion->insert_id, "A patient registered!");
+        return $result;
+            
+        
+    }else{ echo "e2";}
+}
+
+function registerd($str)
+{
+    $conexion = db_connect();
+    
+    if($conexion->query($str)==true){
+        $result = array($conexion->insert_id, "A doctor registered!");
+        return $result;
+            
+        
+    }else{ echo "e2";}
+}
+function registerc($str)
+{
+    $conexion = db_connect();
+    
+    if($conexion->query($str)==true){
+        $result = array($conexion->insert_id, "A Medical Consultant registered!");
+        return $result;
+            
+        
+    }else{ echo "e2";}
+}
+function update_cid($ch_id, $dc_id)
+{
+    $conexion = db_connect();
+    $st="UPDATE `doctor` SET`charges_id`='$ch_id' WHERE doctor_id='$dc_id'";
+    if($conexion->query($st)==true){
+        
+        return "Done";
+            
+        
+    }else{ echo "e2";}
+}
 //prepare for sql interaction
 
 function sql_escape($value)
