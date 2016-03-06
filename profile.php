@@ -89,36 +89,43 @@ window.location.href = 'signin.php';
 
             if ((!empty($fname)) && (!empty($lname)) && (!empty($contact)) && (!empty($initials))) {
 
+                if (preg_match("/^[0-9]{10}$/", $contact)) {
 
 //profile picture upload>>>>>>>>>>>>>
-                $target_dir = "images/";
-                $target_file = $target_dir . basename($_FILES["profile_img"]["name"]);
-                $uploadOk = 1;
-                $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+                    $target_dir = "images/";
+                    $target_file = $target_dir . basename($_FILES["profile_img"]["name"]);
+                    $uploadOk = 1;
+                    $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 
-                // Check if $uploadOk is set to 0 by an error
-                if ($uploadOk == 1) {
-                   
-                    $target_image = str_replace(" ", "_", "$target_file");
-                    if (move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_image)) {
+                    // Check if $uploadOk is set to 0 by an error
+                    if ($uploadOk == 1) {
 
-                        //if file moved to the images folder update the user table
-                        $sql = "UPDATE user SET profile_img='$target_image',first_name='$fname',last_name='$lname', name_with_initials='$initials', contact_number='$contact' WHERE email='a@g.com'";
-                        
-                        if ($result = $conexion->query($sql)) {
-                            echo "<div class='alert alert-success'>Profile settings updated successfully.</div>";
+                        $target_image = str_replace(" ", "_", "$target_file") . uniqid();
+                        if (move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_image)) {
+
+                            //if file moved to the images folder update the user table
+                            $sql = "UPDATE user SET profile_img='$target_image',first_name='$fname',last_name='$lname', name_with_initials='$initials', contact_number='$contact' WHERE email='a@g.com'";
+
+                            if ($result = $conexion->query($sql)) {
+                                echo "<div class='alert alert-success'>Profile settings updated successfully.</div>";
+                            } else {
+                                echo "<div class='alert alert-danger'>Error while updating profile settings.</div>";
+                            }
                         } else {
-                            echo "<div class='alert alert-danger'>Error while updating profile settings.</div>";
+                            //if file not moved to the images folder 
+                            echo "<div class='alert alert-danger'>Sorry, there was an error uploading your profle image.</div>";
                         }
-                    } else {
-                        //if file not moved to the images folder 
-                        echo "<div class='alert alert-danger'>Sorry, there was an error uploading your profle image.</div>";
                     }
+                } else {
+                    echo "<div class='alert alert-danger'>Phone number should be 10 digit number</div>";
                 }
             } else {
                 //if user doesn't enter first name or last name
                 echo "<div class='alert alert-danger'>*All the feilds are mandatory</div>";
             }
+        }
+        if (isset($_POST['submit2'])) {
+            
         }
         ?>
     </div>
@@ -132,7 +139,7 @@ window.location.href = 'signin.php';
 
             while ($row = $result->fetch_array()) {
 
-
+                $user_id=$row['user_id'];
                 $first_name = $row['first_name'];
                 $last_name = $row['last_name'];
                 $name_with_initials = $row['name_with_initials'];
@@ -145,36 +152,53 @@ window.location.href = 'signin.php';
                 $contact_number = $row['contact_number'];
             }
         }
+        if($user_type=='D'){
+        $sql2 = "SELECT availability FROM doctor where user_id = '$user_id'";
+         $result = $conexion->query($sql2);
+        if ($result->num_rows > 0) {
+
+            while ($row = $result->fetch_array()) {
+
+                $availability = $row['availability'];
+            }
+        }
+        
+           
+     
+        }
         ?>
+        <div id="alert-container"></div>
         <div class="col-md-3"   style="background-color: rgba(210, 210, 210, 0.09);  min-height: 553px" >
             <div class="col-md-offset-1 col-md-10" ><h3 class="text-center"><?php echo $name_with_initials; ?></h3></div>
             <div class="col-md-offset-1 col-md-10" style="padding-bottom: 25px; border-bottom: 1px solid #ddd; align-content:center; ">
-                <image style="width:80%;height: 80%; margin-left: 20px;" src="<?php if (isset($profile_img) && (!empty($profile_img))) {
-                        echo $profile_img;
-                    } else {
-                        echo "images/default_prof.jpg";
-                    }?>"/>
+                <image style="width:80%;height: 80%; margin-left: 20px;" src="<?php
+                if (isset($profile_img) && (!empty($profile_img))) {
+                    echo $profile_img;
+                } else {
+                    echo "images/default_prof.jpg";
+                }
+                ?>"/>
             </div>
             <div class="col-md-offset-1 col-md-10 text-center" style='padding-top: 10px;'><h3><span style="color:#FF4800;"><?php echo $first_name; ?></span></h3></div>
             <div class="col-md-offset-1 col-md-10 text-center" style='padding-top: 0px;'><h4><span style="color:rgb(77, 80, 89);"><?php
-        if ($user_type == 'A') {
-            echo 'ADMIN';
-        } elseif ($user_type == 'D') {
-            echo 'DOCTOR';
-        } elseif ($user_type == 'P') {
-            echo 'PATIENT';
-        } elseif ($user_type == 'G') {
-            echo 'GENERAL PYSICIANT';
-        }
-        ?></span></h4></div>
+                        if ($user_type == 'A') {
+                            echo 'ADMIN';
+                        } elseif ($user_type == 'D') {
+                            echo 'DOCTOR';
+                        } elseif ($user_type == 'P') {
+                            echo 'PATIENT';
+                        } elseif ($user_type == 'G') {
+                            echo 'GENERAL PYSICIANT';
+                        }
+                        ?></span></h4></div>
 
-            <div class="col-md-offset-1 col-md-10 center" ><button class='btn btn-success col-md-12' data-toggle="modal" data-target="#editModal">Edit Profile</button></div>
+            <div class="col-md-offset-1 col-md-10 center" ><button class='btn btn-success col-md-12' data-toggle="modal" data-target="#editModal">Profile settings</button></div>
 
             <div class="clearfix"></div>
         </div>
 
         <div class="col-md-9" style=" border-left: 1px solid #ddd; min-height: 553px">
-            <div class="col-md-10"><h1><?php
+            <div class="col-md-12"><div class="col-md-8"><h1><?php
                         if ($user_type == 'A') {
                             echo 'Admin Profile';
                         } elseif ($user_type == 'D') {
@@ -184,7 +208,29 @@ window.location.href = 'signin.php';
                         } elseif ($user_type == 'G') {
                             echo 'General Pysicient';
                         }
-        ?></h1></div>
+                        ?></h1></div>
+                <div class="col-md-4">
+                    <br>
+                    <?php if($user_type=='D'){?>
+                    <form id="statusform">
+
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary <?php if($availability == '1'){echo 'active';}?>">
+                                <input type="radio" name="availability" id="option1" value="1"  <?php if($availability == '1'){echo 'checked';}?>> Available 
+                            </label>
+                            <label class="btn btn-primary  <?php if($availability == '0'){echo 'active';}?>">
+                                <input type="radio" name="availability" id="option2" value="0"  <?php if($availability == '0'){echo  'checked';}?>> Unavailable
+                            </label>
+                            <input type="text" value="<?php echo $user_id;?>" id="uid" hidden>
+                          
+                        </div>
+
+
+                    </form>
+                    <?php }?>
+                </div>
+
+            </div>
             <div class="col-md-12" style="margin-top: 10px;">
                 <div class="bhoechie-tab-menu">
                     <ul class="nav nav-tabs profile-nav">
@@ -205,7 +251,7 @@ window.location.href = 'signin.php';
                             </tr>
                             <tr>
                                 <td class="subheadng">Name</td>
-                                <td class="normal"><?php echo $name_with_initials;?></td>
+                                <td class="normal"><?php echo $name_with_initials; ?></td>
                                 <td class="subheadng">&nbsp;  </td>
                                 <td class="normal">&nbsp; </td>   
                             </tr>
@@ -219,15 +265,17 @@ window.location.href = 'signin.php';
                             <tr>
 
                                 <td class="subheadng">User Role</td>
-                                <td class="normal"><?php if ($user_type == 'A') {
-                            echo 'Admin';
-                        } elseif ($user_type == 'D') {
-                            echo 'Doctor';
-                        } elseif ($user_type == 'P') {
-                            echo 'Patient';
-                        } elseif ($user_type == 'G') {
-                            echo 'General Pysicient';
-                        }?></td>
+                                <td class="normal"><?php
+                                    if ($user_type == 'A') {
+                                        echo 'Admin';
+                                    } elseif ($user_type == 'D') {
+                                        echo 'Doctor';
+                                    } elseif ($user_type == 'P') {
+                                        echo 'Patient';
+                                    } elseif ($user_type == 'G') {
+                                        echo 'General Pysicient';
+                                    }
+                                    ?></td>
                                 <td class="subheadng">&nbsp;  </td>
                                 <td class="normal">&nbsp; </td>   
                             </tr>
@@ -294,12 +342,12 @@ window.location.href = 'signin.php';
                             <br />
 
                             <img src="<?php
-                    if (isset($profile_img) && (!empty($profile_img))) {
-                        echo $profile_img;
-                    } else {
-                        echo "images/default_prof.jpg";
-                    }
-        ?>" id="profile-img" class="img-thumbnail profile-img" name="profile-img">
+                            if (isset($profile_img) && (!empty($profile_img))) {
+                                echo $profile_img;
+                            } else {
+                                echo "images/default_prof.jpg";
+                            }
+                            ?>" id="profile-img" class="img-thumbnail profile-img" name="profile-img">
                             <span class="btn btn-default btn-file">
                                 Upload new picture<input type="file" name="profile_img" id="profile_img">
                             </span>
@@ -337,7 +385,7 @@ window.location.href = 'signin.php';
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- end of edit profile -->
-<?php include 'includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 
     <script>
         $(document).ready(function () {
@@ -366,6 +414,26 @@ window.location.href = 'signin.php';
         $("#profile_img").change(function () {
             readURL(this);
         });
+        
+        
+    $(document).on('change', 'input:radio[id^="option"]', function (event) {
+        
+      var status = $('input[name=availability]:checked', '#statusform').val();
+      var uid=document.getElementById("uid").value;
+
+       $.ajax({
+                            type: "POST",
+                            url: "includes/profile_functions.php",
+                            data: {status: status,id:uid }, //pass txtarea input with cssrf tolcke
+                            dataType: "json",
+                            success: function (result) {
+                                alert(result['result']);
+                                $( "#alert-container" ).html( result['result'] );
+                            }
+                        });
+    });
+
+
 
 
     </script>
