@@ -1,15 +1,12 @@
 
-<?php include_once("includes/header.php"); ?>
-<?php
+<?php include_once("includes/header.php");
 include_once("includes/sql.php");
 
-//if(!loggedin())
-//{
-?>
-<!--  <script type="text/javascript">
-window.location.href = 'signin.php';
-</script>-->
-//
+if(!loggedin()){
+
+header('Location: signin.php');
+} ?>
+
 <!--=========== END HEADER SECTION ================-->  
 <style>
     #details-table td{

@@ -116,7 +116,7 @@ function fetchOne($sql){
 
 function fetchAll($sql){
     $conexion = db_connect();
-    $rs = $conexion->query($sql) or die("Database single query error.<br/>".mysql_error());
+    $rs = mysql_query($sql, $conexion) or die("Database single query error.<br/>".mysql_error());
     while ($rows =mysql_fetch_assoc($rs)) {
         $out[]=$rows;
     }
