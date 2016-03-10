@@ -32,6 +32,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
             {
 
                 $_SESSION['email']=$filteredID;
+                $_SESSION['user_id']=$resultSet['user_id'];
                 $_SESSION['first_name'] = $resultSet['first_name'];
                 $_SESSION['last_name'] = $resultSet['last_name'];
                 $_SESSION['name_with_initials'] = $resultSet['name_with_initials'];

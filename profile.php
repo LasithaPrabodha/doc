@@ -2,12 +2,47 @@
 <?php include_once("includes/header.php");
 include_once("includes/sql.php");
 
+
 if(!loggedin()){
 
 header('Location: signin.php');
 } ?>
 
+
+
+<?php
+$conexion = db_connect();
+if(isset($_GET['id'])){
+     
+        $sql = "SELECT * FROM user where user_id = '{$_GET['id']}'";
+        }else{
+        $sql = "SELECT * FROM user where user_id = '{$_SESSION['user_id']}'";    
+        }
+        $result = $conexion->query($sql);
+        if ($result->num_rows > 0) {
+
+            while ($row = $result->fetch_array()) {
+
+                $user_id = $row['user_id'];
+                $first_name = $row['first_name'];
+                $last_name = $row['last_name'];
+                $name_with_initials = $row['name_with_initials'];
+                $email = $row['email'];
+                $profile_img = $row['profile_img'];
+                $gender = $row['gender'];
+                $user_type = $row['user_type'];
+                $is_active = $row['is_active'];
+                $password = $row['password'];
+                $contact_number = $row['contact_number'];
+            }
+        }
+    
+
+?>
+
 <!--=========== END HEADER SECTION ================-->  
+
+
 <style>
     #details-table td{
         height: 50px;
@@ -128,40 +163,17 @@ header('Location: signin.php');
     </div>
     <div class="row">
         <?php
-        $conexion = db_connect();
+       
+        if ($user_type == 'D') {
+            $sql2 = "SELECT availability FROM doctor where user_id = '$user_id'";
+            $result = $conexion->query($sql2);
+            if ($result->num_rows > 0) {
 
-        $sql = "SELECT * FROM user where email = 'a@g.com'";
-        $result = $conexion->query($sql);
-        if ($result->num_rows > 0) {
+                while ($row = $result->fetch_array()) {
 
-            while ($row = $result->fetch_array()) {
-
-                $user_id=$row['user_id'];
-                $first_name = $row['first_name'];
-                $last_name = $row['last_name'];
-                $name_with_initials = $row['name_with_initials'];
-                $email = $row['email'];
-                $profile_img = $row['profile_img'];
-                $gender = $row['gender'];
-                $user_type = $row['user_type'];
-                $is_active = $row['is_active'];
-                $password = $row['password'];
-                $contact_number = $row['contact_number'];
+                    $availability = $row['availability'];
+                }
             }
-        }
-        if($user_type=='D'){
-        $sql2 = "SELECT availability FROM doctor where user_id = '$user_id'";
-         $result = $conexion->query($sql2);
-        if ($result->num_rows > 0) {
-
-            while ($row = $result->fetch_array()) {
-
-                $availability = $row['availability'];
-            }
-        }
-        
-           
-     
         }
         ?>
         <div id="alert-container"></div>
@@ -208,23 +220,39 @@ header('Location: signin.php');
                         ?></h1></div>
                 <div class="col-md-4">
                     <br>
-                    <?php if($user_type=='D'){?>
-                    <form id="statusform">
+                    <?php if ($user_type == 'D') { ?>
+                        <form id="statusform">
 
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary <?php if($availability == '1'){echo 'active';}?>">
-                                <input type="radio" name="availability" id="option1" value="1"  <?php if($availability == '1'){echo 'checked';}?>> Available 
-                            </label>
-                            <label class="btn btn-primary  <?php if($availability == '0'){echo 'active';}?>">
-                                <input type="radio" name="availability" id="option2" value="0"  <?php if($availability == '0'){echo  'checked';}?>> Unavailable
-                            </label>
-                            <input type="text" value="<?php echo $user_id;?>" id="uid" hidden>
-                          
-                        </div>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary <?php
+                                if ($availability == '1') {
+                                    echo 'active';
+                                }
+                                ?>">
+                                    <input type="radio" name="availability" id="option1" value="1"  <?php
+                                if ($availability == '1') {
+                                    echo 'checked';
+                                }
+                                ?>> Available 
+                                </label>
+                                <label class="btn btn-primary  <?php
+                                           if ($availability == '0') {
+                                               echo 'active';
+                                           }
+                                           ?>">
+                                    <input type="radio" name="availability" id="option2" value="0"  <?php
+                                           if ($availability == '0') {
+                                               echo 'checked';
+                                           }
+                                           ?>> Unavailable
+                                </label>
+                                <input type="text" value="<?php echo $user_id; ?>" id="uid" hidden>
+
+                            </div>
 
 
-                    </form>
-                    <?php }?>
+                        </form>
+<?php } ?>
                 </div>
 
             </div>
@@ -293,6 +321,47 @@ header('Location: signin.php');
 
                 <div class="bhoechie-tab-content hide">
                     <br>
+                    <div style="width:90%;padding-left: 50px">
+                    <?php
+                    if($user_type == 'P'){
+                    $conexion = db_connect();
+
+                    $sql = "SELECT a.appoinment_id, a.patient_name , a.patient_age ,a.telephone_no,u.first_name,u.last_name FROM appoinments a , user u where a.doctor_id=u.user_id and a.user_id = '2'";
+                    $result = $conexion->query($sql);
+                    if ($result->num_rows > 0) {
+                        ?>
+                    
+                        <table id="patient_tab" class="display col-md-12" style="width:80%">
+                            <thead>
+                                <tr>
+                                    <th>Appointment No</th>
+                                    <th>Doctor</th>
+                                    <th>Appintment Details</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                while ($row = $result->fetch_array()) {
+
+                                    $appintment_id = $row['appoinment_id'];
+                                    $doctor_is = "Dr ".$row['first_name']."".$row['last_name'];
+                                    $patient_name = $row['patient_name'];
+                                    $patient_age = $row['patient_age'];
+                                    $patient_tel = $row['telephone_no'];
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $appintment_id; ?></td>
+                                        <td><?php echo $doctor_is; ?></td>
+                                        <td><br><p style="padding-top:1px"> <?php echo "Doctor: ".$doctor_is; ?></p><p style="padding-top:1px"><?php echo "Age: ".$patient_age; ?></p><p style="padding-top:1px"><?php echo "Contant No: ".$patient_tel; ?></p><br></td>
+                                        <td>Pending</td>
+                                    </tr>
+    <?php } ?>
+                            </tbody>
+                        </table>
+
+                    <?php }}
+?>
 
 
 
@@ -300,8 +369,7 @@ header('Location: signin.php');
 
 
 
-
-
+                    </div>
                 </div>
                 <div class="bhoechie-tab-content hide">
                     <br>
@@ -339,12 +407,12 @@ header('Location: signin.php');
                             <br />
 
                             <img src="<?php
-                            if (isset($profile_img) && (!empty($profile_img))) {
-                                echo $profile_img;
-                            } else {
-                                echo "images/default_prof.jpg";
-                            }
-                            ?>" id="profile-img" class="img-thumbnail profile-img" name="profile-img">
+if (isset($profile_img) && (!empty($profile_img))) {
+    echo $profile_img;
+} else {
+    echo "images/default_prof.jpg";
+}
+?>" id="profile-img" class="img-thumbnail profile-img" name="profile-img">
                             <span class="btn btn-default btn-file">
                                 Upload new picture<input type="file" name="profile_img" id="profile_img">
                             </span>
@@ -382,7 +450,7 @@ header('Location: signin.php');
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- end of edit profile -->
-    <?php include 'includes/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>
 
     <script>
         $(document).ready(function () {
@@ -394,6 +462,8 @@ header('Location: signin.php');
                 $("div.bhoechie-tab-content").addClass("hide");
                 $("div.bhoechie-tab-content").eq(index).removeClass("hide");
             });
+            //patient table script
+//            $('#patient_tab').DataTable();
         });
 
         function readURL(input) {
@@ -411,26 +481,30 @@ header('Location: signin.php');
         $("#profile_img").change(function () {
             readURL(this);
         });
-        
-        
-    $(document).on('change', 'input:radio[id^="option"]', function (event) {
-        
-      var status = $('input[name=availability]:checked', '#statusform').val();
-      var uid=document.getElementById("uid").value;
-
-       $.ajax({
-                            type: "POST",
-                            url: "includes/profile_functions.php",
-                            data: {status: status,id:uid }, //pass txtarea input with cssrf tolcke
-                            dataType: "json",
-                            success: function (result) {
-                                alert(result['result']);
-                                $( "#alert-container" ).html( result['result'] );
-                            }
-                        });
-    });
 
 
+        $(document).on('change', 'input:radio[id^="option"]', function (event) {
+
+            var status = $('input[name=availability]:checked', '#statusform').val();
+            var uid = document.getElementById("uid").value;
+
+            $.ajax({
+                type: "POST",
+                url: "includes/profile_functions.php",
+                data: {status: status, id: uid}, //pass txtarea input with cssrf tolcke
+                dataType: "json",
+                success: function (result) {
+//                                alert(result['result']);
+                    $("#alert-container").html(result['result']);
+                     $(".alert").delay(3000).slideUp(200);
+                }
+            });
+        });
+
+      $(document).ready(function(){
+           $('#patient_tab').DataTable();
+          
+      });
 
 
     </script>
