@@ -4,15 +4,22 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/xampp/htdocs/doc/style.css</file>
-            <file>file:/D:/xampp/htdocs/doc/admin/users.php</file>
-            <file>file:/D:/xampp/htdocs/doc/admin/index.php</file>
-            <file>file:/D:/xampp/htdocs/doc/admin/totusers.php</file>
-            <file>file:/D:/xampp/htdocs/doc/signout.php</file>
-            <file>file:/D:/xampp/htdocs/doc/admin/genp.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/fullcalendar/dist/fullcalendar.js</file>
+            <file>file:/D:/xampp/htdocs/doc/includes/functions.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/fullcalendar/dist/lang-all.js</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/js/charisma.js</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/datatables/examples/ajax/ajax.html</file>
             <file>file:/D:/xampp/htdocs/doc/includes/header.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/fullcalendar/dist/gcal.js</file>
             <file>file:/D:/xampp/htdocs/doc/signin.php</file>
+            <file>file:/D:/xampp/htdocs/doc/includes/header2.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/fullcalendar/dist/fullcalendar.css</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/fullcalendar/dist/fullcalendar.print.css</file>
+            <file>file:/D:/xampp/htdocs/doc/includes/sql.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/calendar.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/form.php</file>
+            <file>file:/D:/xampp/htdocs/doc/admin/bower_components/fullcalendar/dist/fullcalendar.min.js</file>
             <file>file:/D:/xampp/htdocs/doc/register.php</file>
-            <file>file:/D:/xampp/htdocs/doc/admin/docs.php</file>
         </group>
     </open-files>
 </project-private>
