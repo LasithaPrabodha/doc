@@ -1,57 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!--
-            ===
-            This comment should NOT be removed.
-    
-            Charisma v2.0.0
-    
-            Copyright 2012-2014 Muhammad Usman
-            Licensed under the Apache License v2.0
-            http://www.apache.org/licenses/LICENSE-2.0
-    
-            http://usman.it
-            http://twitter.com/halalit_usman
-            ===
-        -->
-        <meta charset="utf-8">
-        <title>Free HTML5 Bootstrap Admin Template</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
-        <meta name="author" content="Muhammad Usman">
+   <?php include_once 'header.php'; 
+   
+    if (isset($_GET['del'])) {
+        $no = $_GET['del'];
+        delete($no);
+    } elseif (isset($_GET['acpt'])) {
+        $no = $_GET['acpt'];
+        accept($no);
+    } elseif (isset($_GET['actv'])) {
+        $no = $_GET['actv'];
+        active($no);
+    } elseif (isset($_GET['inac'])) {
+        $no = $_GET['inac'];
+        inactive($no);
+    }
 
-        <!-- The styles -->
-        <link id="bs-css" href="css/bootstrap-cerulean.min.css" rel="stylesheet">
+    function delete($no) {
+        require_once("../includes/sql.php");
 
-        <link href="css/charisma-app.css" rel="stylesheet">
-        <link href='bower_components/fullcalendar/dist/fullcalendar.css' rel='stylesheet'>
-        <link href='bower_components/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print'>
-        <link href='bower_components/chosen/chosen.min.css' rel='stylesheet'>
-        <link href='bower_components/colorbox/example3/colorbox.css' rel='stylesheet'>
-        <link href='bower_components/responsive-tables/responsive-tables.css' rel='stylesheet'>
-        <link href='bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css' rel='stylesheet'>
-        <link href='css/jquery.noty.css' rel='stylesheet'>
-        <link href='css/noty_theme_default.css' rel='stylesheet'>
-        <link href='css/elfinder.min.css' rel='stylesheet'>
-        <link href='css/elfinder.theme.css' rel='stylesheet'>
-        <link href='css/jquery.iphone.toggle.css' rel='stylesheet'>
-        <link href='css/uploadify.css' rel='stylesheet'>
-        <link href='css/animate.min.css' rel='stylesheet'>
+        $conexion = db_connect();
+        $sql = "DELETE FROM user WHERE user_id='" . $no . "'";
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+    }
 
-        <!-- jQuery -->
-        <script src="bower_components/jquery/jquery.min.js"></script>
+    function accept($no) {
+        require_once("../includes/sql.php");
 
-        <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+        $conexion = db_connect();
+        $sql = "UPDATE `user` SET `is_active` = '1' WHERE `user_id` = " . $no;
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+    }
 
-        <!-- The fav icon -->
-        <link rel="shortcut icon" href="img/favicon.ico">
+    function active($no) {
+        require_once("../includes/sql.php");
 
-    </head>
+        $conexion = db_connect();
+        $sql = "UPDATE `user` SET `is_active` = '1' WHERE `user_id` = " . $no;
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+    }
 
+    function inactive($no) {
+        require_once("../includes/sql.php");
+
+        $conexion = db_connect();
+        $sql = "UPDATE `user` SET `is_active` = '0' WHERE `user_id` = " . $no;
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+    }
+    ?>
+
+    <script>
+        function Deleteqry(id)
+        {
+            if (confirm("Are you sure you want to delete this user?") == true)
+                window.location = "users_patients.php?del=" + id;
+            return false;
+        }
+
+        function acptqry(id)
+        {
+            if (confirm("Are you sure you want to accept this user?") == true)
+                window.location = "users_patients.php?acpt=" + id;
+            return false;
+        }
+
+        function actvqry(id)
+        {
+            if (confirm("Are you sure you want to active this user?") == true)
+                window.location = "users_patients.php?actv=" + id;
+            return false;
+        }
+
+        function inac(id)
+        {
+            if (confirm("Are you sure you want to inactive this user?") == true)
+                window.location = "users_patients.php?inac=" + id;
+            return false;
+        }
+
+        
+
+
+    </script>
     <body>
 
 
@@ -108,30 +138,12 @@
                                 </div>
                             </div>
 
-                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                 aria-hidden="true">
-
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal">×</button>
-                                            <h3>Settings</h3>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Here settings can be configured...</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                                            <a href="#" class="btn btn-primary" data-dismiss="modal">Save changes</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>  
+                             
                             <!-- topbar starts -->
                             <?php include 'users.php'; ?>
                             <div class="box-inner">
                                 <div class="box-header well" data-original-title="">
-                                    <h2><i class="glyphicon glyphicon-user"></i> Users/Patients</h2>
+                                    <h2><i class="glyphicon glyphicon-user"></i> General Physicians</h2>
 
                                     <div class="box-icon">
                                         <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
@@ -153,205 +165,77 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>David R</td>
-                                                <td class="center">2012/01/01</td>
-                                                <td class="center">Member</td>
-                                                <td class="center">
-                                                    <span class="label-success label label-default">Active</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Chris Jack</td>
-                                                <td class="center">2012/01/01</td>
-                                                <td class="center">Member</td>
-                                                <td class="center">
-                                                    <span class="label-success label label-default">Active</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Jack Chris</td>
-                                                <td class="center">2012/01/01</td>
-                                                <td class="center">Member</td>
-                                                <td class="center">
-                                                    <span class="label-success label label-default">Active</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#" >
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Muhammad Usman</td>
-                                                <td class="center">2012/01/01</td>
-                                                <td class="center">Member</td>
-                                                <td class="center">
-                                                    <span class="label-success label label-default">Active</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sheikh Heera</td>
-                                                <td class="center">2012/02/01</td>
-                                                <td class="center">Staff</td>
-                                                <td class="center">
-                                                    <span class="label-default label label-danger">Banned</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Helen Garner</td>
-                                                <td class="center">2012/02/01</td>
-                                                <td class="center">Staff</td>
-                                                <td class="center">
-                                                    <span class="label-default label label-danger">Banned</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Saruar Ahmed</td>
-                                                <td class="center">2012/03/01</td>
-                                                <td class="center">Member</td>
-                                                <td class="center">
-                                                    <span class="label-warning label label-default">Pending</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ahemd Saruar</td>
-                                                <td class="center">2012/03/01</td>
-                                                <td class="center">Member</td>
-                                                <td class="center">
-                                                    <span class="label-warning label label-default">Pending</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Habib Rizwan</td>
-                                                <td class="center">2012/01/21</td>
-                                                <td class="center">Staff</td>
-                                                <td class="center">
-                                                    <span class="label-success label label-default">Active</span>
-                                                </td>
-                                                <td class="center">
-                                                    <a class="btn btn-success" href="#">
-                                                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                        View
-                                                    </a>
-                                                    <a class="btn btn-info" href="#">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        Edit
-                                                    </a>
-                                                    <a class="btn btn-danger" href="#">
-                                                        <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                        Delete
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                           <?php
+                                            include_once("../includes/sql.php");
+                                            $conexion = db_connect();
 
+                                            $sql = "SELECT * FROM user where user_type='P'";
+                                            $result = $conexion->query($sql);
+
+                                            while ($row = $result->fetch_array()) {
+
+                                                $user_id = $row['user_id'];
+                                                $first_name = $row['first_name'];
+                                                $last_name = $row['last_name'];
+                                                $name_with_initials = $row['name_with_initials'];
+                                                $email = $row['email'];
+                                                $profile_img = $row['profile_img'];
+                                                $gender = $row['gender'];
+                                                $user_type = $row['user_type'];
+                                                $is_active = $row['is_active'];
+                                                $contact_number = $row['contact_number'];
+                                                
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $first_name . ' ' . $last_name; ?> </td>
+                                                        <td class="center">2012/01/01</td>
+                                                        <td class="center"><?php
+                                                            
+                                                                echo 'Patient';
+                                                            
+                                                            ?></td>
+                                                        <td class="center">
+                                                            <?php
+                                                            if ($is_active == '1')
+                                                                echo '<span class="label-success label label-default">Active</span>';
+                                                            if ($is_active == '0')
+                                                                echo '<span class="label-success label label-danger">Inactive</span>';
+                                                             if ($is_active == '2')
+                                                                echo '<span class="label-warning label label-default">Pending</span>';
+                                                            
+                                                            ?>
+                                                        </td>
+                                                        <td class="center">
+                                                            <a class="btn btn-info" href="#" onclick="return view(<?php echo $user_id; ?>)">
+                                                                <i class="glyphicon glyphicon-edit icon-white"></i>
+                                                                View
+                                                            </a>
+                                                            <a class="btn btn-danger" href="#" onclick="return Deleteqry(<?php echo $user_id; ?>)" >
+                                                                <i class="glyphicon glyphicon-trash icon-white"></i>
+                                                                Delete
+                                                            </a>
+                                                            <?php if ($is_active == '1') { ?>  
+                                                                <a class="btn btn-default" href="#" onclick="return inac(<?php echo $user_id; ?>)" >
+                                                                    <i class="glyphicon glyphicon-trash icon-white"></i>
+                                                                    Inactivate
+                                                                </a>
+                                                            <?php } elseif ($is_active == '2') { ?>  
+                                                                <a class="btn btn-default" href="#" onclick="return acptqry(<?php echo $user_id; ?>)" >
+                                                                    <i class="glyphicon glyphicon-ok icon-white"></i>
+                                                                    Approve
+                                                                </a>
+                                                            <?php } elseif ($is_active == '0') { ?>
+                                                                <a class="btn btn-default" href="#" onclick="return actvqry(<?php echo $user_id; ?>)" >
+                                                                    <i class="glyphicon glyphicon-ok icon-white"></i>
+                                                                    Make active
+                                                                </a>
+                                                            <?php }
+                                                        
+                                                        ?>
+
+                                                </td>
+                                            </tr>
+                                             <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

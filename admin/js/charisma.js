@@ -302,11 +302,7 @@ function docReady() {
 
         $('#myModal').modal('show');
     });
-    $('.btn-info').click(function (e) {
-        e.preventDefault();
-        $('#editModal').modal('show');
-    });
-
+    
     $('#calendar').fullCalendar({
         header: {
             left: 'prev,next today',
