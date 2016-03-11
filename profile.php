@@ -6,7 +6,7 @@ include_once("includes/sql.php");
 
 if (!loggedin()) {
 
-    die("<script>location.href = 'signin.php'</script>");
+   die("<script>location.href = 'signin.php'</script>");
 }
 ?>
 
@@ -14,12 +14,47 @@ if (!loggedin()) {
 
 <?php
 $conexion = db_connect();
-if (isset($_GET['id'])) {
+if (isset($_GET['key'])) {
 
+    $appointment_id = $_GET['key'];
+
+    $sql = "SELECT * FROM appoinments where appoinment_id = '$appointment_id'";
+    $result = $conexion->query($sql);
+    if ($result->num_rows > 0) {
+
+        while ($row = $result->fetch_array()) {
+
+            $user_id = $row['user_id'];
+            $doctor_id = $row['doctor_id'];
+            $time_slot = $row['time_slot'];
+        }
+    }
+    $sql2 = "SELECT reserved_time_slots FROM doctor where doctor_id = '$doctor_id'";
+    $result2 = $conexion->query($sql2);
+    $rows = $result2->fetch_array();
+
+    $reserved = explode(',', $rows[0]);
+
+    if (($key = array_search($time_slot, $reserved)) !== false) {
+        unset($reserved[$key]);
+
+        $sql3 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where doctor_id=$doctor_id";
+        if ($result = $conexion->query($sql3)) {
+            $sql4 = "delete from appoinments where appoinment_id='$appointment_id'";
+            if ($conexion->query($sql4)) {
+                echo "<div class='alert alert-success'>Appointment canceled!</div>";
+                die("<script>location.href = 'profile.php'</script>");
+            }
+        };
+    }
+}
+
+if (isset($_GET['id'])) {
     $id = $_GET['id'];
 } else {
     $id = $_SESSION['user_id'];
 }
+
 $sql = "SELECT * FROM user where user_id = '$id'";
 $result = $conexion->query($sql);
 if ($result->num_rows > 0) {
@@ -116,10 +151,33 @@ if ($result->num_rows > 0) {
 
             $conexion = db_connect();
 
-            $sql = "UPDATE doctor SET allocated_appointment_time='".implode(',', $_POST['check_box'])."' where doctor_id=1";
+            $sql = "UPDATE doctor SET allocated_appointment_time='".implode(',', $_POST['check_box'])."' where doctor_id=$id";
             if($result = $conexion->query($sql)){
                 echo "<div class='alert alert-success'>Alocation times saved successfully!</div>";
             };
+
+        }
+        
+        if((isset($_POST['reserve']))&&(!empty($_POST['radio']))) {
+
+            $conexion = db_connect();
+
+
+                            $sql = "SELECT reserved_time_slots FROM doctor where doctor_id=".$id;
+                            $result = $conexion->query($sql);
+                            $rows = $result->fetch_array();
+                            $reserved=array();
+                            $reserved = explode(',',$rows[0]);
+                            
+                            array_push($reserved,$_POST['radio']);
+                            
+                         
+            $sql2 = "UPDATE doctor SET reserved_time_slots='".implode(',', $reserved)."' where doctor_id=$id";
+            if($result = $conexion->query($sql2)){
+                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$id','{$_POST['radio']}')";
+                if($conexion->query($sql3)){
+                echo "<div class='alert alert-success'>Appointment saved successfully!</div>";
+            }};
 
         }
 
@@ -242,7 +300,7 @@ if ($result->num_rows > 0) {
                         } elseif ($user_type == 'P') {
                             echo 'PATIENT';
                         } elseif ($user_type == 'G') {
-                            echo 'GENERAL PYSICIANT';
+                            echo 'MEDICAL CONSULTANT';
                         }
                         ?></span></h4></div>
 
@@ -264,36 +322,20 @@ if ($result->num_rows > 0) {
                         } elseif ($user_type == 'P') {
                             echo 'Patient Profile';
                         } elseif ($user_type == 'G') {
-                            echo 'General Pysicient';
+                            echo 'Medical Consultant';
                         }
                         ?></h1></div>
                 <div class="col-md-4">
                     <br>
-                    <?php if ($user_type == 'D') { ?>
+                    <?php if (($user_type == 'D')&& ($id == $_SESSION['user_id'])) { ?>
                         <form id="statusform">
-
+                            <span style="color:green;font-size: 16px;padding-right: 5px;"><b>Availability</b></span>
                             <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary <?php
-                                if ($availability == '1') {
-                                    echo 'active';
-                                }
-                                ?>">
-                                    <input type="radio" name="availability" id="option1" value="1"  <?php
-                                    if ($availability == '1') {
-                                        echo 'checked';
-                                    }
-                                    ?>> Available 
+                                <label class="btn btn-primary <?php if ($availability == '1') { echo 'active'; } ?>">
+                                    <input type="radio" name="availability" id="option1" value="1"  <?php if ($availability == '1') {echo 'checked'; }?>> Available 
                                 </label>
-                                <label class="btn btn-primary  <?php
-                                if ($availability == '0') {
-                                    echo 'active';
-                                }
-                                ?>">
-                                    <input type="radio" name="availability" id="option2" value="0"  <?php
-                                    if ($availability == '0') {
-                                        echo 'checked';
-                                    }
-                                    ?>> Unavailable
+                                <label class="btn btn-primary  <?php if ($availability == '0') {echo 'active';}?>">
+                                    <input type="radio" name="availability" id="option2" value="0"  <?php if ($availability == '0') {echo 'checked';}?>> Unavailable
                                 </label>
                                 <input type="text" value="<?php echo $user_id; ?>" id="uid" hidden>
 
@@ -311,9 +353,12 @@ if ($result->num_rows > 0) {
                         <li role="presentation" class="active"><a href="#">Profile</a></li>
                         <?php if(isset($_SESSION['user_id']) && ($id == $_SESSION['user_id'])){ ?>
                         <li role="presentation"><a href="">Appoinments</a></li> 
+                        <?php if($user_type=='D'){ ?>
                         <li role="presentation"><a href="#">Set Available Times</a></li>
+                        <?php } } ?>
+                         <?php if($user_type=='D'){ ?>
+                        <li role="presentation" class="active"><a href="#">Make An Appointment</a></li>
                         <?php } ?>
-
                     </ul>
                 </div>
                 <div class="col-md-12 bhoechie-tab-content" style="padding: 0px;">
@@ -369,7 +414,7 @@ if ($result->num_rows > 0) {
                     <br><br>
                     <div class="clearfix"></div>
                 </div>
-
+<?php if(isset($_SESSION['user_id']) && ($id == $_SESSION['user_id'])){ ?>
                 <div class="bhoechie-tab-content hide">
                     <br>
                     <div style="width:90%;padding-left: 50px">
@@ -377,7 +422,7 @@ if ($result->num_rows > 0) {
                         if ($user_type == 'P') {
                             $conexion = db_connect();
 
-                            $sql = "SELECT a.appoinment_id, a.patient_name , a.patient_age ,a.telephone_no,u.first_name,u.last_name FROM appoinments a , user u where a.doctor_id=u.user_id and a.user_id = '2'";
+                            $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where a.doctor_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
                             $result = $conexion->query($sql);
                             if ($result->num_rows > 0) {
                                 ?>
@@ -388,7 +433,8 @@ if ($result->num_rows > 0) {
                                             <th>Appointment No</th>
                                             <th>Doctor</th>
                                             <th>Appintment Details</th>
-                                            <th>Status</th>
+                                            <th>Place of Appoinment</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -397,36 +443,37 @@ if ($result->num_rows > 0) {
 
                                             $appintment_id = $row['appoinment_id'];
                                             $doctor_is = "Dr " . $row['first_name'] . "" . $row['last_name'];
-                                            $patient_name = $row['patient_name'];
-                                            $patient_age = $row['patient_age'];
-                                            $patient_tel = $row['telephone_no'];
+                                            $address = $row['Address'];
+                                            $time_slot = $row['time_slot'];
                                             ?>
                                             <tr>
                                                 <td><?php echo $appintment_id; ?></td>
                                                 <td><?php echo $doctor_is; ?></td>
-                                                <td><br><p style="padding-top:1px"><?php echo "Age: " . $patient_age; ?></p><p style="padding-top:1px"><?php echo "Contant No: " . $patient_tel; ?></p><br></td>
-                                                <td>Pending</td>
+                                                <td><br><p style="padding-top:1px"><?php echo "Date: "; ?></p><p style="padding-top:1px"><?php echo "Time Slot: ". $time_slot;?></p><br></td>
+                                                <td><?php echo $address; ?></td>
+                                                <td><a href="<?php echo "profile.php?key=" . $appintment_id; ?>"  class="btn btn-sm btn-danger" title="view"><button class="btn btn-sm btn-danger" >Cancel</button></a>&nbsp;</td>
+                                    
                                             </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
-
+                        
                                 <?php
                             }
                         } else if ($user_type == 'D') {
 
                             $conexion = db_connect();
 
-                            $sql = "SELECT a.appoinment_id, a.patient_name , a.patient_age ,a.telephone_no,u.first_name,u.last_name FROM appoinments a , user u where a.doctor_id=u.user_id and a.doctor_id = '$id'";
+                            $sql = "SELECT a.appoinment_id,a.time_slot,u.first_name,u.last_name, d.Address , FROM appoinments a , user u where a.doctor_id=u.user_id and a.doctor_id = '$id'";
                             $result = $conexion->query($sql);
                             if ($result->num_rows > 0) {
                                 ?>
 
-                                <table id="patient_tab" class="display col-md-12" style="width:80%">
+                                <table id="patient_tab2" class="display col-md-12" style="width:80%">
                                     <thead>
                                         <tr>
                                             <th>Appointment No</th>
-                                            <th>Doctor</th>
+                                            <th>Patient</th>
                                             <th>Appintment Details</th>
                                             <th>Status</th>
                                         </tr>
@@ -436,15 +483,14 @@ if ($result->num_rows > 0) {
                                         while ($row = $result->fetch_array()) {
 
                                             $appintment_id = $row['appoinment_id'];
-                                            $doctor_is = "Dr " . $row['first_name'] . "" . $row['last_name'];
-                                            $patient_name = $row['patient_name'];
-                                            $patient_age = $row['patient_age'];
-                                            $patient_tel = $row['telephone_no'];
+                                            $patient_is = $row['first_name'] . "" . $row['last_name'];
+                                            $time_slot = $row['time_slot'];
+                                            
                                             ?>
                                             <tr>
                                                 <td><?php echo $appintment_id; ?></td>
-                                                <td><?php echo $patient_name; ?></td>
-                                                <td><br><p style="padding-top:1px"><?php echo "Age: " . $patient_age; ?></p><p style="padding-top:1px"><?php echo "Contant No: " . $patient_tel; ?></p><br></td>
+                                                <td><?php echo $patient_is; ?></td>
+                                                <td><br><p style="padding-top:1px"><?php echo "Date: "; ?></p><p style="padding-top:1px"><?php echo "Time Slot: ".$time_slot; ?></p><br></td>
                                                 <td>Pending</td>
                                             </tr>
                                         <?php } ?>
@@ -465,7 +511,7 @@ if ($result->num_rows > 0) {
                     </div>
 
                 </div>
-                <?php if(isset($_SESSION['user_id']) && ($id == $_SESSION['user_id'])){ ?>
+                <?php if($user_type == 'D'){?>
                 <div class="col-md-12 bhoechie-tab-content hide">
                     <br>
                     <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
@@ -522,7 +568,63 @@ if ($result->num_rows > 0) {
                     </div>
                     </form>
                 </div>
-                <?php }?>
+                <?php }} if($user_type=='D'){ ?>
+                
+                <div class="bhoechie-tab-content hide">
+                     <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+                    <table class="table-striped" style="width:100%">
+                        <tr>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Satureday</th>
+                            <th>Sunday</th>
+                        </tr>
+                    <?php $conexion = db_connect();
+                            $user_id = $id;
+
+                            $sql = "SELECT allocated_appointment_time,reserved_time_slots FROM doctor where doctor_id=".$user_id;
+                            $result = $conexion->query($sql);
+                            $rows = $result->fetch_array();
+
+                            $appDates = explode(',',$rows[0]);
+                            $reserved = explode(',',$rows[1]);
+
+                            $days =['M','T','W','L','F','S','Z'];
+                            $times =['12 - 01 AM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 PM','02 - 03 PM','03 - 04 PM','04 - 05 PM','05 - 06 PM','06 - 07 PM','07 - 08 PM','08 - 09 PM','09 - 10 PM','10 - 11 PM','11 - 12 AM'] ;
+
+                            for($x = 0;$x<22;$x++){
+                                echo '<tr>';
+                                for($y = 0;$y<7;$y++){
+                                    $chk = "";
+                                    $dis = "";
+                                    $color = "";
+                                    foreach($appDates as $val){
+                                        if($val == $days[$y].($x+1)){
+                                            if (in_array($days[$y].($x+1), $reserved)) {
+                                                $dis='disabled="disabled"';
+                                                $color='background:#EE2C2C;color:#fff;';
+                                            }
+                                            
+                                            echo '<td style="padding:8px;margin:10px;'.$color.'"><input'.$dis.' type="radio" name="radio" value="'.$days[$y].($x+1).'">'.$days[$y].$times[$x].'</input></td>';
+                                        }
+                                    }
+
+                                    
+
+                                }
+
+                                echo '</tr>';
+                            }?>
+                        </table>
+                         <div class="col-md-12" style="margin: 10px 0">
+                        <input type="submit" name="reserve" class="btn-primary btn pull-right" value="Reserve this time slot"/>
+                    </div>
+                     </form>
+                </div>
+                <?php } ?>
             </div>
         </div>
 
@@ -639,8 +741,26 @@ if ($result->num_rows > 0) {
                 $("div.bhoechie-tab-content").addClass("hide");
                 $("div.bhoechie-tab-content").eq(index).removeClass("hide");
             });
+            
+           
             //patient table script
 //            $('#patient_tab').DataTable();
+        $('input:radio[id^="option"]').on('change', function (event) {
+            var status = $('input[name=availability]:checked', '#statusform').val();
+            var uid = document.getElementById("uid").value;
+
+            $.ajax({
+                type: "POST",
+                url: "includes/profile_functions.php",
+                data: {status: status, id: uid}, //pass txtarea input with cssrf tolcke
+                dataType: "json",
+                success: function (result) {
+//                                alert(result['result']);
+                    $("#alert-container").html(result['result']);
+                    $(".alert").delay(3000).slideUp(200);
+                }
+            });
+        });
         });
 
         function readURL(input) {
@@ -660,23 +780,7 @@ if ($result->num_rows > 0) {
         });
 
 
-        $(document).on('change', 'input:radio[id^="option"]', function (event) {
 
-            var status = $('input[name=availability]:checked', '#statusform').val();
-            var uid = document.getElementById("uid").value;
-
-            $.ajax({
-                type: "POST",
-                url: "includes/profile_functions.php",
-                data: {status: status, id: uid}, //pass txtarea input with cssrf tolcke
-                dataType: "json",
-                success: function (result) {
-//                                alert(result['result']);
-                    $("#alert-container").html(result['result']);
-                    $(".alert").delay(3000).slideUp(200);
-                }
-            });
-        });
 
         $(document).ready(function () {
             $('#patient_tab').DataTable();
