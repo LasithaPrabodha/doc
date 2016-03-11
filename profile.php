@@ -111,6 +111,18 @@ if ($result->num_rows > 0) {
 <div class="col-md-12">
     <div class="row">
         <?php
+
+        if(isset($_POST['available'])) {
+
+            $conexion = db_connect();
+
+            $sql = "UPDATE doctor SET allocated_appointment_time='".implode(',', $_POST['check_box'])."' where doctor_id=1";
+            if($result = $conexion->query($sql)){
+                echo "<div class='alert alert-success'>Alocation times saved successfully!</div>";
+            };
+
+        }
+
         if (isset($_POST['submit1'])) {
 
 
@@ -217,7 +229,7 @@ if ($result->num_rows > 0) {
                 if (isset($profile_img) && (!empty($profile_img))) {
                     echo $profile_img;
                 } else {
-                    echo "images/default_prof.jpg";
+                    echo 'images/default_prof.jpg';
                 }
                 ?>"/>
             </div>
@@ -296,7 +308,7 @@ if ($result->num_rows > 0) {
                     <ul class="nav nav-tabs profile-nav">
                         <li role="presentation" class="active"><a href="#">Profile</a></li>
                         <li role="presentation"><a href="">Appoinments</a></li> 
-                        <li role="presentation"><a href="#">Classes</a></li>
+                        <li role="presentation"><a href="#">Set Available Times</a></li>
 
                     </ul>
                 </div>
@@ -447,18 +459,59 @@ if ($result->num_rows > 0) {
 
 
                     </div>
+
                 </div>
-                <div class="bhoechie-tab-content hide">
+                <div class="col-md-12 bhoechie-tab-content hide">
                     <br>
+                    <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+                        <table class="table-striped" style="width:100%">
+                        <tr>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Satureday</th>
+                            <th>Sunday</th>
+                        </tr>
 
+                        <?php
+                        $conexion = db_connect();
 
+                        $sql = "SELECT allocated_appointment_time FROM doctor where doctor_id=1";
+                        $result = $conexion->query($sql);
+                        $rows = $result->fetch_array();
 
+                        $appDates = explode(',',$rows[0]);
 
+                        $days =['M','T','W','L','F','S','Z'];
+                        $times =['12 - 01 AM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 PM','02 - 03 PM','03 - 04 PM','04 - 05 PM','05 - 06 PM','06 - 07 PM','07 - 08 PM','08 - 09 PM','09 - 10 PM','10 - 11 PM','11 - 12 AM'] ;
 
+                        for($x = 0;$x<22;$x++){
+                            echo '<tr>';
+                            for($y = 0;$y<7;$y++){
+                                $chk = "";
+                                foreach($appDates as $val){
+                                    if($val == $days[$y].($x+1)){
+                                        $chk = 'checked';
+                                    }
+                                }
 
+                                echo '<td><input type="checkbox" '.$chk.' name="check_box[]" value="'.$days[$y].($x+1).'">'.$times[$x].'</input></td>';
 
+                            }
 
+                            echo '</tr>';
+                        }
 
+                        ?>
+
+                    </table>
+
+                    <div class="col-md-12" style="margin: 10px 0">
+                        <input type="submit" name="available" class="btn-primary btn pull-right" value="Save Available times"/>
+                    </div>
+                    </form>
                 </div>
 
             </div>
