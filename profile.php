@@ -6,7 +6,7 @@ include_once("includes/sql.php");
 
 if (!loggedin()) {
 
-    header('Location: signin.php');
+    die("<script>location.href = 'signin.php'</script>");
 }
 ?>
 
@@ -99,7 +99,7 @@ if ($result->num_rows > 0) {
                         <ol class="breadcrumb">
                             <li>You are here</li>
                             <li><a href="#">Home</a></li>                  
-                            <li class="active">Sign In</li>
+                            <li class="active">Profile</li>
                         </ol>
                     </div>
                 </div>
@@ -246,10 +246,12 @@ if ($result->num_rows > 0) {
                         }
                         ?></span></h4></div>
 
+            <?php if($id == $_SESSION['user_id']){ ?>
             <div class="col-md-offset-1 col-md-10 center" ><button class='btn btn-success col-md-12' data-toggle="modal" data-target="#editModal">Profile settings</button></div>
 
             <div class="col-md-offset-1 col-md-10 center" style="margin-top: 3px; "><center><a href="#" class='col-md-12' data-toggle="modal" data-target="#passModal" >change password</a></center></div>
 
+            <?php }?>
             <div class="clearfix"></div>
         </div>
 
@@ -307,8 +309,10 @@ if ($result->num_rows > 0) {
                 <div class="bhoechie-tab-menu">
                     <ul class="nav nav-tabs profile-nav">
                         <li role="presentation" class="active"><a href="#">Profile</a></li>
+                        <?php if(isset($_SESSION['user_id']) && ($id == $_SESSION['user_id'])){ ?>
                         <li role="presentation"><a href="">Appoinments</a></li> 
                         <li role="presentation"><a href="#">Set Available Times</a></li>
+                        <?php } ?>
 
                     </ul>
                 </div>
@@ -461,6 +465,7 @@ if ($result->num_rows > 0) {
                     </div>
 
                 </div>
+                <?php if(isset($_SESSION['user_id']) && ($id == $_SESSION['user_id'])){ ?>
                 <div class="col-md-12 bhoechie-tab-content hide">
                     <br>
                     <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
@@ -476,33 +481,37 @@ if ($result->num_rows > 0) {
                         </tr>
 
                         <?php
-                        $conexion = db_connect();
 
-                        $sql = "SELECT allocated_appointment_time FROM doctor where doctor_id=1";
-                        $result = $conexion->query($sql);
-                        $rows = $result->fetch_array();
+                            $conexion = db_connect();
+                            $user_id = $_SESSION['user_id'];
 
-                        $appDates = explode(',',$rows[0]);
+                            $sql = "SELECT allocated_appointment_time FROM doctor where doctor_id=".$user_id;
+                            $result = $conexion->query($sql);
+                            $rows = $result->fetch_array();
 
-                        $days =['M','T','W','L','F','S','Z'];
-                        $times =['12 - 01 AM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 PM','02 - 03 PM','03 - 04 PM','04 - 05 PM','05 - 06 PM','06 - 07 PM','07 - 08 PM','08 - 09 PM','09 - 10 PM','10 - 11 PM','11 - 12 AM'] ;
+                            $appDates = explode(',',$rows[0]);
 
-                        for($x = 0;$x<22;$x++){
-                            echo '<tr>';
-                            for($y = 0;$y<7;$y++){
-                                $chk = "";
-                                foreach($appDates as $val){
-                                    if($val == $days[$y].($x+1)){
-                                        $chk = 'checked';
+                            $days =['M','T','W','L','F','S','Z'];
+                            $times =['12 - 01 AM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 PM','02 - 03 PM','03 - 04 PM','04 - 05 PM','05 - 06 PM','06 - 07 PM','07 - 08 PM','08 - 09 PM','09 - 10 PM','10 - 11 PM','11 - 12 AM'] ;
+
+                            for($x = 0;$x<22;$x++){
+                                echo '<tr>';
+                                for($y = 0;$y<7;$y++){
+                                    $chk = "";
+                                    foreach($appDates as $val){
+                                        if($val == $days[$y].($x+1)){
+                                            $chk = 'checked';
+                                        }
                                     }
+
+                                    echo '<td><input type="checkbox" '.$chk.' name="check_box[]" value="'.$days[$y].($x+1).'">'.$times[$x].'</input></td>';
+
                                 }
 
-                                echo '<td><input type="checkbox" '.$chk.' name="check_box[]" value="'.$days[$y].($x+1).'">'.$times[$x].'</input></td>';
-
+                                echo '</tr>';
                             }
 
-                            echo '</tr>';
-                        }
+
 
                         ?>
 
@@ -513,7 +522,7 @@ if ($result->num_rows > 0) {
                     </div>
                     </form>
                 </div>
-
+                <?php }?>
             </div>
         </div>
 

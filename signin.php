@@ -94,7 +94,7 @@ require_once("includes/header.php");
                                 <div class="col-md-6 col-sm-6">
                                     <label class="control-label">Password <span class="required">*</span>
                                     </label>
-                                    <input type="text" name="password" id="password" class="wp-form-control wpcf7-text" placeholder="Your password">
+                                    <input type="password" name="password" id="password" class="wp-form-control wpcf7-text" placeholder="Your password">
 
                                     <div class="col-md-6"> <a href="#"><u>Forgot password?</u>  </a></div>
                                     <div class="col-md-6" > New user?  <a href="register.php"><u>SignUp</u> </a></div>
