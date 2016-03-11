@@ -1,43 +1,44 @@
 
-<?php include_once("includes/header.php");
+<?php
+include_once("includes/header.php");
 include_once("includes/sql.php");
 
 
-if(!loggedin()){
+if (!loggedin()) {
 
-header('Location: signin.php');
-} ?>
+    header('Location: signin.php');
+}
+?>
 
 
 
 <?php
 $conexion = db_connect();
-if(isset($_GET['id'])){
-     
-        $sql = "SELECT * FROM user where user_id = '{$_GET['id']}'";
-        }else{
-        $sql = "SELECT * FROM user where user_id = '{$_SESSION['user_id']}'";    
-        }
-        $result = $conexion->query($sql);
-        if ($result->num_rows > 0) {
+if (isset($_GET['id'])) {
 
-            while ($row = $result->fetch_array()) {
+    $id = $_GET['id'];
+} else {
+    $id = $_SESSION['user_id'];
+}
+$sql = "SELECT * FROM user where user_id = '$id'";
+$result = $conexion->query($sql);
+if ($result->num_rows > 0) {
 
-                $user_id = $row['user_id'];
-                $first_name = $row['first_name'];
-                $last_name = $row['last_name'];
-                $name_with_initials = $row['name_with_initials'];
-                $email = $row['email'];
-                $profile_img = $row['profile_img'];
-                $gender = $row['gender'];
-                $user_type = $row['user_type'];
-                $is_active = $row['is_active'];
-                $password = $row['password'];
-                $contact_number = $row['contact_number'];
-            }
-        }
-    
+    while ($row = $result->fetch_array()) {
 
+        $user_id = $row['user_id'];
+        $first_name = $row['first_name'];
+        $last_name = $row['last_name'];
+        $name_with_initials = $row['name_with_initials'];
+        $email = $row['email'];
+        $profile_img = $row['profile_img'];
+        $gender = $row['gender'];
+        $user_type = $row['user_type'];
+        $is_active = $row['is_active'];
+        $password = $row['password'];
+        $contact_number = $row['contact_number'];
+    }
+}
 ?>
 
 <!--=========== END HEADER SECTION ================-->  
@@ -157,13 +158,45 @@ if(isset($_GET['id'])){
             }
         }
         if (isset($_POST['submit2'])) {
-            
+            $curr_pw = $_POST['currentPassword'];
+            $new_pw = $_POST['newPassword'];
+            $conf_pw = $_POST['confirmPassword'];
+            if ((!empty($curr_pw)) && (!empty($new_pw)) && (!empty($conf_pw))) {
+
+                $sql2 = "SELECT password FROM user where user_id = '$id'";
+                $result = $conexion->query($sql2);
+                if ($result->num_rows > 0) {
+
+                    while ($row = $result->fetch_array()) {
+
+                        $password = $row['password'];
+                    }
+                }
+                if ($password == md5($curr_pw)) {
+                    if ($new_pw == $conf_pw) {
+                        $new_pw=  md5($new_pw);
+                        $sql2 = "update user set password='$new_pw' where user_id = '$id'";
+                        $result = $conexion->query($sql2);
+                        if ($conexion->query($sql2)) {
+                             echo "<div class='alert alert-success'>Password updated successfully.</div>";
+                        } else {
+                             echo "<div class='alert alert-danger'>Error occured</div>";
+                        }
+                    } else {
+                        echo "<div class='alert alert-danger'>New password and Confirm password should be the same</div>";
+                    }
+                } else {
+
+                    echo "<div class='alert alert-danger'>Incorrect Current Password</div>";
+                }
+            }
+        } else if(!isset($_POST)){
+            echo "<div class='alert alert-danger'>*All the feilds are mandatory</div>";
         }
         ?>
     </div>
     <div class="row">
         <?php
-       
         if ($user_type == 'D') {
             $sql2 = "SELECT availability FROM doctor where user_id = '$user_id'";
             $result = $conexion->query($sql2);
@@ -203,6 +236,8 @@ if(isset($_GET['id'])){
 
             <div class="col-md-offset-1 col-md-10 center" ><button class='btn btn-success col-md-12' data-toggle="modal" data-target="#editModal">Profile settings</button></div>
 
+            <div class="col-md-offset-1 col-md-10 center" style="margin-top: 3px; "><center><a href="#" class='col-md-12' data-toggle="modal" data-target="#passModal" >change password</a></center></div>
+
             <div class="clearfix"></div>
         </div>
 
@@ -230,21 +265,21 @@ if(isset($_GET['id'])){
                                 }
                                 ?>">
                                     <input type="radio" name="availability" id="option1" value="1"  <?php
-                                if ($availability == '1') {
-                                    echo 'checked';
-                                }
-                                ?>> Available 
+                                    if ($availability == '1') {
+                                        echo 'checked';
+                                    }
+                                    ?>> Available 
                                 </label>
                                 <label class="btn btn-primary  <?php
-                                           if ($availability == '0') {
-                                               echo 'active';
-                                           }
-                                           ?>">
+                                if ($availability == '0') {
+                                    echo 'active';
+                                }
+                                ?>">
                                     <input type="radio" name="availability" id="option2" value="0"  <?php
-                                           if ($availability == '0') {
-                                               echo 'checked';
-                                           }
-                                           ?>> Unavailable
+                                    if ($availability == '0') {
+                                        echo 'checked';
+                                    }
+                                    ?>> Unavailable
                                 </label>
                                 <input type="text" value="<?php echo $user_id; ?>" id="uid" hidden>
 
@@ -252,7 +287,7 @@ if(isset($_GET['id'])){
 
 
                         </form>
-<?php } ?>
+                    <?php } ?>
                 </div>
 
             </div>
@@ -322,46 +357,88 @@ if(isset($_GET['id'])){
                 <div class="bhoechie-tab-content hide">
                     <br>
                     <div style="width:90%;padding-left: 50px">
-                    <?php
-                    if($user_type == 'P'){
-                    $conexion = db_connect();
+                        <?php
+                        if ($user_type == 'P') {
+                            $conexion = db_connect();
 
-                    $sql = "SELECT a.appoinment_id, a.patient_name , a.patient_age ,a.telephone_no,u.first_name,u.last_name FROM appoinments a , user u where a.doctor_id=u.user_id and a.user_id = '2'";
-                    $result = $conexion->query($sql);
-                    if ($result->num_rows > 0) {
-                        ?>
-                    
-                        <table id="patient_tab" class="display col-md-12" style="width:80%">
-                            <thead>
-                                <tr>
-                                    <th>Appointment No</th>
-                                    <th>Doctor</th>
-                                    <th>Appintment Details</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            $sql = "SELECT a.appoinment_id, a.patient_name , a.patient_age ,a.telephone_no,u.first_name,u.last_name FROM appoinments a , user u where a.doctor_id=u.user_id and a.user_id = '2'";
+                            $result = $conexion->query($sql);
+                            if ($result->num_rows > 0) {
+                                ?>
+
+                                <table id="patient_tab" class="display col-md-12" style="width:80%">
+                                    <thead>
+                                        <tr>
+                                            <th>Appointment No</th>
+                                            <th>Doctor</th>
+                                            <th>Appintment Details</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ($row = $result->fetch_array()) {
+
+                                            $appintment_id = $row['appoinment_id'];
+                                            $doctor_is = "Dr " . $row['first_name'] . "" . $row['last_name'];
+                                            $patient_name = $row['patient_name'];
+                                            $patient_age = $row['patient_age'];
+                                            $patient_tel = $row['telephone_no'];
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $appintment_id; ?></td>
+                                                <td><?php echo $doctor_is; ?></td>
+                                                <td><br><p style="padding-top:1px"><?php echo "Age: " . $patient_age; ?></p><p style="padding-top:1px"><?php echo "Contant No: " . $patient_tel; ?></p><br></td>
+                                                <td>Pending</td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+
                                 <?php
-                                while ($row = $result->fetch_array()) {
+                            }
+                        } else if ($user_type == 'D') {
 
-                                    $appintment_id = $row['appoinment_id'];
-                                    $doctor_is = "Dr ".$row['first_name']."".$row['last_name'];
-                                    $patient_name = $row['patient_name'];
-                                    $patient_age = $row['patient_age'];
-                                    $patient_tel = $row['telephone_no'];
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $appintment_id; ?></td>
-                                        <td><?php echo $doctor_is; ?></td>
-                                        <td><br><p style="padding-top:1px"> <?php echo "Doctor: ".$doctor_is; ?></p><p style="padding-top:1px"><?php echo "Age: ".$patient_age; ?></p><p style="padding-top:1px"><?php echo "Contant No: ".$patient_tel; ?></p><br></td>
-                                        <td>Pending</td>
-                                    </tr>
-    <?php } ?>
-                            </tbody>
-                        </table>
+                            $conexion = db_connect();
 
-                    <?php }}
-?>
+                            $sql = "SELECT a.appoinment_id, a.patient_name , a.patient_age ,a.telephone_no,u.first_name,u.last_name FROM appoinments a , user u where a.doctor_id=u.user_id and a.doctor_id = '$id'";
+                            $result = $conexion->query($sql);
+                            if ($result->num_rows > 0) {
+                                ?>
+
+                                <table id="patient_tab" class="display col-md-12" style="width:80%">
+                                    <thead>
+                                        <tr>
+                                            <th>Appointment No</th>
+                                            <th>Doctor</th>
+                                            <th>Appintment Details</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ($row = $result->fetch_array()) {
+
+                                            $appintment_id = $row['appoinment_id'];
+                                            $doctor_is = "Dr " . $row['first_name'] . "" . $row['last_name'];
+                                            $patient_name = $row['patient_name'];
+                                            $patient_age = $row['patient_age'];
+                                            $patient_tel = $row['telephone_no'];
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $appintment_id; ?></td>
+                                                <td><?php echo $patient_name; ?></td>
+                                                <td><br><p style="padding-top:1px"><?php echo "Age: " . $patient_age; ?></p><p style="padding-top:1px"><?php echo "Contant No: " . $patient_tel; ?></p><br></td>
+                                                <td>Pending</td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+
+                                <?php
+                            }
+                        }
+                        ?>
 
 
 
@@ -407,12 +484,12 @@ if(isset($_GET['id'])){
                             <br />
 
                             <img src="<?php
-if (isset($profile_img) && (!empty($profile_img))) {
-    echo $profile_img;
-} else {
-    echo "images/default_prof.jpg";
-}
-?>" id="profile-img" class="img-thumbnail profile-img" name="profile-img">
+                            if (isset($profile_img) && (!empty($profile_img))) {
+                                echo $profile_img;
+                            } else {
+                                echo "images/default_prof.jpg";
+                            }
+                            ?>" id="profile-img" class="img-thumbnail profile-img" name="profile-img">
                             <span class="btn btn-default btn-file">
                                 Upload new picture<input type="file" name="profile_img" id="profile_img">
                             </span>
@@ -437,7 +514,7 @@ if (isset($profile_img) && (!empty($profile_img))) {
                             <input type="text" name="contact_no" id="contact_no" class="form-control" value="<?php echo $contact_number; ?>">
                             <p class="help-block"></p>
                         </div>
-                        <input type="submit" class="btn btn-success" value="Submit" name="submit1">
+                        <input type="submit" class="btn btn-success" value="Change Settings" name="submit1">
 
                         </div>
                     </form>
@@ -450,7 +527,45 @@ if (isset($profile_img) && (!empty($profile_img))) {
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- end of edit profile -->
-<?php include 'includes/footer.php'; ?>
+    <!--change password-->
+    <!-- edit profile -->
+    <div class="modal fade bs-modal-lg" id="passModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">Change your password</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="frmChange" method="post" action="" onSubmit="return validatePassword()">
+                        <div style="width:500px;">
+                            <div class="form-group">
+                                <label for="first_name">Current Password</label>
+                                <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">New Password</label>
+                                <input type="password" name="newPassword" id="newPassword" class="form-control" required>
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Confirm Password</label>
+                                <input type="password" name="confirmPassword"  id="confirmPassword" class="form-control" required >
+                                <p class="help-block"></p>
+                            </div>
+                            <input type="submit" class="btn btn-success" value="Change Password" name="submit2">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <?php include 'includes/footer.php'; ?>
 
     <script>
         $(document).ready(function () {
@@ -496,15 +611,15 @@ if (isset($profile_img) && (!empty($profile_img))) {
                 success: function (result) {
 //                                alert(result['result']);
                     $("#alert-container").html(result['result']);
-                     $(".alert").delay(3000).slideUp(200);
+                    $(".alert").delay(3000).slideUp(200);
                 }
             });
         });
 
-      $(document).ready(function(){
-           $('#patient_tab').DataTable();
-          
-      });
+        $(document).ready(function () {
+            $('#patient_tab').DataTable();
+
+        });
 
 
     </script>
