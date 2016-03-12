@@ -8,6 +8,7 @@ if (!loggedin()) {
 
    die("<script>location.href = 'signin.php'</script>");
 }
+
 ?>
 
 
@@ -158,10 +159,12 @@ if ($result->num_rows > 0) {
 
         }
         
-        if((isset($_POST['reserve']))&&(!empty($_POST['radio']))) {
+        if((isset($_POST['reserve']))&&(!empty($_SESSION['c_fee']))&&(!empty($_SESSION['radioval']))) {
 
             $conexion = db_connect();
-
+            $slot = $_SESSION['radioval'];
+            $fee = $_SESSION['c_fee'];
+            
 
                             $sql = "SELECT reserved_time_slots FROM doctor where doctor_id=".$id;
                             $result = $conexion->query($sql);
@@ -169,14 +172,19 @@ if ($result->num_rows > 0) {
                             $reserved=array();
                             $reserved = explode(',',$rows[0]);
                             
-                            array_push($reserved,$_POST['radio']);
+                            array_push($reserved,$slot);
+             
                             
                          
             $sql2 = "UPDATE doctor SET reserved_time_slots='".implode(',', $reserved)."' where doctor_id=$id";
             if($result = $conexion->query($sql2)){
-                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$id','{$_POST['radio']}')";
+                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$id','{$slot}')";
                 if($conexion->query($sql3)){
+                    $appointmentid = $conexion->insert_id;
+                    $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$id','$fee')";
+                    $conexion->query($sql);
                 echo "<div class='alert alert-success'>Appointment saved successfully!</div>";
+                $_SESSION['radioval']= '';
             }};
 
         }
@@ -571,7 +579,21 @@ if ($result->num_rows > 0) {
                 <?php }} if($user_type=='D'){ ?>
                 
                 <div class="bhoechie-tab-content hide">
-                     <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+                     <form id="loginForm" name="radiofrm" action="" method="post" style="margin:auto; margin-top: 40px">
+                     <b>   <?php $sql1 = "SELECT * from doctor_charges  where doctor_id=".$user_id;
+                            $result = $conexion->query($sql1);
+                            $row = $result->fetch_array();
+                            
+                            $fee =$row[2];
+                            $tot=$fee+200;
+                            
+                            echo "Doctor fee is : Rs." .$fee.".00/= <br>";
+                            echo "Channeling fee is : Rs." .$tot.".00/=";
+                            $_SESSION['c_fee']=$tot;
+                            ?>
+                         </b> <br>
+                         <hr/>
+                         
                     <table class="table-striped" style="width:100%">
                         <tr>
                             <th>Monday</th>
@@ -608,7 +630,7 @@ if ($result->num_rows > 0) {
                                                 $color='background:#EE2C2C;color:#fff;';
                                             }
                                             
-                                            echo '<td style="padding:8px;margin:10px;'.$color.'"><input'.$dis.' type="radio" name="radio" value="'.$days[$y].($x+1).'">'.$days[$y].$times[$x].'</input></td>';
+                                            echo '<td style="padding:8px;margin:10px;'.$color.'"><input'.$dis.' type="radio" name="radio"  value="'.$days[$y].($x+1).'">'.$days[$y].$times[$x].'</input></td>';
                                         }
                                     }
 
@@ -619,10 +641,12 @@ if ($result->num_rows > 0) {
                                 echo '</tr>';
                             }?>
                         </table>
-                         <div class="col-md-12" style="margin: 10px 0">
-                        <input type="submit" name="reserve" class="btn-primary btn pull-right" value="Reserve this time slot"/>
-                    </div>
+                         <input type="hidden" name="radio"   value="Reserve this time slot"/>
                      </form>
+                     <div class="col-md-12" style="margin: 10px 0">
+                        <!--<input type="submit" name="reserve1"  data-toggle="modal" data-target="#cardModal" class="btn-primary btn pull-right" value="Reserve this time slot"/>-->
+                        <button class='btn-primary btn pull-right' data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
+                    </div>
                 </div>
                 <?php } ?>
             </div>
@@ -695,6 +719,7 @@ if ($result->num_rows > 0) {
     <!-- edit profile -->
     <div class="modal fade bs-modal-lg" id="passModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
         <div class="modal-dialog modal-lg" role="document">
+            <center>
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -727,6 +752,92 @@ if ($result->num_rows > 0) {
                     <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
                 </div>
             </div><!-- /.modal-content -->
+            </center>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!--payment-->
+        <div class="modal fade bs-modal-sm" id="cardModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <center>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">Card Payments</h4>
+                </div>
+                    <div class="panel panel-default credit-card-box">
+                <div class="panel-heading display-table" >
+                    <div class="row display-tr" >
+                        <h3 class="panel-title display-td" >Payment Details</h3>
+                        <div class="display-td" >                            
+                            <img class="img-responsive" src="http://i76.imgup.net/accepted_c22e0.png">
+                        </div>
+                    </div>                    
+                </div>
+                <div class="panel-body">
+                    <form role="form" name="payment-form" method="POST" action="">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="cardNumber">CARD NUMBER</label>
+                                    <div class="input-group">
+                                        <input 
+                                            type="tel"
+                                            class="form-control"
+                                            name="cardNumber"
+                                            placeholder="Valid Card Number"
+                                            autocomplete="cc-number"
+                                            required autofocus 
+                                        />
+                                        <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 col-md-7">
+                                <div class="form-group">
+                                    <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+                                    <input 
+                                        type="tel" 
+                                        class="form-control" 
+                                        name="cardExpiry"
+                                        placeholder="MM / YY"
+                                        autocomplete="cc-exp"
+                                        required 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-xs-5 col-md-5 pull-right">
+                                <div class="form-group">
+                                    <label for="cardCVC">CV CODE</label>
+                                    <input 
+                                        type="tel" 
+                                        class="form-control"
+                                        name="cardCVC"
+                                        placeholder="CVC"
+                                        autocomplete="cc-csc"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="row">
+                            <div class="col-xs-12">
+                             
+                               <input type="submit" name="reserve"   class="btn-primary btn pull-right" value="Reserve this time slot"/>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>  
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div><!-- /.modal-content -->
+            </center>
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <?php include 'includes/footer.php'; ?>
@@ -741,10 +852,24 @@ if ($result->num_rows > 0) {
                 $("div.bhoechie-tab-content").addClass("hide");
                 $("div.bhoechie-tab-content").eq(index).removeClass("hide");
             });
+           //radio button value save in session 
+            $("input[name='radio']").click(function() 
+{
+            var radioVal = $(this).val();
+           
             
+             $.ajax({
+                type: "POST",
+                url: "includes/profile_functions.php",
+                data: {radioval: radioVal}, //pass txtarea input with cssrf tolcke
+                dataType: "json"
+
+            });
+           
+    });
            
             //patient table script
-//            $('#patient_tab').DataTable();
+
         $('input:radio[id^="option"]').on('change', function (event) {
             var status = $('input[name=availability]:checked', '#statusform').val();
             var uid = document.getElementById("uid").value;

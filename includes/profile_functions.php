@@ -27,6 +27,13 @@ if(isset($_POST['status'])){
     
     echo json_encode($aResult);
 }
+
+if(isset($_POST['radioval'])){
+    
+    
+    $_SESSION['radioval'] = $_POST['radioval'];
+    echo json_encode($_SESSION['radioval']);
+}
     
     
 
