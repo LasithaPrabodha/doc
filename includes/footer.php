@@ -110,10 +110,10 @@
 <script src="https://cdn.datatables.net/responsive/2.0.2/js/responsive.bootstrap.min.js"></script>
 
 <script>
-  $(document).ready(function () {
+    $(document).ready(function () {
 
-            $(".alert").delay(3000).slideUp(200);
-        });
+        $(".alert").delay(3000).slideUp(200);
+    });
 </script>
 
 </body>
