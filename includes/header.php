@@ -75,7 +75,7 @@
               <ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
                 <li class="active"><a href="index.php">Home</a></li>
                 <li><a href="doctors.php">Doctors</a></li>
-                <li><a href="blood-bank.php">Blood Bank </a></li>
+                <li><a href="blood-bank.php">Donations </a></li>
                   <li><a href="about-us.php">About Us</a></li>
                 <!--                <li class="dropdown">-->
     <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Blood Bank <span class="fa fa-angle-down"></span></a>
@@ -105,7 +105,7 @@
 <!--                    <li><a href="#">Link Three</a></li>               -->
 <!--                  </ul>-->
 <!--                </li>               -->
-                <li><a href="contact.php">Contact Us</a></li>
+                <li><a href="contact.php">Feedbacks</a></li>
                   <?PHP
                   if(loggedin()){ ?>
                 <li>

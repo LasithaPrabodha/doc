@@ -1,6 +1,6 @@
 
-   <?php include("includes/header.php");?>
-   <?php include("includes/sql.php");?>
+   <?php include_once("includes/header.php");?>
+   <?php include_once("includes/sql.php");?>
     <!--=========== END HEADER SECTION ================-->      
     <section id="blogArchive">      
       <div class="row">
@@ -269,4 +269,4 @@
     </section>
     <!--=========== End Counter SECTION ================-->
 
-   <?php include 'includes/footer.php'; ?>
+   <?php include_once 'includes/footer.php'; ?>

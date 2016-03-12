@@ -1,5 +1,5 @@
 
-   <?php include("includes/header.php");?>
+   <?php include_once("includes/header.php");?>
 
     <!--=========== END HEADER SECTION ================-->   
 
@@ -791,4 +791,4 @@
     </section>
     <!--=========== End Home Blog SECTION ================-->
 
-   <?php include 'includes/footer.php'; ?>
+   <?php include_once 'includes/footer.php'; ?>
