@@ -112,6 +112,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?PHP echo $_SESSION['email']; ?> <span class="fa fa-angle-down"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="profile.php">Profile</a></li>
+                    <li><a href="messages.php">Messages</a></li>
                     <li><a href="signout.php">Sign out</a></li>
                   </ul>
                 </li>
