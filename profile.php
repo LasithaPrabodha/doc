@@ -148,7 +148,7 @@ if ($result->num_rows > 0) {
     <div class="row">
         <?php
 
-        if(isset($_POST['available'])) {
+        if(isset($_POST['available'])) { // Save Available Slots: For Doctors
 
             $conexion = db_connect();
 
@@ -159,7 +159,7 @@ if ($result->num_rows > 0) {
 
         }
         
-        if((isset($_POST['reserve']))&&(!empty($_SESSION['c_fee']))&&(!empty($_SESSION['radioval']))) {
+        if((isset($_POST['reserve']))&&(!empty($_SESSION['c_fee']))&&(!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
 
             $conexion = db_connect();
             $slot = $_SESSION['radioval'];
@@ -189,7 +189,7 @@ if ($result->num_rows > 0) {
 
         }
 
-        if (isset($_POST['submit1'])) {
+        if (isset($_POST['submit1'])) { //Save User Settings
 
 
 
@@ -202,7 +202,7 @@ if ($result->num_rows > 0) {
 
                 if (preg_match("/^[0-9]{10}$/", $contact)) {
 
-//profile picture upload>>>>>>>>>>>>>
+//profile picture upload
                     $target_dir = "images/";
                     $target_file = $target_dir . basename($_FILES["profile_img"]["name"]);
                     $uploadOk = 1;
@@ -235,7 +235,7 @@ if ($result->num_rows > 0) {
                 echo "<div class='alert alert-danger'>*All the feilds are mandatory</div>";
             }
         }
-        if (isset($_POST['submit2'])) {
+        if (isset($_POST['submit2'])) { // Change password
             $curr_pw = $_POST['currentPassword'];
             $new_pw = $_POST['newPassword'];
             $conf_pw = $_POST['confirmPassword'];
@@ -275,7 +275,7 @@ if ($result->num_rows > 0) {
     </div>
     <div class="row">
         <?php
-        if ($user_type == 'D') {
+        if ($user_type == 'D') { // get doctor availability
             $sql2 = "SELECT availability FROM doctor where user_id = '$user_id'";
             $result = $conexion->query($sql2);
             if ($result->num_rows > 0) {
@@ -333,6 +333,7 @@ if ($result->num_rows > 0) {
                             echo 'Medical Consultant';
                         }
                         ?></h1></div>
+                <!--Doctor availability-->
                 <div class="col-md-4">
                     <br>
                     <?php if (($user_type == 'D')&& ($id == $_SESSION['user_id'])) { ?>
@@ -353,9 +354,11 @@ if ($result->num_rows > 0) {
                         </form>
                     <?php } ?>
                 </div>
-
+                <!--end of Doctor availability-->
             </div>
+            
             <div class="col-md-12" style="margin-top: 10px;">
+                <!--Tabs-->
                 <div class="bhoechie-tab-menu">
                     <ul class="nav nav-tabs profile-nav">
                         <li role="presentation" class="active"><a href="#">Profile</a></li>
@@ -363,12 +366,15 @@ if ($result->num_rows > 0) {
                         <li role="presentation"><a href="">Appoinments</a></li> 
                         <?php if($user_type=='D'){ ?>
                         <li role="presentation"><a href="#">Set Available Times</a></li>
+                        <li role="presentation"><a href="#">Payments</a></li>
                         <?php } } ?>
-                         <?php if($user_type=='D'){ ?>
+                         <?php if(($user_type=='D')){ ?>
                         <li role="presentation" class="active"><a href="#">Make An Appointment</a></li>
                         <?php } ?>
                     </ul>
                 </div>
+                <!--end of Tabs-->
+                <!--Tab content 1:Profile-->
                 <div class="col-md-12 bhoechie-tab-content" style="padding: 0px;">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="details-table" style="margin-top: 10px; margin-bottom: 10px;">
                         <tbody>
@@ -422,12 +428,14 @@ if ($result->num_rows > 0) {
                     <br><br>
                     <div class="clearfix"></div>
                 </div>
+                <!--end of tab content 1-->
 <?php if(isset($_SESSION['user_id']) && ($id == $_SESSION['user_id'])){ ?>
+                <!--tab content 2:appointment details-->
                 <div class="bhoechie-tab-content hide">
                     <br>
                     <div style="width:90%;padding-left: 50px">
                         <?php
-                        if ($user_type == 'P') {
+                        if ($user_type == 'P') { // Apointment details for:patients
                             $conexion = db_connect();
 
                             $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where a.doctor_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
@@ -468,11 +476,11 @@ if ($result->num_rows > 0) {
                         
                                 <?php
                             }
-                        } else if ($user_type == 'D') {
+                        } else if ($user_type == 'D') {// Apointment details for:doctors
 
                             $conexion = db_connect();
 
-                            $sql = "SELECT a.appoinment_id,a.time_slot,u.first_name,u.last_name, d.Address , FROM appoinments a , user u where a.doctor_id=u.user_id and a.doctor_id = '$id'";
+                            $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where a.doctor_id=u.user_id and a.doctor_id=d.doctor_id and a.doctor_id = '$id'";
                             $result = $conexion->query($sql);
                             if ($result->num_rows > 0) {
                                 ?>
@@ -504,22 +512,12 @@ if ($result->num_rows > 0) {
                                         <?php } ?>
                                     </tbody>
                                 </table>
-
-                                <?php
-                            }
-                        }
-                        ?>
-
-
-
-
-
-
-
+                            <?php    }  }   ?>
                     </div>
-
                 </div>
+                <!--end of tab content 2-->
                 <?php if($user_type == 'D'){?>
+                <!--tab content 3:For doctors select available time slots-->
                 <div class="col-md-12 bhoechie-tab-content hide">
                     <br>
                     <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
@@ -570,15 +568,64 @@ if ($result->num_rows > 0) {
                         ?>
 
                     </table>
-
+                <?php } ?>
                     <div class="col-md-12" style="margin: 10px 0">
                         <input type="submit" name="available" class="btn-primary btn pull-right" value="Save Available times"/>
                     </div>
                     </form>
                 </div>
-                <?php }} if($user_type=='D'){ ?>
+                <!--end of tab content 3-->
+                <!--tab content 4:for doctors see payment details -->
+                <div class="col-md-12 bhoechie-tab-content hide">
+                    <br>
+                    <?php
+                            $conexion = db_connect();
+
+                            $sql = "SELECT * from patient_payments where doctor_id = '$id'" ;
+                            $result = $conexion->query($sql);
+                            if ($result->num_rows > 0) {
+                                ?>
+
+                                <table id="payments_tab2" class="display col-md-12" style="width:80%">
+                                    <thead>
+                                        <tr>
+                                            <th>Payment ID</th>
+                                            <th>Appointment No</th>
+                                            <th>Patient</th>
+                                            <th>Payment Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ($row = $result->fetch_array()) {
+
+                                            $payment_id = $row['p_payment_id'];
+                                            $appointment = $row['appoinment_id'];
+                                            $patient = $row['user_id'];
+                                            $amount = $row['amount'];
+                                            $time = $row['date'];
+                                            
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $payment_id; ?></td>
+                                                <td><?php echo $appointment; ?></td>
+                                                <td><?php echo $patient; ?></td>
+                                                <td><?php echo $amount; ?></td>
+                                                <td><?php echo $time; ?></td>
+                                               
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
                 
+                
+                </div>
+                 <!--end of tab content 4-->
+                <?php }} if(($user_type=='D')  ){ ?>
+                 <!--tab content 5:For patients to select a appointment time of a doctor-->
                 <div class="bhoechie-tab-content hide">
+                   <?php if($id != $_SESSION['user_id']){?>
                      <form id="loginForm" name="radiofrm" action="" method="post" style="margin:auto; margin-top: 40px">
                      <b>   <?php $sql1 = "SELECT * from doctor_charges  where doctor_id=".$user_id;
                             $result = $conexion->query($sql1);
@@ -595,16 +642,7 @@ if ($result->num_rows > 0) {
                          <hr/>
                          
                     <table class="table-striped" style="width:100%">
-                        <tr>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
-                            <th>Satureday</th>
-                            <th>Sunday</th>
-                        </tr>
-                    <?php $conexion = db_connect();
+                     <?php $conexion = db_connect();
                             $user_id = $id;
 
                             $sql = "SELECT allocated_appointment_time,reserved_time_slots FROM doctor where doctor_id=".$user_id;
@@ -617,9 +655,16 @@ if ($result->num_rows > 0) {
                             $days =['M','T','W','L','F','S','Z'];
                             $times =['12 - 01 AM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 AM','02 - 03 AM','03 - 04 AM','04 - 05 AM','05 - 06 AM','06 - 07 AM','07 - 08 AM','08 - 09 AM','09 - 10 AM','10 - 11 AM','11 - 12 PM','01 - 02 PM','02 - 03 PM','03 - 04 PM','04 - 05 PM','05 - 06 PM','06 - 07 PM','07 - 08 PM','08 - 09 PM','09 - 10 PM','10 - 11 PM','11 - 12 AM'] ;
 
-                            for($x = 0;$x<22;$x++){
-                                echo '<tr>';
-                                for($y = 0;$y<7;$y++){
+                            for($y = 0;$y<7;$y++){
+                                if($days[$y]=='M'){ $day_name='MONDAY';}
+                                if($days[$y]=='T'){$day_name='TUESDAY';}
+                                if($days[$y]=='W'){$day_name='WEDNSDAY';}
+                                if($days[$y]=='L'){$day_name='THURSDAY';}
+                                if($days[$y]=='F'){$day_name='FRIDAY';}
+                                if($days[$y]=='S'){$day_name='SATURDAY';}
+                                if($days[$y]=='Z'){$day_name='SUNDAY';}
+                                echo '<tr><td><b>'.$day_name.'</b></td>';
+                                for($x = 0;$x<22;$x++){
                                     $chk = "";
                                     $dis = "";
                                     $color = "";
@@ -643,11 +688,13 @@ if ($result->num_rows > 0) {
                         </table>
                          <input type="hidden" name="radio"   value="Reserve this time slot"/>
                      </form>
+                   
                      <div class="col-md-12" style="margin: 10px 0">
-                        <!--<input type="submit" name="reserve1"  data-toggle="modal" data-target="#cardModal" class="btn-primary btn pull-right" value="Reserve this time slot"/>-->
-                        <button class='btn-primary btn pull-right' data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
+                       <button class='btn-primary btn pull-right' data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
                     </div>
+                    <?php } ?>
                 </div>
+                  <!--end of tab content 5-->
                 <?php } ?>
             </div>
         </div>
@@ -655,7 +702,7 @@ if ($result->num_rows > 0) {
     </div>
 
 </div>
-<!-- edit profile -->
+<!-- edit profile popup-->
 <div class="modal fade bs-modal-lg" id="editModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -715,8 +762,9 @@ if ($result->num_rows > 0) {
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- end of edit profile -->
-    <!--change password-->
-    <!-- edit profile -->
+    
+    
+    <!--change password popup-->
     <div class="modal fade bs-modal-lg" id="passModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <center>
@@ -755,7 +803,8 @@ if ($result->num_rows > 0) {
             </center>
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <!--payment-->
+    <!--end of change password-->
+    <!--Card payment popup-->
         <div class="modal fade bs-modal-sm" id="cardModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
         <div class="modal-dialog modal-sm" role="document">
             <center>
@@ -840,10 +889,12 @@ if ($result->num_rows > 0) {
             </center>
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <!--end of Card payment-->
     <?php include 'includes/footer.php'; ?>
 
     <script>
         $(document).ready(function () {
+            //tab change script
             $("div.bhoechie-tab-menu>ul>li").click(function (e) {
                 e.preventDefault();
                 $(this).siblings('li.active').removeClass("active");
@@ -852,7 +903,8 @@ if ($result->num_rows > 0) {
                 $("div.bhoechie-tab-content").addClass("hide");
                 $("div.bhoechie-tab-content").eq(index).removeClass("hide");
             });
-           //radio button value save in session 
+           
+        //radio button value save in session 
             $("input[name='radio']").click(function() 
 {
             var radioVal = $(this).val();
@@ -868,8 +920,7 @@ if ($result->num_rows > 0) {
            
     });
            
-            //patient table script
-
+       //patient table script
         $('input:radio[id^="option"]').on('change', function (event) {
             var status = $('input[name=availability]:checked', '#statusform').val();
             var uid = document.getElementById("uid").value;
@@ -888,6 +939,7 @@ if ($result->num_rows > 0) {
         });
         });
 
+           //load profile to the picture box  when uploading 
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -905,10 +957,11 @@ if ($result->num_rows > 0) {
         });
 
 
-
-
+// for datatables
         $(document).ready(function () {
             $('#patient_tab').DataTable();
+            $('#patient_tab2').DataTable();
+            $('#payments_tab2').DataTable();
 
         });
 
