@@ -138,7 +138,101 @@
                     </div>
                     <div class="col-lg-7 col-md-6 col-sm-6 col-xs-12">
                         <?php if (!loggedin()) { ?>
-                            
+                            <?php
+                            require_once("includes/functions.php");
+
+
+
+                            if (isset($_POST['username']) && isset($_POST['password'])) {
+                                $LUsername = sql_escape($_POST['username']);
+                                $LPassword = sql_escape($_POST['password']);
+
+                                if (!empty($LUsername) && !empty($LPassword)) {
+                                    $hashPassword = md5($LPassword);
+                                    $conexion = db_connect();
+                                    $sql = "SELECT * FROM user WHERE email = '{$LUsername}' ";
+                                    $result = $conexion->query($sql);
+                                    $resultSet[] = null;
+                                    if ($result->num_rows > 0) {
+
+                                        $resultSet = $result->fetch_assoc();
+                                    }
+
+                                    if (!empty($resultSet)) {
+                                        $filteredID = sql_escape($resultSet['email']);
+                                        $filteredPW = sql_escape($resultSet['password']);
+                                        if ((($filteredID == $LUsername)) && ($filteredPW == $hashPassword)) {
+
+                                            $_SESSION['email'] = $filteredID;
+                                            $_SESSION['user_id'] = $resultSet['user_id'];
+                                            $_SESSION['first_name'] = $resultSet['first_name'];
+                                            $_SESSION['last_name'] = $resultSet['last_name'];
+                                            $_SESSION['name_with_initials'] = $resultSet['name_with_initials'];
+                                            $_SESSION['user_type'] = $resultSet['user_type'];
+                                            $_SESSION['is_active'] = $resultSet['is_active'];
+                                        } else {
+                                            echo "<div>";
+                                            echo " <h2 style='text-align: center;top: 355px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Wrong Password</font></h2>";
+                                            echo "</div>";
+                                        }
+                                    } else {
+                                        echo "<div>";
+                                        echo " <h2 style='text-align: center;top: 362px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>User Not Found</font></h2>";
+                                        echo "</div>";
+                                    }
+                                }
+                            }
+                            ?>
+                            <!--=========== END HEADER SECTION ================-->
+
+                            <div class="col-md-12">
+                                <div class="col-md-offset-1" style="height: 400px;"> 
+                                        
+                                    <div class="whyChoose-right">
+                                        <legend>Please to login to view/donate.</legend>
+                                        <br>
+                                        <form id="loginForm" action="" method="post" style="margin:auto">
+                                            <div class="row">
+                                                <div class="col-md-8 col-sm-8">
+                                                    <label class="control-label">Email<span class="required">*</span>
+                                                    </label>
+                                                    <input type="text" name="username" id="username" class="wp-form-control wpcf7-text" placeholder="Your email address">
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-8 col-sm-8">
+                                                    <label class="control-label">Password <span class="required">*</span>
+                                                    </label>
+                                                    <input type="password" name="password" id="password" class="wp-form-control wpcf7-text" placeholder="Your password">
+
+                                                    <div class="col-md-6"> <a href="#"><u>Forgot password?</u>  </a></div>
+                                                    <div class="col-md-6" > New user?  <a href="register.php"><u>SignUp</u> </a></div>
+                                                </div>
+
+                                            </div>
+
+                                            <button class="wpcf7-submit button--itzel" type="submit"><i class="button__icon fa fa-share"></i><span>Sign In</span></button>
+                                        </form>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        <?php } else { ?>
+                            <!-- Select Basic -->
+                            <div class="whyChoose-right">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="selectbasic">What would you like to donate</label>
+                                    <div class="col-md-4">
+                                        <select id="selectbasic" name="selectbasic" class="form-control">
+                                            <option value="b">Blood</option>
+                                            <option value="o">Organs</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         <?php } ?>
                     </div>
                 </div>
