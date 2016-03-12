@@ -11,6 +11,8 @@
                         </li>
                        <li><a class="ajax-link" href="feedb.php"><i class="glyphicon glyphicon-home"></i><span> Feedbacks</span></a>
                         </li>
+                        <li><a class="ajax-link" href="donations.php"><i class="glyphicon glyphicon-home"></i><span> Donations</span></a>
+                        </li>
                     </ul>
                     <label id="for-is-ajax" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax on menu</label>
                 </div>

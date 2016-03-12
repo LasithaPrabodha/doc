@@ -28,7 +28,7 @@ if (isset($_POST['submit1'])) {
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
     } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`) VALUES ('$fname', '$lname','$email','$sex', 'p', '1', '$password', '$cno')";
+        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno')";
         $result = register($insert);
         echo "<div>";
         echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result[1] . "</font></h5>";
@@ -60,7 +60,7 @@ if (isset($_POST['submit1'])) {
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
     } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`) VALUES ('$fname', '$lname','$email','$sex', 'p', '1', '$password', '$cno')";
+        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add')";
         $result = register($insert);
         $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `allocated_appointment_time`, `account_no`, `bank`) VALUES ('$result[0]', '$sp', '$aat', '$accno','$bank')";
         $result2 = registerd($doctor);
@@ -97,7 +97,7 @@ if (isset($_POST['submit1'])) {
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
     } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `address`) VALUES ('$fname', '$lname','$email','$sex', 'p', '1', '$password', '$cno', '$add')";
+        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `address`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add')";
         $result = register($insert);
         $medcon = "INSERT INTO `g_physiciant`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
         $result2 = registerc($medcon);
@@ -176,7 +176,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Contact Number<span class="required">*</span>
                             </label>
-                            <input type="text" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" pattern=".{10,}"   required title="10 numbers minimum" required>
                         </div>
                     </div>
                 </div>
@@ -312,8 +312,8 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Specialization<span class="required">*</span>
                             </label>
-                            <select id="speciality" name="speciality" class="form-control">
-                                <option value="0">Any</option>
+                            <select id="sp" name="sp" class="form-control">
+                                <option value="Any">Any</option>
                                 <option value="Heart surgeon">Heart surgeon</option>
                                 <option value="Dermatologist">Dermatologist</option>
                                 <option value="Psychiatrist">Psychiatrist</option>
@@ -325,7 +325,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Bank<span class="required">*</span>
                             </label>
-                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" placeholder="Your Bank name with branch" required>
                         </div>
                     </div>
                     <div class="row">
@@ -333,7 +333,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Contact Number<span class="required">*</span>
                             </label>
-                            <input type="text" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" pattern=".{10,}"   required title="10 numbers minimum" required>
                         </div>
                     </div>
                     <div class="row">
@@ -341,7 +341,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Channeling fee<span class="required">*</span>
                             </label>
-                            <input type="text" name="cf" id="cf" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="cf" id="cf" class="wp-form-control wpcf7-text" placeholder="Your Channeling fee for one hour" required>
                         </div>
                     </div>
                 </div>
@@ -375,7 +375,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10">
                             <label class="control-label">Allocated appointment time<span class="required">*</span>
                             </label>
-                            <input type="text" name="aat" id="aat" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="aat" id="aat" class="wp-form-control wpcf7-text" placeholder="Your appointment time to be allocated in hours" required>
                         </div>
                     </div>
                     <div class="row">
@@ -383,7 +383,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10">
                             <label class="control-label">Account no.<span class="required">*</span>
                             </label>
-                            <input type="text" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your Account no." required>
                         </div>
                     </div>
                      <div class="row">
@@ -492,7 +492,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Qualifications<span class="required">*</span>
                             </label>
-                            <input type="text" name="quali" id="quali" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="quali" id="quali" class="wp-form-control wpcf7-text" placeholder="Your Qualifications (seperate with a comma)" required>
                         </div>
                     </div>
                     <div class="row">
@@ -500,7 +500,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Bank<span class="required">*</span>
                             </label>
-                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" placeholder="Your bank name with branch" required>
                         </div>
                     </div>
                     <div class="row">
@@ -508,7 +508,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Account no.<span class="required">*</span>
                             </label>
-                            <input type="text" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your account no" required>
                         </div>
                     </div>
 
@@ -543,7 +543,7 @@ require_once("includes/header.php");
                         <div class="col-md-10 col-sm-10 ">
                             <label class="control-label">Contact Number<span class="required">*</span>
                             </label>
-                            <input type="text" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" required>
+                            <input type="text" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number"pattern=".{10,}"   required title="10 numbers minimum" required>
                         </div>
                     </div>
                     <div class="row">

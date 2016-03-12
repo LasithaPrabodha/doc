@@ -8,7 +8,7 @@
         ================================================== -->
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>WpF Medinova : Service</title>
+        <title>DocRes : Service</title>
 
         <!-- Mobile Specific Metas
         ================================================== -->
@@ -67,7 +67,7 @@
               </button>
               <!-- LOGO -->              
               <!-- TEXT BASED LOGO -->
-              <a class="navbar-brand" href="index.php"><i class="fa fa-heartbeat"></i><span>Medinova</span></a>
+              <a class="navbar-brand" href="index.php"><i class="fa fa-heartbeat"></i><span>DocRes</span></a>
               <!-- IMG BASED LOGO  -->
               <!--  <a class="navbar-brand" href="index.html"><img src="images/logo.png" alt="logo"></a>   -->                    
             </div>
@@ -109,7 +109,7 @@
                   <?PHP
                   if(loggedin()){ ?>
                 <li>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?PHP echo $_SESSION['email']; ?> <span class="fa fa-angle-down"></span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?PHP echo $_SESSION['first_name']; ?> <span class="fa fa-angle-down"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="profile.php">Profile</a></li>
                     <li><a href="messages.php">Messages</a></li>

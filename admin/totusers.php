@@ -213,7 +213,7 @@
                                                                                                                 <i class="glyphicon glyphicon-zoom-in icon-white"></i>
                                                                                                                 View
                                                                                                             </a>-->
-                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $user_id; ?>" onclick="return view(<?php echo $user_id; ?>)" target="_blank">
+                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $user_id; ?>"  target="_blank">
                                                             <i class="glyphicon glyphicon-edit icon-white"></i>
                                                             View
                                                         </a>

@@ -1,6 +1,42 @@
 
-<?php include_once("includes/header.php"); ?>
-<?php include_once("includes/sql.php"); ?>
+<?php
+include_once("includes/header.php");
+include_once("includes/sql.php");
+
+$conexion = db_connect();
+
+if (isset($_POST['submit'])) {
+    $dt = $_POST['donatetype'];
+    $bt = $_POST['bloodtype'];
+    $og = $_POST['organ'];
+    $details = $_POST['details'];
+    $uid = $_SESSION['user_id'];
+    if ($dt == 'b' && $bt != '0' || $dt == 'o' && $og != '0') {
+        if ($dt == 'o') {
+            $sqldnt = "INSERT INTO `donations`( `user_id`, `user_name`,`user_loc`,`blood_group`, `organ`,`details`) VALUES ('$uid',(select first_name from user where user.user_id ='$uid'),(select Address from user where user.user_id ='$uid'),'$bt','$og','$details')";
+            $conexion->query($sqldnt);
+        } else {
+            $sqldnt2 = "INSERT INTO `donations`( `user_id`,`user_name`,`user_loc`, `blood_group`, `organ`,`details`) VALUES ('$uid',(select first_name from user where user.user_id ='$uid'),(select Address from user where user.user_id ='$uid'),'$bt','no organ','$details')";
+            $conexion->query($sqldnt2);
+        }
+    }
+}
+?>
+<script>
+    function showDiv(elem) {
+        if (elem.value == 'o') {
+            //alert('ok');
+            document.getElementById('toggle').style.display = "block";
+        }
+
+    }
+    $('.donatebtn').click(function (e) {
+        e.preventDefault();
+
+
+        $('#donateModal').modal('show');
+    });
+</script>
 <!--=========== END HEADER SECTION ================-->        
 <section id="blogArchive">      
     <div class="row">
@@ -23,94 +59,31 @@
     </div>      
 </section>
 
-<!--=========== BEGIN Service SECTION ================-->
-<!--    
-    <section id="service">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12">
-            <div class="service-area">
-               Start Service Title 
-              <div class="section-heading">
-                <h2>Our Services</h2>
-                <div class="line"></div>
-              </div>
-               Start Service Content 
-              <div class="service-content">
-                <div class="row">
-                   Start Single Service 
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-stethoscope service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Cardio Monitoring</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                   Start Single Service 
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-heartbeat service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Rehabilitation Therapy</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                   Start Single Service 
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-h-square service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Medical Health Care</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                   Start Single Service 
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-medkit service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Background Checks</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                   Start Single Service 
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-user-md service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Special Doctor</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                   Start Single Service 
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-ambulance service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">24 Hours Service</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>-->
-<!--=========== End Service SECTION ================-->
 <!--=========== BEGAIN Why Choose Us SECTION ================-->
+
 <section id="whychooseSection">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12">
+                <div class="modal fade" id="donateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                 aria-hidden="true">
+
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">×</button>
+                                            <h3>Settings</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Here settings can be configured...</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                                            <a href="#" class="btn btn-primary" data-dismiss="modal">Save changes</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                 <div class="service-area">
                     <!-- Start Service Title -->
                     <div class="section-heading">
@@ -149,7 +122,6 @@
 
                                 if (!empty($LUsername) && !empty($LPassword)) {
                                     $hashPassword = md5($LPassword);
-                                    $conexion = db_connect();
                                     $sql = "SELECT * FROM user WHERE email = '{$LUsername}' ";
                                     $result = $conexion->query($sql);
                                     $resultSet[] = null;
@@ -170,6 +142,8 @@
                                             $_SESSION['name_with_initials'] = $resultSet['name_with_initials'];
                                             $_SESSION['user_type'] = $resultSet['user_type'];
                                             $_SESSION['is_active'] = $resultSet['is_active'];
+
+                                            echo '<meta http-equiv="refresh" content="0">';
                                         } else {
                                             echo "<div>";
                                             echo " <h2 style='text-align: center;top: 355px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Wrong Password</font></h2>";
@@ -187,9 +161,9 @@
 
                             <div class="col-md-12">
                                 <div class="col-md-offset-1" style="height: 400px;"> 
-                                        
+
                                     <div class="whyChoose-right">
-                                        <legend>Please to login to view/donate.</legend>
+                                        <legend>Please login to view/donate.</legend>
                                         <br>
                                         <form id="loginForm" action="" method="post" style="margin:auto">
                                             <div class="row">
@@ -223,17 +197,89 @@
                         <?php } else { ?>
                             <!-- Select Basic -->
                             <div class="whyChoose-right">
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="selectbasic">What would you like to donate</label>
-                                    <div class="col-md-4">
-                                        <select id="selectbasic" name="selectbasic" class="form-control">
-                                            <option value="b">Blood</option>
-                                            <option value="o">Organs</option>
-                                        </select>
+                                <form action="" method="post" id="donation">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="selectbasic">What would you like to donate</label>
+                                        <div class="col-md-4">
+                                            <select id="donatetype" name="donatetype" class="form-control" onchange="showDiv(this)">
+                                                <option value="b">Blood</option>
+                                                <option value="o">Organs</option>
+                                            </select>
+                                        </div>
                                     </div>
+                                    <div class="clearfix"></div>
+                                    <!-- Select Basic -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="selectbasic">Blood group</label>
+                                        <div class="col-md-4">
+                                            <select id="bloodtype" name="bloodtype" class="form-control" >
+                                                <option value="0">Select your blood group</option>
+                                                <option value="op">O+</option>
+                                                <option value="on">O-</option>
+                                                <option value="ap">A+</option>
+                                                <option value="an">A-</option>
+                                                <option value="bp">B+</option>
+                                                <option value="bn">B-</option>
+                                                <option value="abp">AB+</option>
+                                                <option value="abn">AB-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="toggle" style="display: none;">
+                                        <!-- Select Multiple -->
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label" for="selectmultiple">Select Multiple</label>
+                                            <div class="col-md-4">
+                                                <select id="organ" name="organ" class="form-control">
+                                                    <option value="0">Select the organ</option>
+                                                    <?php
+                                                    $sql2 = "select * from organs";
+                                                    $result = $conexion->query($sql2);
+                                                    while ($row = $result->fetch_array()) {
+                                                        echo '<option value="' . $row['organ_id'] . '">' . $row['name'] . '</option>';
+                                                    }
+                                                    ?>
+
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                    </div>
+
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textarea">Details</label>
+                                        <div class="col-md-4">                     
+                                            <textarea class="form-control" id="details" name="details"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br>
+                                    <div class="form-group">
+
+                                        <div class="col-md-4 col-md-offset-4">
+                                            <button id="send" type="submit" value="Submit" name="submit" class="btn btn-primary">Send Donation</button>
+                                        </div>
+                                        <br><br>
+                                        <div class="col-md-4 col-md-offset-4">
+                                            Please confirm your donation within 3 days.
+                                        </div>
+                                    </div>
+
+
+                                <?php } ?>
+                            </form>
+                            <div class="clearfix"></div><br>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="singlebutton">View Donations</label>
+                                <div class="col-md-4">
+                                    <button id="donatebtn" name="donatebtn" class="btn btn-primary donatebtn">View</button>
                                 </div>
                             </div>
-                        <?php } ?>
+                        </div>
                     </div>
                 </div>
             </div>          

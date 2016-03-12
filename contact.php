@@ -16,16 +16,14 @@ if (isset($_POST['submit'])) {
     $subject = $_POST['subject'];
     $content = $_POST['content'];
 
-    
-    
+
+
     $sql = "INSERT INTO `feedbacks`(`name`, `email`, `subject`, `content`) VALUES ('$name', '$email', '$subject', '$content')";
-    if($conexion->query($sql)){
-       echo "<div>";
+    if ($conexion->query($sql)) {
+        echo "<div>";
         echo " <h3 style='text-align: center;top: 1100px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=blue>Your feedback has been sent</font></h3>";
         echo "</div>";
-        
     }
-    
 }
 ?>
 
@@ -71,10 +69,10 @@ if (isset($_POST['submit'])) {
                     </div>
                     <p>Fill out all required Field to send a Message. Please don't spam,Thank you!</p>
                     <form class="submitphoto_form" action="" method="post">
-<?php if (!loggedin()) { ?>
+                        <?php if (!loggedin()) { ?>
                             <input type="text" class="wp-form-control wpcf7-text" placeholder="Your name" id="name" name="name">
                             <input type="mail" class="wp-form-control wpcf7-email" placeholder="Email address" id="email" name="email">          
-<?php } ?>
+                        <?php } ?>
                         <input type="text" class="wp-form-control wpcf7-text" placeholder="Subject" id="subject" name="subject" required="">
                         <textarea class="wp-form-control wpcf7-textarea" cols="30" rows="10" placeholder="What would you like to tell us" id="content" name="content" required=""></textarea>
                         <button class="wpcf7-submit button--itzel" type="submit" name="submit"><i class="button__icon fa fa-envelope"></i><span>Send Feedbacks</span></button>                
