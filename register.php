@@ -17,7 +17,7 @@ if (isset($_POST['submit1'])) {
     $sex = sql_escape($_POST['sex']);
     $cno = sql_escape($_POST['cno']);
     $add= sql_escape($_POST['add']);
-    $dob = sql_escape($_POST['day']) . "/" . sql_escape($_POST['month']) . '/' . sql_escape($_POST['year']);
+    $dob = sql_escape($_POST['year']).'-'.sql_escape($_POST['month']) .'-'.sql_escape($_POST['day']) ;
 
     if ($email != $email2) {
         echo "<div>";
@@ -49,7 +49,7 @@ if (isset($_POST['submit1'])) {
     $accno = sql_escape($_POST['accno']);
     $aat = sql_escape($_POST['aat']);
     $add= sql_escape($_POST['add']);
-    $dob = sql_escape($_POST['day']) . "/" . sql_escape($_POST['month']) . '/' . sql_escape($_POST['year']);
+    $dob = sql_escape($_POST['year']).'-'.sql_escape($_POST['month']) .'-'.sql_escape($_POST['day']) ;
 
     if ($email != $email2) {
         echo "<div>";
@@ -86,7 +86,7 @@ if (isset($_POST['submit1'])) {
     $add= sql_escape($_POST['add']);
     $bank = sql_escape($_POST['bank']);
     $accno = sql_escape($_POST['accno']);
-    $dob = sql_escape($_POST['day']) . "/" . sql_escape($_POST['month']) . '/' . sql_escape($_POST['year']);
+    $dob = sql_escape($_POST['year']).'-'.sql_escape($_POST['month']) .'-'.sql_escape($_POST['day']) ;
 
     if ($email != $email2) {
         echo "<div>";

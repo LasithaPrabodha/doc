@@ -28,6 +28,14 @@ function loggedin() {
     }
 }
 
+function loggedinadmin() {
+    if (isset($_SESSION['email']) && !empty($_SESSION['email']) && isset($_SESSION['user_type']) && !empty($_SESSION['user_type']) && $_SESSION['user_type']=='A') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function getuser($field) {
     $conexion = db_connect();
     $sqlStr = "SELECT $field FROM user WHERE user_id='" . $_SESSION['user_id'] . "'";

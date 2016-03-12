@@ -1,5 +1,10 @@
 <?php
 require_once("../includes/sql.php");
+include_once '../includes/functions.php';
+    
+    if(!loggedinadmin()){
+        die("<script>location.href = 'login.php'</script>");
+    }
 $conexion = db_connect();
 
 ?>

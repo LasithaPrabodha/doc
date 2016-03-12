@@ -2,7 +2,11 @@
 <html lang="en">
     <?php
     include_once 'header.php';
+    include_once '../includes/functions.php';
 
+    if (!loggedinadmin()) {
+        die("<script>location.href = 'login.php'</script>");
+    }
     if (isset($_GET['del'])) {
         $no = $_GET['del'];
         delete($no);
@@ -79,7 +83,7 @@
             return false;
         }
 
-        
+
 
 
     </script>
@@ -138,7 +142,7 @@
                                     </div>
                                 </div>
                             </div>
- 
+
                             <!-- topbar starts -->
 
                             <div class="box-inner">

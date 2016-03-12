@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <?php
-    include_once 'header.php'; ?>
+    include_once 'header.php'; 
+    include_once '../includes/functions.php';
+    
+    if(!loggedinadmin()){
+        die("<script>location.href = 'login.php'</script>");
+    }?>
 
 
     <body>
