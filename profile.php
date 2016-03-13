@@ -183,6 +183,8 @@ if ($result->num_rows > 0) {
                     $appointmentid = $conexion->insert_id;
                     $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$id','$fee')";
                     $conexion->query($sql);
+                    $updt_pay = "update doc_pay set appoi_no=appoi_no+1, tot_amnt=tot_amnt+$fee where doc_id='$id'";
+                    $conexion->query($updt_pay);
                 echo "<div class='alert alert-success'>Appointment saved successfully!</div>";
                 $_SESSION['radioval']= '';
             }};
