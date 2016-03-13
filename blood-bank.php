@@ -27,6 +27,8 @@ if (isset($_POST['submit'])) {
         if (elem.value == 'o') {
             //alert('ok');
             document.getElementById('toggle').style.display = "block";
+        }else{
+            document.getElementById('toggle').style.display = "none";
         }
 
     }

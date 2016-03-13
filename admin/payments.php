@@ -7,8 +7,29 @@
     if (!loggedinadmin()) {
         die("<script>location.href = 'login.php'</script>");
     }
-    
-?>
+    if (isset($_GET['id']) && isset($_GET['pay'])) {
+        $no = $_GET['id'];
+        $amount = $_GET['pay'];
+        pay($no, $amount);
+    }
+
+    function pay($no, $amount) {
+        require_once("../includes/sql.php");
+
+        $conexion = db_connect();
+        $sql = "insert into gp_payments(gp_id, amount) values('$no','$amount')";
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+    }
+    ?>
+    <script>
+        function pay(id)
+        {
+            var amount = $('#textinput').val();
+            if (confirm("Are you sure you want to pay to this employee?") == true)
+                window.location = "payments.php?id=" + id + "&pay=" + amount;
+            return false;
+        }
+    </script>
     <body>
 
 
@@ -127,7 +148,7 @@
                                     </table>
                                 </div>
                                 <div class="box-content">
-                                    <h3>Amount from Doctor</h3>
+                                    <h3>Channeling fee from Doctor</h3>
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
@@ -157,7 +178,63 @@
                                                     <td><?php echo $row['doc_name']; ?></td>
                                                     <td><?php echo $row['appoi_no']; ?></td>
                                                     <td><?php echo $row['tot_amnt']; ?></td>
-                                                    
+
+
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="box-content">
+                                    <h3>Medical Consultant salary</h3>
+                                    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>User ID</th>
+                                                <th>Medical Consultant ID</th>
+                                                <th>Medical Consultant name</th>
+                                                <th>Last paid date</th>
+                                                <th>Last paid amount</th>
+                                                <th>This month salary</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            include_once("../includes/sql.php");
+                                            $conexion = db_connect();
+
+                                            $sql = "SELECT g_physiciant.user_id, g_physiciant.gp_id, user.first_name, user.last_name FROM `g_physiciant` join user on g_physiciant.user_id=user.user_id";
+                                            $result = $conexion->query($sql);
+
+
+                                            while ($row = $result->fetch_array()) {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $row['user_id']; ?> 
+                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
+                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
+                                                            View User
+                                                        </a>
+                                                    </td>
+                                                    <td><?php echo $row['gp_id']; ?></td>
+                                                    <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
+                                                    <td><?php $g=$row['gp_id'];
+                                                        $sql2 = "SELECT amount, date_added FROM gp_payments WHERE date_added IN (SELECT MAX( date_added ) FROM gp_payments WHERE gp_id =".$g." GROUP BY gp_id) ORDER BY gp_id ASC";
+                                                        $result2 = $conexion->query($sql2);
+                                                        while ($row2 = $result2->fetch_array()) {
+                                                            echo $row2['date_added'];
+                                                            echo '</td><td>';
+                                                            echo $row2['amount'];
+                                                        }
+                                                        ?></td>
+                                                    <td><input id="textinput" name="textinput" type="number" placeholder="Salary" class="form-control input-md"></td>
+                                                    <td>
+                                                        <a class="btn btn-default" href="#" onclick="return pay(<?php echo $row['gp_id']; ?>)" >
+                                                            <i class="glyphicon glyphicon-ok-sign icon-white"></i>
+                                                            Pay
+                                                        </a>
+                                                    </td>
 
                                                 </tr>
                                             <?php } ?>
