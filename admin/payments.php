@@ -7,27 +7,7 @@
     if (!loggedinadmin()) {
         die("<script>location.href = 'login.php'</script>");
     }
-    if (isset($_GET['pay'])) {
-        $no = $_GET['pay'];
-        pay($no);
-    }
-    function pay($no) {
-        require_once("../includes/sql.php");
-
-        $conexion = db_connect();
-        $sql = "update doc_pay set appoi_no='0', tot_amnt='0' WHERE pay_id='" . $no . "'";
-        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
-    }
     
-    ?>
-    <script>
-        function pay(id)
-        {
-            if (confirm("Are you sure you want to pay this doctor?") == true)
-                window.location = "payments.php?pay=" + id;
-            return false;
-        }
-    </script>
 
     <body>
 
@@ -154,8 +134,7 @@
                                                 <th>Doctor ID</th>
                                                 <th>Doctor name</th>
                                                 <th>Total number of appointments</th>
-                                                <th>To be paid</th>
-                                                <th></th>
+                                                <th>Profit</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -178,12 +157,7 @@
                                                     <td><?php echo $row['doc_name']; ?></td>
                                                     <td><?php echo $row['appoi_no']; ?></td>
                                                     <td><?php echo $row['tot_amnt']; ?></td>
-                                                    <td>
-                                                        <a class="btn btn-info" onclick="return pay(<?php echo $row['pay_id']; ?>)">
-                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                            Pay
-                                                        </a>
-                                                    </td>
+                                                    
 
                                                 </tr>
                                             <?php } ?>
