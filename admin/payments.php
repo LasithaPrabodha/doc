@@ -127,7 +127,7 @@
                                     </table>
                                 </div>
                                 <div class="box-content">
-                                    <h3>Pay Doctor</h3>
+                                    <h3>Amount from Doctor</h3>
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
