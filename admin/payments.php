@@ -8,7 +8,7 @@
         die("<script>location.href = 'login.php'</script>");
     }
     
-
+?>
     <body>
 
 
