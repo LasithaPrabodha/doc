@@ -107,6 +107,16 @@ function sql_escape($value) {
     }
     return $value;
 }
+function docpay($str) {
+    $conexion = db_connect();
+
+    if ($conexion->query($str) == true) {
+        $result = array($conexion->insert_id, "A Doctor payment registered!");
+        return $result;
+    } else {
+        echo "e2";
+    }
+}
 
 // populate single record
 

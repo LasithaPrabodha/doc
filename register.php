@@ -28,7 +28,7 @@ if (isset($_POST['submit1'])) {
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
     } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno')";
+        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`,`Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno','$add','$dob')";
         $result = register($insert);
         echo "<div>";
         echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result[1] . "</font></h5>";
@@ -60,10 +60,13 @@ if (isset($_POST['submit1'])) {
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
     } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add')";
+        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`, `dob`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add','$dob')";
         $result = register($insert);
         $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `allocated_appointment_time`, `account_no`, `bank`) VALUES ('$result[0]', '$sp', '$aat', '$accno','$bank')";
         $result2 = registerd($doctor);
+        $name=$fname." ".$lname;
+        $insert2="INSERT INTO `doc_pay`(`doc_id`, `doc_name`, `user_id`) VALUES ('$result2[0]', '$name', '$result[0]')";
+        docpay($insert2);
         $charges = "INSERT INTO `doctor_charges`( `doctor_id`, `channeling_fee`) VALUES ('$result2[0]', '$cf')";
         $result3 = registerd($charges);
         $ch_id = $result3[0];
@@ -97,7 +100,7 @@ if (isset($_POST['submit1'])) {
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
     } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `address`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add')";
+        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add','$dob')";
         $result = register($insert);
         $medcon = "INSERT INTO `g_physiciant`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
         $result2 = registerc($medcon);
