@@ -39,7 +39,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
                 $_SESSION['user_type'] = $resultSet['user_type'];
                 $_SESSION['is_active'] = $resultSet['is_active'];
 
-                header("Location:index.php");
+                header("Location:profile.php");
             }else{
                 echo "<div>";
                 echo " <h2 style='text-align: center;top: 355px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Wrong Password</font></h2>";
