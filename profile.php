@@ -230,14 +230,14 @@ if ($user_type == 'D') {
 
 //profile picture upload
                     $target_dir = "images/";
-                    $target_file = $target_dir . basename($_FILES["profile_img"]["name"]);
+                    $target_file = $target_dir .uniqid(). basename($_FILES["profile_img"]["name"]);
                     $uploadOk = 1;
                     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 
                     // Check if $uploadOk is set to 0 by an error
                     if ($uploadOk == 1) {
 
-                        $target_image = str_replace(" ", "_", "$target_file") . uniqid();
+                        $target_image = str_replace(" ", "_", "$target_file");
                         move_uploaded_file($_FILES["profile_img"]["tmp_name"], $target_image);
                         $sqldoc_result = false;
                         $sqlmc_result = false;
