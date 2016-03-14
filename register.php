@@ -49,6 +49,7 @@ if (isset($_POST['submit1'])) {
     $accno = sql_escape($_POST['accno']);
     $aat = sql_escape($_POST['aat']);
     $add = sql_escape($_POST['add']);
+    $cadd = sql_escape($_POST['cadd']);
     $dob = sql_escape($_POST['year']) . '-' . sql_escape($_POST['month']) . '-' . sql_escape($_POST['day']);
 
     if ($email != $email2) {
@@ -62,7 +63,7 @@ if (isset($_POST['submit1'])) {
     } else {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`, `dob`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add','$dob')";
         $result = register($insert);
-        $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `allocated_appointment_time`, `account_no`, `bank`) VALUES ('$result[0]', '$sp', '$aat', '$accno','$bank')";
+        $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `allocated_appointment_time`, `account_no`, `bank`,`address`) VALUES ('$result[0]', '$sp', '$aat', '$accno','$bank','$cadd')";
         $result2 = registerd($doctor);
         $name = $fname . " " . $lname;
         $insert2 = "INSERT INTO `doc_pay`(`doc_id`, `doc_name`, `user_id`) VALUES ('$result2[0]', '$name', '$result[0]')";
