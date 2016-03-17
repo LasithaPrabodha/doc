@@ -64,7 +64,7 @@ if ($result->num_rows > 0) {
         $user_id = $row['user_id'];
         $first_name = $row['first_name'];
         $last_name = $row['last_name'];
-        $name_with_initials = $row['name_with_initials'];
+        $name_with_initials = $first_name." ".$last_name;
         $email = $row['email'];
         $profile_img = $row['profile_img'];
         $gender = $row['gender'];
