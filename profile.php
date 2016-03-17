@@ -721,32 +721,41 @@ if ($user_type == 'D') {
                                     $appDates = explode(',', $rows[0]);
                                     $reserved = explode(',', $rows[1]);
 
-                                    $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
+
+                                    $today   = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
+                                    $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
+                                    $tomorrow1  = mktime(0, 0, 0, date("m")  , date("d")+2, date("Y"));
+                                    $tomorrow2  = mktime(0, 0, 0, date("m")  , date("d")+3, date("Y"));
+                                    $tomorrow3  = mktime(0, 0, 0, date("m")  , date("d")+4, date("Y"));
+                                    $tomorrow4  = mktime(0, 0, 0, date("m")  , date("d")+5, date("Y"));
+                                    $tomorrow5  = mktime(0, 0, 0, date("m")  , date("d")+6, date("Y"));
+
+                                    $dates = [date("D d-m-Y",$today),date("D d-m-Y",$tomorrow),date("D d-m-Y",$tomorrow1),date("D d-m-Y",$tomorrow2),date("D d-m-Y",$tomorrow3),date("D d-m-Y",$tomorrow4),date("D d-m-Y",$tomorrow5)];
                                     $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $days = array();
+                                    foreach($dates as $date){
+
+                                        $day = substr($date,0,3);
+                                        if($day == "Mon"){
+                                            array_push($days,'M');
+                                        }else if($day == "Tue"){
+                                            array_push($days,'T');
+                                        }else if($day == "Wed"){
+                                            array_push($days,'W');
+                                        }else if($day == "Thu"){
+                                            array_push($days,'L');
+                                        }else if($day == "Fri"){
+                                            array_push($days,'F');
+                                        }else if($day == "Sat"){
+                                            array_push($days,'S');
+                                        }else if($day == "Sun"){
+                                            array_push($days,'Z');
+                                        }
+                                    }
 
                                     for ($y = 0; $y < 7; $y++) {
-                                        if ($days[$y] == 'M') {
-                                            $day_name = 'MONDAY';
-                                        }
-                                        if ($days[$y] == 'T') {
-                                            $day_name = 'TUESDAY';
-                                        }
-                                        if ($days[$y] == 'W') {
-                                            $day_name = 'WEDNSDAY';
-                                        }
-                                        if ($days[$y] == 'L') {
-                                            $day_name = 'THURSDAY';
-                                        }
-                                        if ($days[$y] == 'F') {
-                                            $day_name = 'FRIDAY';
-                                        }
-                                        if ($days[$y] == 'S') {
-                                            $day_name = 'SATURDAY';
-                                        }
-                                        if ($days[$y] == 'Z') {
-                                            $day_name = 'SUNDAY';
-                                        }
-                                        echo '<tr><td><b>' . $day_name . '</b></td>';
+
+                                        echo '<tr><td style="padding:8px;margin:10px;" ><b>' . $dates[$y] . '</b></td>';
                                         for ($x = 0; $x < 22; $x++) {
                                             $chk = "";
                                             $dis = "";
@@ -758,7 +767,7 @@ if ($user_type == 'D') {
                                                         $color = 'background:#EE2C2C;color:#fff;';
                                                     }
 
-                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . '">' . $days[$y] . $times[$x] . '</input></td>';
+                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . '">'. $times[$x] . '</input></td>';
                                                 }
                                             }
                                         }

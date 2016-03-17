@@ -126,7 +126,7 @@
                                                     <div class="single-doctor">
                                                         <a class="tdoctor" href="#"
                                                            data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
-                                                            <figure>
+                                                            <figure style="height: 250px;">
                                                                 <img src="<?php echo $row[2] ?>"/>
                                                                 <svg viewBox="0 0 180 320" preserveAspectRatio="none">
                                                                     <path d="M 180,160 0,218 0,0 180,0 z"/>
@@ -192,7 +192,7 @@
                                     <li>
                                     <div class="single-doctor">
                                         <a class="tdoctor" href="#" data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
-                                            <figure>
+                                            <figure style="height: 250px;">
                                                 <img src="<?php echo $row[2] ?>" />
                                                 <svg viewBox="0 0 180 320" preserveAspectRatio="none"><path d="M 180,160 0,218 0,0 180,0 z"/></svg>
                                                 <figcaption>
