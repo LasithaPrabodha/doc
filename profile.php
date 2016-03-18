@@ -177,7 +177,8 @@ if ($user_type == 'D') {
         if (isset($_POST['available'])) { // Save Available Slots: For Doctors
             $conexion = db_connect();
 
-            $sql = "UPDATE doctor SET allocated_appointment_time='" . implode(',', $_POST['check_box']) . "' where doctor_id=$id";
+            $sql = "UPDATE doctor SET allocated_appointment_time='" . implode(',', $_POST['check_box']) . "' where user_id=$id";
+            var_dump($sql);
             if ($result = $conexion->query($sql)) {
                 echo "<div class='alert alert-success'>Alocation times saved successfully!</div>";
             };
@@ -189,24 +190,26 @@ if ($user_type == 'D') {
             $fee = $_SESSION['c_fee'];
 
 
-            $sql = "SELECT reserved_time_slots FROM doctor where doctor_id=" . $id;
+            $sql = "SELECT reserved_time_slots,doctor_id FROM doctor where user_id=" . $id;
             $result = $conexion->query($sql);
             $rows = $result->fetch_array();
             $reserved = array();
             $reserved = explode(',', $rows[0]);
+            $doc_id=$rows[1];
 
             array_push($reserved, $slot);
 
 
 
-            $sql2 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where doctor_id=$id";
+            $sql2 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where user_id=$id";
             if ($result = $conexion->query($sql2)) {
-                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$id','{$slot}')";
+                
+                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$doc_id','{$slot}')";
                 if ($conexion->query($sql3)) {
                     $appointmentid = $conexion->insert_id;
-                    $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$id','$fee')";
+                    $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$doc_id','$fee')";
                     $conexion->query($sql);
-                    $updt_pay = "update doc_pay set appoi_no=appoi_no+1, tot_amnt=tot_amnt+$fee where doc_id='$id'";
+                    $updt_pay = "update doc_pay set appoi_no=appoi_no+1, tot_amnt=tot_amnt+$fee where doc_id='$doc_id'";
                     $conexion->query($updt_pay);
                     echo "<div class='alert alert-success'>Appointment saved successfully!</div>";
                     $_SESSION['radioval'] = '';
@@ -506,8 +509,9 @@ if ($user_type == 'D') {
                             <?php
                             if ($user_type == 'P') { // Apointment details for:patients
                                 $conexion = db_connect();
-
-                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where a.doctor_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
+//                                  $sql = "SELECT d.address FROM  user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
+//                                $result = $conexion->query($sql);
+                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
                                 $result = $conexion->query($sql);
                                 if ($result->num_rows > 0) {
                                     ?>
@@ -534,7 +538,7 @@ if ($user_type == 'D') {
                                                 <tr>
                                                     <td><?php echo $appintment_id; ?></td>
                                                     <td><?php echo $doctor_is; ?></td>
-                                                    <td><br><p style="padding-top:1px"><?php echo "Date: "; ?></p><p style="padding-top:1px"><?php echo "Time Slot: " . $time_slot; ?></p><br></td>
+                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $time_slot; ?></p><br></td>
                                                     <td><?php echo $address; ?></td>
                                                     <td><a href="<?php echo "profile.php?key=" . $appintment_id; ?>"  class="btn btn-sm btn-danger" title="view"><button class="btn btn-sm btn-danger" >Cancel</button></a>&nbsp;</td>
 
@@ -548,7 +552,7 @@ if ($user_type == 'D') {
                             } else if ($user_type == 'D') {// Apointment details for:doctors
                                 $conexion = db_connect();
 
-                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where a.doctor_id=u.user_id and a.doctor_id=d.doctor_id and a.doctor_id = '$id'";
+                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and d.user_id = '$id'";
                                 $result = $conexion->query($sql);
                                 if ($result->num_rows > 0) {
                                     ?>
@@ -559,7 +563,7 @@ if ($user_type == 'D') {
                                                 <th>Appointment No</th>
                                                 <th>Patient</th>
                                                 <th>Appintment Details</th>
-                                                <th>Status</th>
+                                               
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -573,8 +577,8 @@ if ($user_type == 'D') {
                                                 <tr>
                                                     <td><?php echo $appintment_id; ?></td>
                                                     <td><?php echo $patient_is; ?></td>
-                                                    <td><br><p style="padding-top:1px"><?php echo "Date: "; ?></p><p style="padding-top:1px"><?php echo "Time Slot: " . $time_slot; ?></p><br></td>
-                                                    <td>Pending</td>
+                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $time_slot; ?></p><br></td>
+                                                   
                                                 </tr>
             <?php } ?>
                                         </tbody>
@@ -606,7 +610,7 @@ if ($user_type == 'D') {
                                     $conexion = db_connect();
                                     $user_id = $_SESSION['user_id'];
 
-                                    $sql = "SELECT allocated_appointment_time FROM doctor where doctor_id=" . $user_id;
+                                    $sql = "SELECT allocated_appointment_time FROM doctor where user_id=" . $user_id;
                                     $result = $conexion->query($sql);
                                     $rows = $result->fetch_array();
 
@@ -646,7 +650,7 @@ if ($user_type == 'D') {
                         <?php
                         $conexion = db_connect();
 
-                        $sql = "SELECT * from patient_payments where doctor_id = '$id'";
+                        $sql = "SELECT * from patient_payments p,doctor d where d.doctor_id=p.doctor_id and d.user_id = '$id'";
                         $result = $conexion->query($sql);
                         if ($result->num_rows > 0) {
                             ?>
@@ -695,7 +699,7 @@ if ($user_type == 'D') {
                                 <?php if ($id != $_SESSION['user_id']) { ?>
                             <form id="loginForm" name="radiofrm" action="" method="post" style="margin:auto; margin-top: 40px">
                                 <b>   <?php
-                                    $sql1 = "SELECT * from doctor_charges  where doctor_id=" . $user_id;
+                                    $sql1 = "SELECT * from doctor_charges c ,doctor d where d.doctor_id=c.doctor_id and d.user_id=" . $user_id;
                                     $result = $conexion->query($sql1);
                                     $row = $result->fetch_array();
 
@@ -714,7 +718,7 @@ if ($user_type == 'D') {
                                     $conexion = db_connect();
                                     $user_id = $id;
 
-                                    $sql = "SELECT allocated_appointment_time,reserved_time_slots FROM doctor where doctor_id=" . $user_id;
+                                    $sql = "SELECT allocated_appointment_time,reserved_time_slots FROM doctor where user_id=" . $user_id;
                                     $result = $conexion->query($sql);
                                     $rows = $result->fetch_array();
 
