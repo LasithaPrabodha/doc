@@ -8,7 +8,9 @@ if (loggedin()) {
 
 if (isset($_POST['submit1'])) {
 
+
     $email = sql_escape($_POST['email']);
+    $re = emailcheck($email);
     $password = md5(sql_escape($_POST['password']));
     $email2 = sql_escape($_POST['email2']);
     $password2 = md5(sql_escape($_POST['password2']));
@@ -21,20 +23,25 @@ if (isset($_POST['submit1'])) {
 
     if ($email != $email2) {
         echo "<div>";
-        echo " <h3 style='text-align: center;top: 315px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h3>";
+        echo " <h4 style='text-align: center;top: 305px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h4>";
         echo "</div>";
     } else if ($password != $password2) {
         echo "<div>";
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
-    } else {
+    } elseif ($re == 'e1') {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`,`Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno','$add','$dob')";
         $result = register($insert);
         echo "<div>";
         echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result[1] . "</font></h5>";
         echo "</div>";
+    } else {
+        echo "<div>";
+        echo " <h4 style='text-align: center;top: 305px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Email is already registered</font></h4>";
+        echo "</div>";
     }
 } elseif (isset($_POST['submit2'])) {
+    $re = emailcheck($email);
     $email = sql_escape($_POST['email']);
     $password = md5(sql_escape($_POST['password']));
     $email2 = sql_escape($_POST['email2']);
@@ -60,7 +67,7 @@ if (isset($_POST['submit1'])) {
         echo "<div>";
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
-    } else {
+    } elseif ($re == 'e1') {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`, `dob`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add','$dob')";
         $result = register($insert);
         $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `allocated_appointment_time`, `account_no`, `bank`,`address`) VALUES ('$result[0]', '$sp', '$aat', '$accno','$bank','$cadd')";
@@ -76,8 +83,14 @@ if (isset($_POST['submit1'])) {
         echo "<div>";
         echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result3[1] . "</font></h5>";
         echo "</div>";
+    } else {
+        echo "<div>";
+        echo " <h4 style='text-align: center;top: 305px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Email is already registered</font></h4>";
+        echo "</div>";
     }
 } elseif (isset($_POST['submit3'])) {
+    $re = emailcheck($email);
+    
     $email = sql_escape($_POST['email']);
     $password = md5(sql_escape($_POST['password']));
     $email2 = sql_escape($_POST['email2']);
@@ -100,7 +113,7 @@ if (isset($_POST['submit1'])) {
         echo "<div>";
         echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
         echo "</div>";
-    } else {
+    } elseif ($re == 'e1') {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add','$dob')";
         $result = register($insert);
         $medcon = "INSERT INTO `g_physiciant`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
@@ -108,6 +121,10 @@ if (isset($_POST['submit1'])) {
 
         echo "<div>";
         echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result2[1] . "</font></h5>";
+        echo "</div>";
+    }else {
+        echo "<div>";
+        echo " <h4 style='text-align: center;top: 305px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Email is already registered</font></h4>";
         echo "</div>";
     }
 }
@@ -344,24 +361,20 @@ require_once("includes/header.php");
                         </div>
                     </div>
                     <div class="row">
+
+                        <div class="col-md-8 col-sm-8  col-md-offset-2 col-sm-offset-2">
+                            <label class="control-label">Address<span class="required">*</span>
+                            </label>
+                            <input type="text" name="add" id="add" class="wp-form-control wpcf7-text" placeholder="Your Address" required>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
                         <div class="col-md-4 col-sm4 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Contact Number<span class="required">*</span>
                             </label>
                             <input type="number" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" pattern=".{10,}"   required title="10 numbers " required>
-                        </div>
-
-                        <div class="col-md-4 col-sm-4">
-                            <label class="control-label">Allocated appointment time<span class="required">*</span>
-                            </label>
-                            <input type="text" name="aat" id="aat" class="wp-form-control wpcf7-text" placeholder="Your appointment time to be allocated in hours" required>
-                        </div>
-                    </div>
-                    <div class="row">
-
-                        <div class="col-md-4 col-sm-4  col-md-offset-2 col-sm-offset-2">
-                            <label class="control-label">Address<span class="required">*</span>
-                            </label>
-                            <input type="text" name="add" id="add" class="wp-form-control wpcf7-text" placeholder="Your Address" required>
                         </div>
 
                         <div class="col-md-4 col-sm-4">

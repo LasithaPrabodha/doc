@@ -13,12 +13,33 @@
         pay($no, $amount);
     }
 
+    if (isset($_GET['id']) && isset($_GET['paydc'])) {
+        $no = $_GET['id'];
+        $amount = $_GET['paydc'];
+        paydc($no, $amount);
+    }
+    
     function pay($no, $amount) {
         require_once("../includes/sql.php");
 
         $conexion = db_connect();
         $sql = "insert into gp_payments(gp_id, amount) values('$no','$amount')";
         $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+         $message='Rs. '.$amount.' has been paid to Medical Consultant '.$no;
+        echo "<script type='text/javascript'>alert('$message');</script>";
+    }
+
+    function paydc($no, $amount) {
+        require_once("../includes/sql.php");
+
+        $conexion = db_connect();
+        $sql = "insert into doc_payments(doc_id, amount) values('$no','$amount')";
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+        
+        $sql = "update doc_pay set appoin_no='0', tot_amnt='0' where doc_id='$no'";
+        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+        $message='Rs. '.$amount.' has been paid to Doctor '.$no;
+        echo "<script type='text/javascript'>alert('$message');</script>";
     }
     ?>
     <script>
@@ -27,6 +48,17 @@
             var amount = $('#textinput').val();
             if (confirm("Are you sure you want to pay to this employee?") == true)
                 window.location = "payments.php?id=" + id + "&pay=" + amount;
+            return false;
+        }
+
+        function paydc(id)
+        {
+            var Row = document.getElementById("somerow");
+            var Cells = Row.getElementsByTagName("td");
+            var amount =Cells[3].innerText;
+            
+            if (confirm("Are you sure you want to pay to this employee?") == true)
+                window.location = "payments.php?id=" + id + "&paydc=" + amount;
             return false;
         }
     </script>
@@ -106,11 +138,12 @@
                                             <tr>
                                                 <th>Appointment ID</th>
                                                 <th>User ID</th>
+                                                <th></th>
                                                 <th>Doctor ID</th>
-                                                <th>Patient name</th>
-                                                <th>Patient age</th>
+                                                <th></th>
                                                 <th>Telephone no</th>
                                                 <th>Time slot</th>
+                                                <th>Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -118,44 +151,46 @@
                                             include_once("../includes/sql.php");
                                             $conexion = db_connect();
 
-                                            $sql = "SELECT appoinments.*, doctor.user_id as doc_user_id FROM `appoinments` join `doctor` on appoinments.doctor_id=doctor.doctor_id";
+                                            $sql = "SELECT appoinments.*, doctor.user_id as doc_user_id, patient_payments.amount FROM `appoinments` join `doctor` on appoinments.doctor_id=doctor.doctor_id join `patient_payments` on appoinments.appoinment_id=patient_payments.appoinment_id";
                                             $result = $conexion->query($sql);
 
                                             while ($row = $result->fetch_array()) {
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $row['appoinment_id']; ?> </td>
-                                                    <td><?php echo $row['user_id']; ?>
-                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
+                                                    <td><?php echo $row['user_id']; ?></td>
+                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
                                                             <i class="glyphicon glyphicon-edit icon-white"></i>
                                                             View User
                                                         </a>
                                                     </td>
-                                                    <td><?php echo $row['doctor_id']; ?>
-                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $row['doc_user_id']; ?>" target="_blank">
+                                                    <td><?php echo $row['doctor_id']; ?></td>
+                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['doc_user_id']; ?>" target="_blank">
                                                             <i class="glyphicon glyphicon-edit icon-white"></i>
                                                             View Doctor
                                                         </a>
                                                     </td>
-                                                    <td><?php echo $row['patient_name']; ?></td>
-                                                    <td><?php echo $row['patient_age']; ?></td>
                                                     <td><?php echo $row['telephone_no']; ?></td>
                                                     <td><?php echo $row['time_slot']; ?></td>
+                                                    <td><?php echo $row['amount']; ?></td>
 
                                                 </tr>
                                             <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
+                                <hr>
                                 <div class="box-content">
-                                    <h3>Channeling fee from Doctor</h3>
+                                    <h3>Channeling fee for Doctor</h3>
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
                                                 <th>Doctor ID</th>
+                                                <th></th>
                                                 <th>Doctor name</th>
                                                 <th>Total number of appointments</th>
-                                                <th>Profit</th>
+                                                <th>Doctor fee</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -168,9 +203,9 @@
 
                                             while ($row = $result->fetch_array()) {
                                                 ?>
-                                                <tr>
-                                                    <td><?php echo $row['doc_id']; ?> 
-                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
+                                                <tr id='somerow'>
+                                                    <td><?php echo $row['doc_id']; ?> </td>
+                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
                                                             <i class="glyphicon glyphicon-edit icon-white"></i>
                                                             View User
                                                         </a>
@@ -178,6 +213,10 @@
                                                     <td><?php echo $row['doc_name']; ?></td>
                                                     <td><?php echo $row['appoi_no']; ?></td>
                                                     <td><?php echo $row['tot_amnt']; ?></td>
+                                                    <td><a class="btn btn-default" href="#" onclick="return paydc(<?php echo $row['doc_id']; ?>)" >
+                                                            <i class="glyphicon glyphicon-ok-sign icon-white"></i>
+                                                            Pay
+                                                        </a></td>
 
 
                                                 </tr>
@@ -185,12 +224,14 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <hr>
                                 <div class="box-content">
                                     <h3>Medical Consultant salary</h3>
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
                                                 <th>User ID</th>
+                                                <th></th>
                                                 <th>Medical Consultant ID</th>
                                                 <th>Medical Consultant name</th>
                                                 <th>Last paid date</th>
@@ -211,16 +252,17 @@
                                             while ($row = $result->fetch_array()) {
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo $row['user_id']; ?> 
-                                                        <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
+                                                    <td><?php echo $row['user_id']; ?> </td>
+                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
                                                             <i class="glyphicon glyphicon-edit icon-white"></i>
                                                             View User
                                                         </a>
                                                     </td>
                                                     <td><?php echo $row['gp_id']; ?></td>
                                                     <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
-                                                    <td><?php $g=$row['gp_id'];
-                                                        $sql2 = "SELECT amount, date_added FROM gp_payments WHERE date_added IN (SELECT MAX( date_added ) FROM gp_payments WHERE gp_id =".$g." GROUP BY gp_id) ORDER BY gp_id ASC";
+                                                    <td><?php
+                                                        $g = $row['gp_id'];
+                                                        $sql2 = "SELECT amount, date_added FROM gp_payments WHERE date_added IN (SELECT MAX( date_added ) FROM gp_payments WHERE gp_id =" . $g . " GROUP BY gp_id) ORDER BY gp_id ASC";
                                                         $result2 = $conexion->query($sql2);
                                                         while ($row2 = $result2->fetch_array()) {
                                                             echo $row2['date_added'];
@@ -237,7 +279,7 @@
                                                     </td>
 
                                                 </tr>
-                                            <?php } ?>
+<?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

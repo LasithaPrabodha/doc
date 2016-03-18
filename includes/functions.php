@@ -36,6 +36,35 @@ function loggedinadmin() {
     }
 }
 
+function emailcheck($email){
+    $conexion = db_connect();
+    $sqlStr = "SELECT email as count FROM user WHERE email='" . $email . "'";
+    if ($resultSet = $conexion->query($sqlStr)) {
+        if ($resultSet->num_rows > 0) {
+           
+            return "yes";
+        } else {
+            return "e1";
+        }
+    } else {
+        return "e2";
+    }
+}
+function usercheck($email){
+    $conexion = db_connect();
+    $sqlStr = "SELECT user_id FROM user WHERE email='" . $email . "'";
+    if ($resultSet = $conexion->query($sqlStr)) {
+        if ($resultSet->num_rows > 0) {
+           $row=$resultSet->fetch_array();
+            return $row['user_id'];
+        } else {
+            return "e1";
+        }
+    } else {
+        return "e2";
+    }
+}
+
 function getuser($field) {
     $conexion = db_connect();
     $sqlStr = "SELECT $field FROM user WHERE user_id='" . $_SESSION['user_id'] . "'";
@@ -125,7 +154,7 @@ function fetchOne($sql) {
     $conexion = db_connect();
     $rs = $conexion->query($sql);
     if ($rs->num_rows > 0) {
-        $out = $rs->fetch_array($rs);
+        $out = $rs->fetch_array();
     }
     return !empty($out) ? $out : null;
 }

@@ -3,8 +3,8 @@
     <?php
     include_once 'header.php';
     include_once '../includes/functions.php';
-    
-    if(!loggedinadmin()){
+
+    if (!loggedinadmin()) {
         die("<script>location.href = 'login.php'</script>");
     }
 
@@ -20,6 +20,59 @@
     } elseif (isset($_GET['inac'])) {
         $no = $_GET['inac'];
         inactive($no);
+    }
+
+    if (isset($_POST['submit'])) {
+
+        $userid = sql_escape($_POST['userid']);
+        $email = sql_escape($_POST['email']);
+        $password = md5(sql_escape($_POST['password']));
+        $email2 = sql_escape($_POST['email2']);
+        $password2 = md5(sql_escape($_POST['password2']));
+        $fname = sql_escape($_POST['fname']);
+        $lname = sql_escape($_POST['lname']);
+        $cno = sql_escape($_POST['cno']);
+        $cf = sql_escape($_POST['cf']);
+        $sp = sql_escape($_POST['sp']);
+        $bank = sql_escape($_POST['bank']);
+        $accno = sql_escape($_POST['accno']);
+        $add = sql_escape($_POST['add']);
+        $cadd = sql_escape($_POST['cadd']);
+        $re = emailcheck($email);
+        $us = usercheck($email);
+
+        if ($email != $email2) {
+            echo "<div>";
+            echo " <h3 style='text-align: center;top: 315px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h3>";
+            echo "</div>";
+        } else if ($password != $password2) {
+            echo "<div>";
+            echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
+            echo "</div>";
+        } elseif ($re == 'e1' || $us == $userid) {
+            $insert = "UPDATE `user` SET `first_name`='$fname',`last_name`='$lname',`email`='$email',`password`='$password',`contact_number`='$cno',`Address`='$add' WHERE user_id='$userid'";
+            registerd($insert);
+            $doctor = "UPDATE `doctor` SET `specialization`='$sp',`account_no`='$accno',`bank`='$bank',`address`='$cadd' WHERE `user_id`='$userid'";
+            registerd($doctor);
+            $seelctDcId="select doctor_id from doctor where user_id='$userid'";
+            $result=  fetchOne($seelctDcId);
+            $charges = "UPDATE `doctor_charges` SET `channeling_fee`='$cf' WHERE doctor_id='$result[0]'";
+            registerd($charges);
+            $seelctDchrgesId="select charges_id from doctor_charges where user_id='$result[0]'";
+            $result3=  fetchOne($seelctDcId);
+            $ch_id = $result3[0];
+            $dc_id = $result[0];
+            update_cid($ch_id, $dc_id);
+            $message='User id: '.$userid.' has been updated.';
+            echo "<script type='text/javascript'>alert('$message');</script>";
+//            echo "<div>";
+//            echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result3[1] . "</font></h5>";
+//            echo "</div>";
+        } else {
+            echo "<div>";
+            echo " <h4 style='text-align: center;top: 305px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Email is already registered</font></h4>";
+            echo "</div>";
+        }
     }
 
     function delete($no) {
@@ -84,10 +137,14 @@
             return false;
         }
 
-       
+
 
     </script>
 
+    <style type="text/css">
+
+
+    </style>
     <body>
 
 
@@ -143,7 +200,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Doctor Details</h4>
+                                        </div>
+                                        <div class="modal-body edit-content">
 
+                                        </div>
+                                        <div class="modal-footer">
+
+                                            <a href="#" class="btn" data-dismiss="modal">Nah.</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- topbar starts -->
                             <?php include 'users.php'; ?>
                             <div class="box-inner">
@@ -175,9 +248,9 @@
                                             $conexion = db_connect();
 
                                             $sql = "SELECT * FROM user where user_type='D'";
-                                            $result = $conexion->query($sql);
+                                            $result2 = $conexion->query($sql);
 
-                                            while ($row = $result->fetch_array()) {
+                                            while ($row = $result2->fetch_array()) {
 
                                                 $user_id = $row['user_id'];
                                                 $first_name = $row['first_name'];
@@ -189,68 +262,85 @@
                                                 $user_type = $row['user_type'];
                                                 $is_active = $row['is_active'];
                                                 $contact_number = $row['contact_number'];
-                                                
-                                                    ?>
-                                                    <tr>
-                                                        <td><?php echo $first_name . ' ' . $last_name; ?> </td>
-                                                        <td class="center">2012/01/01</td>
-                                                        <td class="center"><?php
-                                                            echo 'Doctor';
-                                                            ?></td>
-                                                        <td class="center">
-                                                            <?php
-                                                            if ($is_active == '1')
-                                                                echo '<span class="label-success label label-default">Active</span>';
-                                                            if ($is_active == '0')
-                                                                echo '<span class="label-success label label-danger">Inactive</span>';
-                                                            if ($is_active == '2')
-                                                                echo '<span class="label-warning label label-default">Pending</span>';
-                                                            ?>
-                                                        </td>
-                                                        <td class="center">
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $first_name . ' ' . $last_name; ?> </td>
+                                                    <td class="center">2012/01/01</td>
+                                                    <td class="center"><?php
+                                                        echo 'Doctor';
+                                                        ?></td>
+                                                    <td class="center">
+                                                        <?php
+                                                        if ($is_active == '1')
+                                                            echo '<span class="label-success label label-default">Active</span>';
+                                                        if ($is_active == '0')
+                                                            echo '<span class="label-success label label-danger">Inactive</span>';
+                                                        if ($is_active == '2')
+                                                            echo '<span class="label-warning label label-default">Pending</span>';
+                                                        ?>
+                                                    </td>
+                                                    <td class="center">
 
 
-                                                            <!--                                                    <a class="btn btn-success" href="#">
-                                                                                                                    <i class="glyphicon glyphicon-zoom-in icon-white"></i>
-                                                                                                                    View
-                                                                                                                </a>-->
-                                                            <a class="btn btn-info" href="#" onclick="return view(<?php echo $user_id; ?>)">
-                                                                <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                                View
-                                                            </a>
-                                                            <a class="btn btn-danger" href="#" onclick="return Deleteqry(<?php echo $user_id; ?>)" >
+                                                        <!--                                                    <a class="btn btn-success" href="#">
+                                                                                                                <i class="glyphicon glyphicon-zoom-in icon-white"></i>
+                                                                                                                View
+                                                                                                            </a>-->
+                                                        <a class="btn btn-info"  data-toggle="modal" id="<?PHP echo $user_id; ?>" data-target="#edit-modal">
+                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
+                                                            View
+                                                        </a>
+                                                        <a class="btn btn-danger" href="#" onclick="return Deleteqry(<?php echo $user_id; ?>)" >
+                                                            <i class="glyphicon glyphicon-trash icon-white"></i>
+                                                            Delete
+                                                        </a>
+                                                        <?php if ($is_active == '1') { ?>  
+                                                            <a class="btn btn-default" href="#" onclick="return inac(<?php echo $user_id; ?>)" >
                                                                 <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                                Delete
+                                                                Inactivate
                                                             </a>
-                                                            <?php if ($is_active == '1') { ?>  
-                                                                <a class="btn btn-default" href="#" onclick="return inac(<?php echo $user_id; ?>)" >
-                                                                    <i class="glyphicon glyphicon-trash icon-white"></i>
-                                                                    Inactivate
-                                                                </a>
-                                                            <?php } elseif ($is_active == '2') { ?>  
-                                                                <a class="btn btn-default" href="#" onclick="return acptqry(<?php echo $user_id; ?>)" >
-                                                                    <i class="glyphicon glyphicon-ok icon-white"></i>
-                                                                    Approve
-                                                                </a>
-                                                            <?php } elseif ($is_active == '0') { ?>
-                                                                <a class="btn btn-default" href="#" onclick="return actvqry(<?php echo $user_id; ?>)" >
-                                                                    <i class="glyphicon glyphicon-ok icon-white"></i>
-                                                                    Make active
-                                                                </a>
-                                                            <?php }
-                                                        
+                                                        <?php } elseif ($is_active == '2') { ?>  
+                                                            <a class="btn btn-default" href="#" onclick="return acptqry(<?php echo $user_id; ?>)" >
+                                                                <i class="glyphicon glyphicon-ok icon-white"></i>
+                                                                Approve
+                                                            </a>
+                                                        <?php } elseif ($is_active == '0') { ?>
+                                                            <a class="btn btn-default" href="#" onclick="return actvqry(<?php echo $user_id; ?>)" >
+                                                                <i class="glyphicon glyphicon-ok icon-white"></i>
+                                                                Make active
+                                                            </a>
+                                                        <?php }
                                                         ?>
 
-                                                </td>
-                                            </tr>
-                                             <?php } ?>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
 
+                        <script>
+                            $('#edit-modal').on('show.bs.modal', function (e) {
 
+                                var $modal = $(this);
+                                essay_id = event.target.id;
+                                console.log(essay_id);
+//
+                                $.ajax({
+                                    cache: false,
+                                    type: 'POST',
+                                    url: 'backend.php',
+                                    data: 'EID=' + essay_id,
+                                    success: function (data)
+                                    {
+                                        $modal.find('.edit-content').html(data);
+                                    }
+                                });
+
+                            })
+                        </script>
 
 
                     </div><!--/row--><!--/.fluid-container-->
