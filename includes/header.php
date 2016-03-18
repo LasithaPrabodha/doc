@@ -105,7 +105,7 @@
 <!--                    <li><a href="#">Link Three</a></li>               -->
 <!--                  </ul>-->
 <!--                </li>               -->
-                <li><a href="contact.php">Feedbacks</a></li>
+                <li><a href="feedback.php">Feedback</a></li>
                   <?PHP
                   if(loggedin()){ ?>
                 <li>

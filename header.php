@@ -51,7 +51,7 @@
                     <li><a href="#">Link Three</a></li>               
                   </ul>
                 </li>               
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="feedback.php">Contact</a></li>
               </ul>           
             </div><!--/.nav-collapse -->
           </div>     

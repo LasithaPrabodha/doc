@@ -13,10 +13,10 @@
             <img src="images/14.jpg" alt="">
           </div>
           <div class="slider-text">
-            <h2>Make <strong>Doctor's Appointments</strong> Faster and Efficiently..</h2>
-            <div class="readmore_area">
-              <a data-hover="Read More" href="#"><span>Book Now</span></a>
-            </div>
+            <h2>Make <strong>Doctor's Appointments </strong> Faster and Efficiently..</h2>
+              <div class="readmore_area">
+                  <a data-hover="Book Now" href="doctors.php"><span>Book Now</span></a>
+              </div>
           </div>
         </div>
         <!-- End First slide -->
@@ -27,11 +27,11 @@
             <img src="images/15.jpg" alt="">
           </div>
           <div class="slider-text">
-            <h2><strong>Best Template</strong> For your Medical Website</h2>
-            <p><strong>WpF Medinova</strong> Theme suitable for any health and medical related projets or business</p>
-            <div class="readmore_area">
-              <a data-hover="Read More" href="#"><span>Read More</span></a>                
-            </div>
+            <h2><strong>24 Hour</strong> Service </h2>
+            <p><strong>Online Booking </strong> Made simple and Easy</p>
+              <div class="readmore_area">
+                  <a data-hover="Book Now" href="doctors.php"><span>Book Now</span></a>
+              </div>
           </div>
         </div>
         <!-- End 2nd slide -->
@@ -42,44 +42,15 @@
             <img src="images/7.jpg" alt="">
           </div>
           <div class="slider-text">
-            <h2>An <strong>Excellent Theme</strong> for your Health Related Project</h2>
-            <p><strong>WpF Medinova</strong> Theme suitable for any health and medical related projets or business</p>
-            <div class="readmore_area">
-              <a data-hover="Read More" href="#"><span>Read More</span></a>                
-            </div>
+            <h2>Fully <strong>Qualified</strong> Doctors</h2>
+            <p><strong>Experianced </strong> and Qualofied Doctors At your Service</p>
+              <div class="readmore_area">
+                  <a data-hover="Book Now" href="doctors.php"><span>Book Now</span></a>
+              </div>
           </div>
         </div>
         <!-- End Third slide -->
 
-        <!-- Start Fourth slide -->
-        <div class="top-slide-inner">
-          <div class="slider-img">
-            <img src="images/12.jpg" alt="">
-          </div>
-          <div class="slider-text">
-            <h2><strong>Best Template</strong> For your Medical Website</h2>
-            <p><strong>WpF Medinova</strong> Theme suitable for any health and medical related projets or business</p>
-            <div class="readmore_area">
-              <a data-hover="Read More" href="#"><span>Read More</span></a>                
-            </div>
-          </div>
-        </div>
-        <!-- End Fourth slide -->
-
-        <!-- Start Fifth slide -->
-        <div class="top-slide-inner">
-          <div class="slider-img">
-            <img src="images/9.jpg" alt="">
-          </div>
-          <div class="slider-text">
-            <h2>An <strong>Excellent Theme</strong> for your Health Related Project</h2>
-            <p><strong>WpF Medinova</strong> Theme suitable for any health and medical related projets or business</p>
-            <div class="readmore_area">
-              <a data-hover="Read More" href="#"><span>Read More</span></a>                
-            </div>
-          </div>
-        </div>
-        <!-- End Fifth slide -->
       </div><!-- /top-slider -->
     </section>
     <!--=========== END SLIDER SECTION ================-->
@@ -92,10 +63,10 @@
           <div class="row">
             <div class="single-top-feature">
               <span class="fa fa-flask"></span>
-              <h3>Blood Donations</h3>
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+              <h3>Blood/Organ Donations</h3>
+              <p>Search For Blood Groups or Organs.</p>
               <div class="readmore_area">
-                <a href="#" data-hover="Read More"><span>Read More</span></a>
+                <a href="blood-bank.php" data-hover="Read More"><span>View</span></a>
               </div>
             </div>
           </div>
@@ -108,11 +79,11 @@
             <div class="single-top-feature opening-hours">
               <span class="fa fa-clock-o"></span>
               <h3>Make an Appointment</h3>
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh.</p>
+              <p>Book a Doctor Easily.</p>
               <ul class="opening-table">
                 <li>
                   <span>Monday - Friday</span>
-                  <div class="value">8.00 - 16.00</div>
+                  <div class="value">8.00 - 17.00</div>
                 </li>
                 <li>
                   <span>Saturday</span>
@@ -134,77 +105,10 @@
             <div class="single-top-feature">
               <span class="fa fa-hospital-o"></span>
               <h3>My Appointments</h3>
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+              <p>view appointments i made.</p>
               <div class="readmore_area">
-                <a data-toggle="modal" data-target="#myModal" href="#" data-hover="Appoinment"><span>Appoinment</span></a>    
+                <a  href="profile.php" data-hover="Appoinment"><span>Appoinment</span></a>
               </div>
-              <!-- start modal window -->
-              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title" id="myModalLabel">Appoinment Details</h4>
-                    </div>
-                    <div class="modal-body">
-                      <div class="appointment-area">
-                        <form class="appointment-form">
-                          <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                              <label class="control-label">Your name <span class="required">*</span>
-                              </label>
-                              <input type="text" class="wp-form-control wpcf7-text" placeholder="Your name">
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                              <label class="control-label">Your Email <span class="required">*</span>
-                              </label>
-                              <input type="mail" class="wp-form-control wpcf7-email" placeholder="Email address">  
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                              <label class="control-label">Your Birth <span class="required">*</span>
-                              </label>
-                              <input type="text" class="wp-form-control wpcf7-text" placeholder="dd/mm/yy">
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                              <label class="control-label">Your Phone <span class="required">*</span>
-                              </label>
-                              <input type="text" class="wp-form-control wpcf7-text" placeholder="Phone No">  
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                              <label class="control-label">Appointment Date <span class="required">*</span>
-                              </label>
-                              <input type="text" class="wp-form-control wpcf7-text" placeholder="dd/mm/yy">
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                              <label class="control-label">Select Department <span class="required">*</span>
-                              </label>
-                              <select class="wp-form-control wpcf7-select">
-                                <option val="1">Dental</option>
-                                <option val="2">cardiology</option>
-                                <option val="3">neurology</option>
-                                <option val="4">Drugstore</option>
-                                <option val="5">x-ray</option>
-                                <option val="6">birth</option>
-                                <option val="7">general</option>
-                                <option val="8">testing</option>
-                                <option val="9">first-aid</option>
-                                <option val="10">immunizations</option><option val="11">pulmonary</option>
-                              </select> 
-                            </div>
-                          </div>         
-                          <input type="text" class="wp-form-control wpcf7-text" placeholder="Subject">
-                          <textarea class="wp-form-control wpcf7-textarea" cols="30" rows="10" placeholder="What would you like to tell us"></textarea>
-                         <button class="wpcf7-submit button--itzel" type="submit"><i class="button__icon fa fa-share"></i><span>Book Appointment</span></button>  
-                        </form>
-                      </div>
-                    </div>                    
-                  </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-              </div><!-- /.modal -->
             </div>
           </div>
         </div>
@@ -212,89 +116,6 @@
       </div>
     </section>
     <!--=========== END Top Feature SECTION ================-->
-
-    <!--=========== BEGIN Service SECTION ================-->
-    <section id="service">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12">
-            <div class="service-area">
-              <!-- Start Service Title -->
-              <div class="section-heading">
-                <h2>Our Services</h2>
-                <div class="line"></div>
-              </div>
-              <!-- Start Service Content -->
-              <div class="service-content">
-                <div class="row">
-                  <!-- Start Single Service -->
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-stethoscope service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Cardio Monitoring</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                  <!-- Start Single Service -->
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-heartbeat service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Rehabilitation Therapy</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                  <!-- Start Single Service -->
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-h-square service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Medical Health Care</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                  <!-- Start Single Service -->
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-medkit service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Background Checks</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                  <!-- Start Single Service -->
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-user-md service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">Special Doctor</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                  <!-- Start Single Service -->
-                  <div class="col-lg-4 col-md-4">
-                    <div class="single-service">
-                      <div class="service-icon">
-                        <span class="fa fa-ambulance service-icon-effect"></span>  
-                      </div>                      
-                      <h3><a href="#">24 Hours Service</a></h3>
-                      <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--=========== End Service SECTION ================-->
 
     <!--=========== BEGAIN Why Choose Us SECTION ================-->
     <section id="whychooseSection">
@@ -335,8 +156,8 @@
                       </a>
                     </div>
                     <div class="media-body">
-                      <h4 class="media-heading">Great Infrastructure</h4>
-                      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>  
+                      <h4 class="media-heading">24 Hour Service</h4>
+                      <p>Make Appointments with doctors at any time you want.</p>
                     </div>
                   </div>
                   <div class="media">
@@ -347,7 +168,7 @@
                     </div>
                     <div class="media-body">
                       <h4 class="media-heading">Qualified Doctors</h4>
-                      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>  
+                      <p>Highly Qulified and Experiance Doctors at your service.</p>
                     </div>
                   </div>
                   <div class="media">
@@ -357,8 +178,8 @@
                       </a>
                     </div>
                     <div class="media-body">
-                      <h4 class="media-heading">Emergency Support</h4>
-                      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>  
+                      <h4 class="media-heading">Medical Consultant Assistance</h4>
+                      <p>Quick and Efficient Assistance From Our Medical consultants using our messaging sevice</p>
                     </div>
                   </div>
                 </div>
@@ -370,50 +191,6 @@
     </section>
     <!--=========== END Why Choose Us SECTION ================-->
 
-    <!--=========== BEGAIN Counter SECTION ================-->
-    <section id="counterSection">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12">
-            <div class="counter-area">
-              <div class="col-lg-3 col-md-3 col-sm-6">
-                <div class="counter-box">
-                  <div class="counter-no counter">
-                    200
-                  </div>
-                  <div class="counter-label">Doctors</div>
-                </div>
-              </div>
-              <div class="col-lg-3 col-md-3 col-sm-6">
-                 <div class="counter-box">
-                  <div class="counter-no counter">
-                    10000
-                  </div>
-                  <div class="counter-label">Clinic Rooms</div>
-                </div>
-              </div>
-              <div class="col-lg-3 col-md-3 col-sm-6">
-                 <div class="counter-box">
-                  <div class="counter-no counter">
-                    350
-                  </div>
-                  <div class="counter-label">Awards</div>
-                </div>
-              </div>
-              <div class="col-lg-3 col-md-3 col-sm-6">
-                 <div class="counter-box">
-                  <div class="counter-no counter">
-                    450
-                  </div>
-                  <div class="counter-label">Happy Patients</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--=========== End Counter SECTION ================-->
 
     <!--=========== BEGAIN Doctors SECTION ================-->
     <section id="meetDoctors">
