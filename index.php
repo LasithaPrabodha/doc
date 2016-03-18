@@ -206,7 +206,7 @@
                 <div class="doctors-area">
                     <ul class="doctors-nav">
                         <?php
-                        $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' ";
+                        $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' Limit 8";
                         $rs  = $conexion->query($sql);
                         $rows = $rs->fetch_all();
 
@@ -215,7 +215,10 @@
                                 <div class="single-doctor">
                                     <a class="tdoctor" href="#" data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
                                         <figure style="height: 250px;">
-                                            <img src="<?php echo $row[2] ?>" />
+                                            <img src="<?php
+                                            if($row[2]==""){
+                                                echo "images/default_prof.jpg";
+                                            }else{echo $row[2];} ?>"/>
                                             <svg viewBox="0 0 180 320" preserveAspectRatio="none"><path d="M 180,160 0,218 0,0 180,0 z"/></svg>
                                             <figcaption>
                                                 <h2><?php echo "Dr.". $row[0] ?></h2>

@@ -266,8 +266,8 @@ require_once("includes/header.php");
                     </div>
                 </div>
 
-                <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2">
-                    <input type="submit" value="Submit" name="submit1">
+                <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2" style="margin-top: 20px">
+                    <input class="btn btn-success" type="submit" value="Register" name="submit1">
                 </div>
             </form>
         </div>
@@ -435,8 +435,8 @@ require_once("includes/header.php");
                     </div>
                 </div>
 
-                <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2">
-                    <input type="submit" value="Submit" name="submit2">
+                <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2" style="margin-top: 20px">
+                    <input class="btn btn-success" type="submit" value="Register" name="submit2">
                 </div>
             </form>
         </div>
@@ -581,8 +581,8 @@ require_once("includes/header.php");
                 </div>
 
 
-                <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2">
-                    <input type="submit" value="Submit" name="submit3">
+                <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2" style="margin-top: 20px">
+                    <input  class="btn btn-success" type="submit" value="Register" name="submit3">
                 </div>
             </form>
         </div>

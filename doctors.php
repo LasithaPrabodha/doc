@@ -127,7 +127,11 @@
                                                         <a class="tdoctor" href="#"
                                                            data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
                                                             <figure style="height: 250px;">
-                                                                <img src="<?php echo $row[2] ?>"/>
+                                                                <img src="<?php
+                                                                if($row[2]==""){
+                                                                    echo "images/default_prof.jpg";
+                                                                }else{echo $row[2];} ?>"/>
+
                                                                 <svg viewBox="0 0 180 320" preserveAspectRatio="none">
                                                                     <path d="M 180,160 0,218 0,0 180,0 z"/>
                                                                 </svg>
@@ -193,7 +197,10 @@
                                     <div class="single-doctor">
                                         <a class="tdoctor" href="#" data-path-hover="m 180,34.57627 -180,0 L 0,0 180,0 z">
                                             <figure style="height: 250px;">
-                                                <img src="<?php echo $row[2] ?>" />
+                                                <img src="<?php
+                                                if($row[2]==""){
+                                                    echo "images/default_prof.jpg";
+                                                }else{echo $row[2];} ?>"/>
                                                 <svg viewBox="0 0 180 320" preserveAspectRatio="none"><path d="M 180,160 0,218 0,0 180,0 z"/></svg>
                                                 <figcaption>
                                                     <h2><?php echo "Dr.". $row[0] ?></h2>
