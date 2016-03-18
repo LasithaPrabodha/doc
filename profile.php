@@ -184,10 +184,10 @@ if ($user_type == 'D') {
             };
         }
 
-        if ((isset($_POST['reserve'])) && (!empty($_SESSION['d_fee'])) && (!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
+        if ((isset($_POST['reserve'])) && (!empty($_SESSION['c_fee'])) && (!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
             $conexion = db_connect();
             $slot = $_SESSION['radioval'];
-            $fee = $_SESSION['d_fee'];
+            $fee = $_SESSION['c_fee'];
 
 
             $sql = "SELECT reserved_time_slots,doctor_id FROM doctor where user_id=" . $id;
@@ -709,7 +709,6 @@ if ($user_type == 'D') {
                                     echo "Doctor fee is : Rs." . $fee . ".00/= <br>";
                                     echo "Channeling fee is : Rs." . $tot . ".00/=";
                                     $_SESSION['c_fee'] = $tot;
-                                    $_SESSION['d_fee'] = $fee;
                                     ?>
                                 </b> <br>
                                 <hr/>
