@@ -103,7 +103,7 @@
                 }
 
 
-                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id FROM `doctor`,`user` WHERE doctor.user_id = user.user_id  AND user.user_type = 'D' AND availability = '1' AND CONCAT(user.first_name, ' ', user.last_name) like " . $name . " AND specialization like " . $spec;
+                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id,doctor.user_id FROM `doctor`,`user` WHERE doctor.user_id = user.user_id  AND user.user_type = 'D' AND availability = '1' AND CONCAT(user.first_name, ' ', user.last_name) like " . $name . " AND specialization like " . $spec;
                 $rs = $conexion->query($sql);
                 $rows = $rs->fetch_all();
                 if (!empty($rows)) {
@@ -135,7 +135,7 @@
                                                                     <h2><?php echo "Dr." . $row[0] ?></h2>
 
                                                                     <p><?php echo $row[1] ?></p>
-                                                                    <button onclick="document.location.href='profile.php?id=<?php echo $row[3]; ?>'">View</button>
+                                                                    <button onclick="document.location.href='profile.php?id=<?php echo $row[4]; ?>'">View</button>
                                                                 </figcaption>
                                                             </figure>
                                                         </a>
@@ -184,7 +184,7 @@
                         <div class="doctors-area">
                             <ul class="doctors-nav">
                                 <?php
-                                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' ";
+                                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id,doctor.user_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' AND availability = '1' ";
                                 $rs  = $conexion->query($sql);
                                 $rows = $rs->fetch_all();
 
@@ -198,7 +198,7 @@
                                                 <figcaption>
                                                     <h2><?php echo "Dr.". $row[0] ?></h2>
                                                     <p><?php echo $row[1] ?></p>
-                                                    <button onclick="document.location.href='profile.php?id=<?php echo $row[3]; ?>'">View</button>
+                                                    <button onclick="document.location.href='profile.php?id=<?php echo $row[4]; ?>'">View</button>
                                                 </figcaption>
                                             </figure>
                                         </a>

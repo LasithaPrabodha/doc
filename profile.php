@@ -562,7 +562,7 @@ if ($user_type == 'D') {
                                             <tr>
                                                 <th>Appointment No</th>
                                                 <th>Patient</th>
-                                                <th>Appintment Details</th>
+                                                <th>Time Slot</th>
                                                
                                             </tr>
                                         </thead>
