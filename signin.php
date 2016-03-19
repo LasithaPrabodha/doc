@@ -7,6 +7,8 @@ if(loggedin()){
     header('Location:index.php');
 }
 
+$message ="";
+
 if(isset($_POST['username']) && isset($_POST['password']))
 {
     $LUsername = sql_escape($_POST['username']);
@@ -22,13 +24,12 @@ if(isset($_POST['username']) && isset($_POST['password']))
         if ($result->num_rows > 0) {
 
             $resultSet = $result->fetch_assoc();
-        }
-
-        if(!empty($resultSet))
-        {
             $filteredID = sql_escape($resultSet['email']);
             $filteredPW = sql_escape($resultSet['password']);
-            if((($filteredID == $LUsername)) && ($filteredPW == $hashPassword))
+            if($resultSet['is_active'] == 0){
+                $message = '<div class="alert alert-danger">  <strong></strong> User Has Not Been Activatied yet!</div>';
+
+            }else if((($filteredID == $LUsername)) && ($filteredPW == $hashPassword))
             {
 
                 $_SESSION['email']=$filteredID;
@@ -42,14 +43,10 @@ if(isset($_POST['username']) && isset($_POST['password']))
 
                 header("Location:profile.php");
             }else{
-                echo "<div>";
-                echo " <h2 style='text-align: center;top: 355px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Wrong Password</font></h2>";
-                echo "</div>";
+                $message = '<div class="alert alert-danger">  <strong></strong>Wrong username or Password!</div>';
             }
         }else{
-            echo "<div>";
-            echo " <h2 style='text-align: center;top: 362px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>User Not Found</font></h2>";
-            echo "</div>";
+            $message = '<div class="alert alert-danger">  <strong></strong>User Not found!</div>';
         }
     }
 }
@@ -78,6 +75,7 @@ require_once("includes/header.php");
             </div>      
         </section>
         <div class="col-md-12">
+            <?php echo $message; ?>
             <div class="col-md-offset-4" style="height: 500px;"> 
 
                 <div class='outer-div'>
