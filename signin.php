@@ -38,6 +38,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
                 $_SESSION['name_with_initials'] = $resultSet['name_with_initials'];
                 $_SESSION['user_type'] = $resultSet['user_type'];
                 $_SESSION['is_active'] = $resultSet['is_active'];
+                $_SESSION['tpno'] = $resultSet['contact_number'];
 
                 header("Location:profile.php");
             }else{

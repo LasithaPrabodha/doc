@@ -204,7 +204,7 @@ if ($user_type == 'D') {
             $sql2 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where user_id=$id";
             if ($result = $conexion->query($sql2)) {
                 
-                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$doc_id','{$slot}')";
+                $sql3 = "insert into appoinments (user_id,doctor_id,telephone_no,time_slot) values('{$_SESSION['user_id']}','$doc_id','{$_SESSION['tpno']}','{$slot}')";
                 if ($conexion->query($sql3)) {
                     $appointmentid = $conexion->insert_id;
                     $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$doc_id','$fee')";

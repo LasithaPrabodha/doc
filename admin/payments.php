@@ -141,7 +141,7 @@
                                                 <th></th>
                                                 <th>Doctor ID</th>
                                                 <th></th>
-                                                <th>Telephone no</th>
+                                                <th>User telephone no</th>
                                                 <th>Time slot</th>
                                                 <th>Amount</th>
                                             </tr>
