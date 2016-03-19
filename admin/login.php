@@ -58,7 +58,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
         
     <div class="row">
         <div class="col-md-12 center login-header">
-            <h2>Welcome to Charisma</h2>
+            <h2>Welcome DocRes Admin</h2>
         </div>
         <!--/span-->
     </div><!--/row-->
