@@ -178,7 +178,6 @@ if ($user_type == 'D') {
             $conexion = db_connect();
 
             $sql = "UPDATE doctor SET allocated_appointment_time='" . implode(',', $_POST['check_box']) . "' where user_id=$id";
-            var_dump($sql);
             if ($result = $conexion->query($sql)) {
                 echo "<div class='alert alert-success'>Alocation times saved successfully!</div>";
             };
@@ -617,9 +616,9 @@ if ($user_type == 'D') {
                                     $appDates = explode(',', $rows[0]);
 
                                     $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
-                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
 
-                                    for ($x = 0; $x < 22; $x++) {
+                                    for ($x = 0; $x < 24; $x++) {
                                         echo '<tr>';
                                         for ($y = 0; $y < 7; $y++) {
                                             $chk = "";
@@ -785,7 +784,7 @@ if ($user_type == 'D') {
                             </form>
 
                             <div class="col-md-12" style="margin: 10px 0">
-                                <button class='btn-primary btn pull-right' data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
+                                <button class='btn-primary btn pull-right' id="res-time-slot" data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
                             </div>
                     <?php } ?>
                     </div>
@@ -1031,6 +1030,7 @@ if ($user_type == 'D') {
                                     <div class="col-xs-12">
 
                                         <input type="submit" name="reserve"   class="btn-primary btn pull-right" value="Reserve this time slot"/>
+                                        <input type="text" name="chkd-val" id="chkd-val" value="" style="display: none"/>
                                     </div>
                                 </div>
 
@@ -1093,6 +1093,13 @@ if ($user_type == 'D') {
                     }
                 });
             });
+
+            //set selected checkbox in payment from
+            $("#res-time-slot").on('click',function(){
+                var selected = $("input[type='radio'][name='radio']:checked").val();
+                console.log(selected);
+                $("#chkd-val").val(selected);
+            })
         });
 
         //load profile to the picture box  when uploading 
