@@ -178,15 +178,16 @@ if ($user_type == 'D') {
             $conexion = db_connect();
 
             $sql = "UPDATE doctor SET allocated_appointment_time='" . implode(',', $_POST['check_box']) . "' where user_id=$id";
+            var_dump($sql);
             if ($result = $conexion->query($sql)) {
                 echo "<div class='alert alert-success'>Alocation times saved successfully!</div>";
             };
         }
 
-        if ((isset($_POST['reserve'])) && (!empty($_SESSION['d_fee'])) && (!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
+        if ((isset($_POST['reserve'])) && (!empty($_SESSION['c_fee'])) && (!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
             $conexion = db_connect();
             $slot = $_SESSION['radioval'];
-            $fee = $_SESSION['d_fee'];
+            $fee = $_SESSION['c_fee'];
 
 
             $sql = "SELECT reserved_time_slots,doctor_id FROM doctor where user_id=" . $id;
@@ -203,7 +204,7 @@ if ($user_type == 'D') {
             $sql2 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where user_id=$id";
             if ($result = $conexion->query($sql2)) {
                 
-                $sql3 = "insert into appoinments (user_id,doctor_id,telephone_no,time_slot) values('{$_SESSION['user_id']}','$doc_id','{$_SESSION['tpno']}','{$slot}')";
+                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$doc_id','{$slot}')";
                 if ($conexion->query($sql3)) {
                     $appointmentid = $conexion->insert_id;
                     $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$doc_id','$fee')";
@@ -616,9 +617,9 @@ if ($user_type == 'D') {
                                     $appDates = explode(',', $rows[0]);
 
                                     $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
-                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
 
-                                    for ($x = 0; $x < 24; $x++) {
+                                    for ($x = 0; $x < 22; $x++) {
                                         echo '<tr>';
                                         for ($y = 0; $y < 7; $y++) {
                                             $chk = "";
@@ -708,7 +709,6 @@ if ($user_type == 'D') {
                                     echo "Doctor fee is : Rs." . $fee . ".00/= <br>";
                                     echo "Channeling fee is : Rs." . $tot . ".00/=";
                                     $_SESSION['c_fee'] = $tot;
-                                    $_SESSION['d_fee'] = $fee;
                                     ?>
                                 </b> <br>
                                 <hr/>
@@ -784,7 +784,7 @@ if ($user_type == 'D') {
                             </form>
 
                             <div class="col-md-12" style="margin: 10px 0">
-                                <button class='btn-primary btn pull-right' id="res-time-slot" data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
+                                <button class='btn-primary btn pull-right' data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
                             </div>
                     <?php } ?>
                     </div>
@@ -1030,7 +1030,6 @@ if ($user_type == 'D') {
                                     <div class="col-xs-12">
 
                                         <input type="submit" name="reserve"   class="btn-primary btn pull-right" value="Reserve this time slot"/>
-                                        <input type="text" name="chkd-val" id="chkd-val" value="" style="display: none"/>
                                     </div>
                                 </div>
 
@@ -1093,13 +1092,6 @@ if ($user_type == 'D') {
                     }
                 });
             });
-
-            //set selected checkbox in payment from
-            $("#res-time-slot").on('click',function(){
-                var selected = $("input[type='radio'][name='radio']:checked").val();
-                console.log(selected);
-                $("#chkd-val").val(selected);
-            })
         });
 
         //load profile to the picture box  when uploading 
