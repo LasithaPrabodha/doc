@@ -208,7 +208,9 @@
                         <?php
                         $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' Limit 8";
                         $rs  = $conexion->query($sql);
-                        $rows = $rs->fetch_all();
+
+                        if ($rs->num_rows > 0) {
+                            $rows = $rs->fetch_all();
 
                         foreach($rows as $row){ ?>
                             <li>
@@ -229,7 +231,9 @@
                                     </a>
                                 </div>
                             </li>
-                        <?php } ?>
+                        <?php }}else{
+                            ech0 "<h2>No Doctors Available At the moment</h2>";
+                        } ?>
 
                     </ul>
                 </div>
@@ -241,6 +245,11 @@
     <!--=========== End Doctors SECTION ================-->
 
     <!--=========== BEGAIN Testimonial SECTION ================-->
+   <?php
+   $sql = "SELECT name,content FROM feedbacks";
+   $rs  = $conexion->query($sql);
+   if ($rs->num_rows > 0) {
+   $rows = $rs->fetch_all();?>
     <section id="testimonial">
       <div class="container">
         <div class="row">
@@ -253,11 +262,8 @@
               </div>
               <div class="testimonial-area">
                 <ul class="testimonial-nav">
-                    <?php
-                    $sql = "SELECT name,content FROM feedbacks";
-                    $rs  = $conexion->query($sql);
-                    $rows = $rs->fetch_all();
-                    foreach($rows as $row){ ?>
+
+                        <?php foreach($rows as $row){ ?>
                         <li>
                             <div class="single-testimonial">
                                 <div class="testimonial-img">
@@ -277,6 +283,7 @@
         </div>
       </div>
     </section>
+   <?php } ?>
     <!--=========== End Testimonial SECTION ================-->
 
 
