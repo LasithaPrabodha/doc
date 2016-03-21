@@ -232,7 +232,7 @@
                                 </div>
                             </li>
                         <?php }}else{
-                            ech0 "<h2>No Doctors Available At the moment</h2>";
+                            echo "<h2>No Doctors Available At the moment</h2>";
                         } ?>
 
                     </ul>

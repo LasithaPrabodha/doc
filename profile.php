@@ -617,9 +617,9 @@ if ($user_type == 'D') {
                                     $appDates = explode(',', $rows[0]);
 
                                     $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
-                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
 
-                                    for ($x = 0; $x < 22; $x++) {
+                                    for ($x = 0; $x < 24; $x++) {
                                         echo '<tr>';
                                         for ($y = 0; $y < 7; $y++) {
                                             $chk = "";
@@ -723,8 +723,8 @@ if ($user_type == 'D') {
                                     $rows = $result->fetch_array();
 
                                     $appDates = explode(',', $rows[0]);
-                                    $reserved = explode(',', $rows[1]);
-
+                                    $reservedx = explode(',', $rows[1]);
+                                    $reserved = array();
 
                                     $today   = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
                                     $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
@@ -735,7 +735,7 @@ if ($user_type == 'D') {
                                     $tomorrow5  = mktime(0, 0, 0, date("m")  , date("d")+6, date("Y"));
 
                                     $dates = [date("D d-m-Y",$today),date("D d-m-Y",$tomorrow),date("D d-m-Y",$tomorrow1),date("D d-m-Y",$tomorrow2),date("D d-m-Y",$tomorrow3),date("D d-m-Y",$tomorrow4),date("D d-m-Y",$tomorrow5)];
-                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
                                     $days = array();
                                     foreach($dates as $date){
 
@@ -757,13 +757,23 @@ if ($user_type == 'D') {
                                         }
                                     }
 
+                                    foreach ($reservedx as $res) {
+                                        if (in_array(substr($res,2,14), $dates)) {
+                                            array_push($reserved,substr($res,0,2));
+                                        }else if(in_array(substr($res,3,14), $dates)) {
+                                            array_push($reserved,substr($res,0,3));
+                                        }
+                                    }
+
                                     for ($y = 0; $y < 7; $y++) {
 
                                         echo '<tr><td style="padding:8px;margin:10px;" ><b>' . $dates[$y] . '</b></td>';
-                                        for ($x = 0; $x < 22; $x++) {
+                                        for ($x = 0; $x < 24; $x++) {
                                             $chk = "";
                                             $dis = "";
                                             $color = "";
+
+
                                             foreach ($appDates as $val) {
                                                 if ($val == $days[$y] . ($x + 1)) {
                                                     if (in_array($days[$y] . ($x + 1), $reserved)) {
@@ -771,7 +781,7 @@ if ($user_type == 'D') {
                                                         $color = 'background:#EE2C2C;color:#fff;';
                                                     }
 
-                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . '">'. $times[$x] . '</input></td>';
+                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . $dates[$y] . '">'. $times[$x] . '</input></td>';
                                                 }
                                             }
                                         }
