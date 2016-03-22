@@ -435,10 +435,12 @@ if ($user_type == 'D') {
                                 <li role="presentation"><a href="#">Set Available Times</a></li>
                                 <li role="presentation"><a href="#">Payments</a></li>
                             <?php
-                            }if (($user_type == 'P')) { ?>
-                                <li role="presentation" ><a href="#">Make An Appointment</a></li>
-                            <?php }
-                        }if (($user_type == 'G')) { ?>
+                            }
+                        }
+                        ?>
+                        <?php if (($user_type == 'D')) { ?>
+<!--                            <li role="presentation" ><a href="#">Make An Appointment</a></li>-->
+                        <?php }if (($user_type == 'G')) { ?>
                             <li role="presentation" ><a href="#">Payment Details</a></li>
 <?php } ?>
                     </ul>
