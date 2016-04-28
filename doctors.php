@@ -103,7 +103,7 @@
                 }
 
 
-                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id,doctor.user_id FROM `doctor`,`user` WHERE doctor.user_id = user.user_id  AND user.user_type = 'D' AND availability = '1' AND CONCAT(user.first_name, ' ', user.last_name) like " . $name . " AND specialization like " . $spec;
+                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id,doctor.user_id FROM `doctor`,`user` WHERE doctor.user_id = user.user_id  AND user.user_type = 'D' AND availability = '1' AND user.is_active='1' AND CONCAT(user.first_name, ' ', user.last_name) like " . $name . " AND specialization like " . $spec;
                 $rs = $conexion->query($sql);
                 $rows = $rs->fetch_all();
                 if (!empty($rows)) {
@@ -188,7 +188,7 @@
                         <div class="doctors-area">
                             <ul class="doctors-nav">
                                 <?php
-                                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id,doctor.user_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' AND availability = '1' ";
+                                $sql = "SELECT CONCAT(user.first_name, ' ', user.last_name) AS name,specialization,profile_img,doctor.doctor_id,doctor.user_id FROM doctor,user WHERE doctor.user_id = user.user_id AND user.user_type = 'D' AND availability = '1' AND user.is_active='1' ";
                                 $rs  = $conexion->query($sql);
                                 $rows = $rs->fetch_all();
 

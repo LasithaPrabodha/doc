@@ -27,13 +27,13 @@ if (isset($_POST['submit'])) {
         if (elem.value == 'o') {
             //alert('ok');
             document.getElementById('toggle').style.display = "block";
-        }else{
+        } else {
             document.getElementById('toggle').style.display = "none";
         }
 
     }
 
-   
+
 </script>
 <!--=========== END HEADER SECTION ================-->        
 <section id="blogArchive">      
@@ -194,14 +194,14 @@ if (isset($_POST['submit'])) {
                                         <div class="col-md-4">
                                             <select id="bloodtype" name="bloodtype" class="form-control" >
                                                 <option value="0">Select your blood group</option>
-                                                <option value="op">O+</option>
-                                                <option value="on">O-</option>
-                                                <option value="ap">A+</option>
-                                                <option value="an">A-</option>
-                                                <option value="bp">B+</option>
-                                                <option value="bn">B-</option>
-                                                <option value="abp">AB+</option>
-                                                <option value="abn">AB-</option>
+                                                <option value="O+">O+</option>
+                                                <option value="O-">O-</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A-">A-</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B-">B-</option>
+                                                <option value="AB+">AB+</option>
+                                                <option value="AB-">AB-</option>
                                             </select>
                                         </div>
                                     </div>
@@ -248,197 +248,27 @@ if (isset($_POST['submit'])) {
                                             Please confirm your donation within 3 days by an email.
                                         </div>
                                     </div>
-
+                                    </form>
+                                    <div class="clearfix"></div><br>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="singlebutton">View Donations</label>
+                                        <div class="col-md-4">
+                                            <button id="donatebtn" onclick="location.href = 'donations.php';" name="donatebtn" class="btn btn-primary donatebtn">View</button>
+                                        </div>
+                                    </div>
 
                                 <?php } ?>
-                            </form>
-                            <div class="clearfix"></div><br>
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="singlebutton">View Donations</label>
-                                <div class="col-md-4">
-                                    <button id="donatebtn" onclick="location.href = 'donations.php';" name="donatebtn" class="btn btn-primary donatebtn">View</button>
-                                </div>
-                            </div>
+                            
+
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
     </div>
 </section>
 <!--=========== END Why Choose Us SECTION ================-->
-<!--=========== BEGAIN Counter SECTION ================-->
-<section id="counterSection">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="counter-area">
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="counter-box">
-                            <div class="counter-no counter">
-                                200
-                            </div>
-                            <div class="counter-label">Doctors</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="counter-box">
-                            <div class="counter-no counter">
-                                300
-                            </div>
-                            <div class="counter-label">Clinic Rooms</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="counter-box">
-                            <div class="counter-no counter">
-                                350
-                            </div>
-                            <div class="counter-label">Awards</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="counter-box">
-                            <div class="counter-no counter">
-                                450
-                            </div>
-                            <div class="counter-label">Happy Patients</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--=========== End Counter SECTION ================-->
-<section id="extraFeatures">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="departments-area">
-                    <div class="section-heading">
-                        <h2>Our Departments</h2>
-                        <div class="line"></div>
-                    </div>
-                    <!-- Start Departments Accordion -->
-                    <div class="panel-group custom-panel" id="accordion">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                        Pediatric Clinic <span class="fa fa-minus"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                        Dental Implants<span class="fa fa-plus"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseTwo" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <img class="img-center" src="images/choose-us-img3.jpg" alt="img">
-                                    <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                        Laryngological Clinic  <span class="fa fa-plus"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseThree" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
-                                        Laryngological Clinic<span class="fa fa-plus"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFour" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <img class="img-center" src="images/choose-us-img3.jpg" alt="img">
-                                    <p> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
-                                        Rehabilitation Therapy Clinic <span class="fa fa-plus"></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFive" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="how-works-area">
-                    <div class="section-heading">
-                        <h2>How we work</h2>
-                        <div class="line"></div>
-                    </div>
-                    <div class="how-works">
-                        <ul class="nav nav-tabs" id="myTab">
-                            <li class="active"><a href="#experiment" data-toggle="tab">Experiment</a></li>
-                            <li><a href="#monitor" data-toggle="tab">Monitor</a></li>
-                            <li><a href="#clean" data-toggle="tab">Clean</a></li>
-                            <li><a href="#fast" data-toggle="tab">Fast</a></li>
-                            <li><a href="#support" data-toggle="tab">Support</a></li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane fade in active" id="experiment">
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div>
-                            <div class="tab-pane fade " id="monitor">
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                                <img class="img-center" src="images/choose-us-img2.jpg" alt="img">
-                            </div>
-                            <div class="tab-pane fade " id="clean">
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                            </div>
-                            <div class="tab-pane fade " id="fast">
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                                <img class="img-center" src="images/choose-us-img1.jpg" alt="img">
-                            </div>
-                            <div class="tab-pane fade " id="support">
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>                     
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>         
-    </div>
-</section>
+
 
 <?php include_once 'includes/footer.php'; ?>

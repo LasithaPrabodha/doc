@@ -173,12 +173,12 @@ CREATE TABLE IF NOT EXISTS `feedbacks` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gp_payments`
+-- Table structure for table `mc_payments`
 --
 
-CREATE TABLE IF NOT EXISTS `gp_payments` (
-  `gp_payment_id` int(11) NOT NULL,
-  `gp_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `mc_payments` (
+  `mc_payment_id` int(11) NOT NULL,
+  `mc_id` int(11) NOT NULL,
   `amount` float NOT NULL,
   `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -186,11 +186,11 @@ CREATE TABLE IF NOT EXISTS `gp_payments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `g_physiciant`
+-- Table structure for table `medical_c`
 --
 
-CREATE TABLE IF NOT EXISTS `g_physiciant` (
-`gp_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `medical_c` (
+`mc_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `qualifications` longtext NOT NULL,
   `acc_no` varchar(30) NOT NULL,
@@ -399,10 +399,10 @@ ALTER TABLE `feedbacks`
  ADD PRIMARY KEY (`f_id`);
 
 --
--- Indexes for table `g_physiciant`
+-- Indexes for table `medical_c`
 --
-ALTER TABLE `g_physiciant`
- ADD PRIMARY KEY (`gp_id`);
+ALTER TABLE `medical_c`
+ ADD PRIMARY KEY (`mc_id`);
 
 --
 -- Indexes for table `messages`
@@ -475,10 +475,10 @@ MODIFY `donation_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 ALTER TABLE `feedbacks`
 MODIFY `f_id` int(10) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `g_physiciant`
+-- AUTO_INCREMENT for table `medical_c`
 --
-ALTER TABLE `g_physiciant`
-MODIFY `gp_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `medical_c`
+MODIFY `mc_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `messages`
 --

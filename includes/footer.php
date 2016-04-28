@@ -8,8 +8,7 @@
             <div class = "row">
                 <div class = "col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class = "footer-copyright">
-                        <p>&copy;
-                            Copyright <a href = "index.html">WpF Medinova</a></p>
+                       
                     </div>
                 </div>
                 <div class = "col-lg-6 col-md-6 col-sm-6 col-xs-12">

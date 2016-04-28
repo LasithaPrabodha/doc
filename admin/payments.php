@@ -13,52 +13,60 @@
         pay($no, $amount);
     }
 
-    if (isset($_GET['id']) && isset($_GET['paydc'])) {
+    if (isset($_GET['id']) && isset($_GET['paydc']) && isset($_GET['doc_id'])) {
         $no = $_GET['id'];
         $amount = $_GET['paydc'];
-        paydc($no, $amount);
+        $doc_id = $_GET['doc_id'];
+        paydc($no, $amount, $doc_id);
     }
-    
+
     function pay($no, $amount) {
         require_once("../includes/sql.php");
 
         $conexion = db_connect();
-        $sql = "insert into gp_payments(gp_id, amount) values('$no','$amount')";
-        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
-         $message='Rs. '.$amount.' has been paid to Medical Consultant '.$no;
+        $sql = "insert into mc_payments(mc_id, amount) values('$no','$amount')";
+        $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+        $message = 'Rs. ' . $amount . ' has been paid to Medical Consultant ' . $no;
         echo "<script type='text/javascript'>alert('$message');</script>";
     }
 
-    function paydc($no, $amount) {
+    function paydc($no, $amount, $doc_id) {
         require_once("../includes/sql.php");
 
         $conexion = db_connect();
-        $sql = "insert into doc_payments(doc_id, amount) values('$no','$amount')";
-        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
-        
-        $sql = "update doc_pay set appoin_no='0', tot_amnt='0' where doc_id='$no'";
-        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
-        $message='Rs. '.$amount.' has been paid to Doctor '.$no;
+//        $sql = "insert into doc_payments(doc_id, amount) values('$no','$amount')";
+//        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+
+        $sql = "update doc_pay set appoi_no='0', tot_amnt='0' where doc_id='$no'";
+        $sql1= "insert into doc_salary(doc_id, amount) values('$doc_id','$amount')";
+        $conexion->query($sql) or die("oopsy, error when tryin to delete ");
+        $conexion->query($sql1) or die("oopsy, error when tryin to delete ");
+        $message = 'Rs. ' . $amount . ' has been paid to Doctor ' . $no;
         echo "<script type='text/javascript'>alert('$message');</script>";
     }
     ?>
     <script>
+
+        
         function pay(id)
         {
-            var amount = $('#textinput').val();
+            var amount = $('#textinput'+id).val();
             if (confirm("Are you sure you want to pay to this employee?") == true)
                 window.location = "payments.php?id=" + id + "&pay=" + amount;
             return false;
         }
 
-        function paydc(id)
+        function paydc(id, count)
         {
-            var Row = document.getElementById("somerow");
+
+
+            var Row = document.getElementById(count);
             var Cells = Row.getElementsByTagName("td");
-            var amount =Cells[3].innerText;
-            
+            var amount = Cells[4].textContent;
+            var doc_id = Cells[0].textContent;
+           
             if (confirm("Are you sure you want to pay to this employee?") == true)
-                window.location = "payments.php?id=" + id + "&paydc=" + amount;
+                window.location = "payments.php?id=" + id + "&doc_id="+doc_id+"&paydc=" + amount;
             return false;
         }
     </script>
@@ -133,7 +141,7 @@
                                 </div>
                                 <div class="box-content">
                                     <h3>Appointments</h3>
-                                    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+                                    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive" id="tablePayDoc">
                                         <thead>
                                             <tr>
                                                 <th>Appointment ID</th>
@@ -200,10 +208,12 @@
 
                                             $sql = "SELECT * FROM `doc_pay`";
                                             $result = $conexion->query($sql);
-
+                                            $count = 0;
                                             while ($row = $result->fetch_array()) {
                                                 ?>
-                                                <tr id='somerow'>
+                                                <tr id='somerow<?PHP
+                                                echo $count;
+                                                ?>'>
                                                     <td><?php echo $row['doc_id']; ?> </td>
                                                     <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
                                                             <i class="glyphicon glyphicon-edit icon-white"></i>
@@ -213,7 +223,8 @@
                                                     <td><?php echo $row['doc_name']; ?></td>
                                                     <td><?php echo $row['appoi_no']; ?></td>
                                                     <td><?php echo $row['tot_amnt']; ?></td>
-                                                    <td><a class="btn btn-default" href="#" onclick="return paydc(<?php echo $row['doc_id']; ?>)" >
+                                                    <td><a class="btn btn-default" href="#" onclick="return paydc(<?php echo $row['doc_id'] . ", 'somerow" . $count."'";
+                                                $count++; ?>)" >
                                                             <i class="glyphicon glyphicon-ok-sign icon-white"></i>
                                                             Pay
                                                         </a></td>
@@ -245,7 +256,7 @@
                                             include_once("../includes/sql.php");
                                             $conexion = db_connect();
 
-                                            $sql = "SELECT g_physiciant.user_id, g_physiciant.gp_id, user.first_name, user.last_name FROM `g_physiciant` join user on g_physiciant.user_id=user.user_id";
+                                            $sql = "SELECT medical_c.user_id, medical_c.mc_id, user.first_name, user.last_name FROM `medical_c` join user on medical_c.user_id=user.user_id";
                                             $result = $conexion->query($sql);
 
 
@@ -258,11 +269,11 @@
                                                             View User
                                                         </a>
                                                     </td>
-                                                    <td><?php echo $row['gp_id']; ?></td>
+                                                    <td><?php echo $row['mc_id']; ?></td>
                                                     <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
                                                     <td><?php
-                                                        $g = $row['gp_id'];
-                                                        $sql2 = "SELECT amount, date_added FROM gp_payments WHERE date_added IN (SELECT MAX( date_added ) FROM gp_payments WHERE gp_id =" . $g . " GROUP BY gp_id) ORDER BY gp_id ASC";
+                                                        $g = $row['mc_id'];
+                                                        $sql2 = "SELECT amount, date_added FROM mc_payments WHERE date_added IN (SELECT MAX( date_added ) FROM mc_payments WHERE mc_id =" . $g . " GROUP BY mc_id) ORDER BY mc_id ASC";
                                                         $result2 = $conexion->query($sql2);
                                                         while ($row2 = $result2->fetch_array()) {
                                                             echo $row2['date_added'];
@@ -270,16 +281,16 @@
                                                             echo $row2['amount'];
                                                         }
                                                         ?></td>
-                                                    <td><input id="textinput" name="textinput" type="number" placeholder="Salary" class="form-control input-md"></td>
+                                                    <td><input id="textinput<?php echo $row['mc_id']; ?>" name="textinput<?php echo $row['mc_id']; ?>" type="number" placeholder="Salary" class="form-control input-md"></td>
                                                     <td>
-                                                        <a class="btn btn-default" href="#" onclick="return pay(<?php echo $row['gp_id']; ?>)" >
+                                                        <a class="btn btn-default" href="#" onclick="return pay(<?php echo $row['mc_id']; ?>)" >
                                                             <i class="glyphicon glyphicon-ok-sign icon-white"></i>
                                                             Pay
                                                         </a>
                                                     </td>
 
                                                 </tr>
-<?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

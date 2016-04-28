@@ -31,7 +31,7 @@ if (isset($_POST['submit1'])) {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`,`Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno','$add','$dob')";
         $result = register($insert);
         echo "<div>";
-        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result[1] . "</font></h5>";
+        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=green>" . $result[1] . "</font></h5>";
         echo "</div>";
     }
 } elseif (isset($_POST['submit2'])) {
@@ -47,7 +47,6 @@ if (isset($_POST['submit1'])) {
     $sp = sql_escape($_POST['sp']);
     $bank = sql_escape($_POST['bank']);
     $accno = sql_escape($_POST['accno']);
-    $aat = sql_escape($_POST['aat']);
     $add = sql_escape($_POST['add']);
     $cadd = sql_escape($_POST['cadd']);
     $dob = sql_escape($_POST['year']) . '-' . sql_escape($_POST['month']) . '-' . sql_escape($_POST['day']);
@@ -63,7 +62,7 @@ if (isset($_POST['submit1'])) {
     } else {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`, `dob`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add','$dob')";
         $result = register($insert);
-        $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `allocated_appointment_time`, `account_no`, `bank`,`address`) VALUES ('$result[0]', '$sp', '$aat', '$accno','$bank','$cadd')";
+        $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `account_no`, `bank`,`address`) VALUES ('$result[0]', '$sp', '$accno','$bank','$cadd')";
         $result2 = registerd($doctor);
         $name = $fname . " " . $lname;
         $insert2 = "INSERT INTO `doc_pay`(`doc_id`, `doc_name`, `user_id`) VALUES ('$result2[0]', '$name', '$result[0]')";
@@ -74,7 +73,7 @@ if (isset($_POST['submit1'])) {
         $dc_id = $result2[0];
         update_cid($ch_id, $dc_id);
         echo "<div>";
-        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result3[1] . "</font></h5>";
+        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=green>" . $result3[1] . "</font></h5>";
         echo "</div>";
     }
 } elseif (isset($_POST['submit3'])) {
@@ -103,11 +102,11 @@ if (isset($_POST['submit1'])) {
     } else {
         $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add','$dob')";
         $result = register($insert);
-        $medcon = "INSERT INTO `g_physiciant`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
+        $medcon = "INSERT INTO `medical_c`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
         $result2 = registerc($medcon);
 
         echo "<div>";
-        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result2[1] . "</font></h5>";
+        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=green>" . $result2[1] . "</font></h5>";
         echo "</div>";
     }
 }
@@ -335,40 +334,38 @@ require_once("includes/header.php");
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Bank<span class="required">*</span>
                             </label>
-                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" placeholder="Your Bank name with branch" required>
+                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" pattern="[a-zA-Z!@#$%^*_|]{0,100}" placeholder="Your Bank name with branch" required>
                         </div>
                         <div class="col-md-4 col-sm-4">
                             <label class="control-label">Account no.<span class="required">*</span>
                             </label>
-                            <input type="text" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your Account no." required>
+                            <input type="number" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your Account no." required>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 col-sm4 col-md-offset-2 col-sm-offset-2">
+
+
+                        <div class="col-md-8 col-sm-8  col-md-offset-2 col-sm-offset-2">
+                            <label class="control-label">Address<span class="required">*</span>
+                            </label>
+                            <input type="text" name="add" id="add" class="wp-form-control wpcf7-text" placeholder="Your Address" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
+                            <label class="control-label">Clinic Address<span class="required">*</span>
+                            </label>
+                            <input type="text" name="cadd" id="cadd" class="wp-form-control wpcf7-text" placeholder="Your Clinic Address" required>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm4 ">
                             <label class="control-label">Contact Number<span class="required">*</span>
                             </label>
                             <input type="number" name="cno" id="cno" class="wp-form-control wpcf7-text" placeholder="Your Contact number" pattern=".{10,}"   required title="10 numbers " required>
                         </div>
 
-                        <div class="col-md-4 col-sm-4">
-                            <label class="control-label">Allocated appointment time<span class="required">*</span>
-                            </label>
-                            <input type="text" name="aat" id="aat" class="wp-form-control wpcf7-text" placeholder="Your appointment time to be allocated in hours" required>
-                        </div>
-                    </div>
-                    <div class="row">
 
-                        <div class="col-md-4 col-sm-4  col-md-offset-2 col-sm-offset-2">
-                            <label class="control-label">Address<span class="required">*</span>
-                            </label>
-                            <input type="text" name="add" id="add" class="wp-form-control wpcf7-text" placeholder="Your Address" required>
-                        </div>
-
-                        <div class="col-md-4 col-sm-4">
-                            <label class="control-label">Clinic Address<span class="required">*</span>
-                            </label>
-                            <input type="text" name="cadd" id="cadd" class="wp-form-control wpcf7-text" placeholder="Your Clinic Address" required>
-                        </div>
+                       
                     </div>
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
@@ -499,12 +496,12 @@ require_once("includes/header.php");
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Bank<span class="required">*</span>
                             </label>
-                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" placeholder="Your bank name with branch" required>
+                            <input type="text" name="bank" id="bank" class="wp-form-control wpcf7-text" pattern="[a-zA-Z!@#$%^*_|]{0,100}" placeholder="Your bank name with branch" required>
                         </div>
                         <div class="col-md-4 col-sm-4">
                             <label class="control-label">Account no.<span class="required">*</span>
                             </label>
-                            <input type="text" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your account no" required>
+                            <input type="number" name="accno" id="accno" class="wp-form-control wpcf7-text" placeholder="Your account no" required>
                         </div>
                     </div>
                     <div class="row">

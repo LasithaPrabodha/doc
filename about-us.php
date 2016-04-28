@@ -22,13 +22,13 @@
         </div>        
       </div>      
     </section>
-    <!--=========== BEGAIN Doctors SECTION ================-->
+<!--    =========== BEGAIN Doctors SECTION ================
     <section id="meetDoctors">
       <div class="container">
         <div class="row">
           <div class="col-lg-12 col-md-12">
             <div class="meetDoctors-area">
-             <!-- Start Service Title -->
+              Start Service Title 
               <div class="section-heading">
                 <h2>Meet Our Doctors</h2>
                 <div class="line"></div>
@@ -222,9 +222,9 @@
         </div>
       </div>
     </section>
-    <!--=========== End Doctors SECTION ================-->
+    =========== End Doctors SECTION ================
 
-    <!--=========== BEGAIN Counter SECTION ================-->
+    =========== BEGAIN Counter SECTION ================
     <section id="counterSection">
       <div class="container">
         <div class="row">
@@ -267,6 +267,6 @@
         </div>
       </div>
     </section>
-    <!--=========== End Counter SECTION ================-->
+    =========== End Counter SECTION ================-->
 
    <?php include_once 'includes/footer.php'; ?>

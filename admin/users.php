@@ -57,7 +57,7 @@ $conexion = db_connect();
         <a data-toggle="tooltip" class="well top-block" href="genp.php">
             <i class="glyphicon glyphicon-user yellow"></i>
 
-            <div>General Physicians</div>
+            <div>Medical Consultant</div>
             <div><?php
                 $sql3 = "SELECT count(*) as count FROM user where user_type='G'";
                 $result3 = $conexion->query($sql3);

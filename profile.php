@@ -90,7 +90,7 @@ if ($user_type == 'D') {
     }
 } elseif ($user_type == 'G') {
 
-    $sql3 = "SELECT acc_no, bank FROM `g_physiciant` where user_id='$id'";
+    $sql3 = "SELECT acc_no, bank FROM `medical_c` where user_id='$id'";
     $result3 = $conexion->query($sql3);
     $bank = $id;
     if ($result3->num_rows > 0) {
@@ -263,7 +263,7 @@ if ($user_type == 'D') {
                             }
                         } elseif ($user_type == 'G') {
                             if ((!empty($bank2)) && (!empty($accno2))) {
-                                $sqlmc = "update g_physiciant set acc_no='$accno2', bank='$bank2' where user_id='$id'";
+                                $sqlmc = "update medical_c set acc_no='$accno2', bank='$bank2' where user_id='$id'";
                                 $sqlmc_result = $conexion->query($sqlmc);
                             } else {
                                 echo "<div class='alert alert-danger'>*All the fields are mandatory</div>";
@@ -430,7 +430,7 @@ if ($user_type == 'D') {
                     <ul class="nav nav-tabs profile-nav">
                         <li role="presentation" class="active"><a href="#">Profile</a></li>
                         <?php if (isset($_SESSION['user_id']) && ($id == $_SESSION['user_id']) && ($user_type != 'G')) { ?>
-                            <li role="presentation"><a href="">Appoinments</a></li> 
+                            <li role="presentation"><a href="">Appointments</a></li> 
                             <?php if ($user_type == 'D') { ?>
                                 <li role="presentation"><a href="#">Set Available Times</a></li>
                                 <li role="presentation"><a href="#">Payments</a></li>
@@ -438,8 +438,8 @@ if ($user_type == 'D') {
                             }
                         }
                         ?>
-                        <?php if (($user_type == 'D')) { ?>
-<!--                            <li role="presentation" ><a href="#">Make An Appointment</a></li>-->
+                        <?php if (($user_type == 'D') && ($_SESSION['user_type'])!='D' && ($_SESSION['user_type'])!='M') { ?>
+                            <li role="presentation" ><a href="#">Make An Appointment</a></li>
                         <?php }if (($user_type == 'G')) { ?>
                             <li role="presentation" ><a href="#">Payment Details</a></li>
 <?php } ?>
@@ -521,8 +521,8 @@ if ($user_type == 'D') {
                                             <tr>
                                                 <th>Appointment No</th>
                                                 <th>Doctor</th>
-                                                <th>Appintment Details</th>
-                                                <th>Place of Appoinment</th>
+                                                <th>Appointment Details</th>
+                                                <th>Place of Appointment</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -650,7 +650,7 @@ if ($user_type == 'D') {
                         <?php
                         $conexion = db_connect();
 
-                        $sql = "SELECT * from patient_payments p,doctor d where d.doctor_id=p.doctor_id and d.user_id = '$id'";
+                        $sql = "SELECT * from doc_salary ds, doctor d where d.doctor_id=ds.doc_id and d.user_id = '$id'";
                         $result = $conexion->query($sql);
                         if ($result->num_rows > 0) {
                             ?>
@@ -659,8 +659,6 @@ if ($user_type == 'D') {
                                 <thead>
                                     <tr>
                                         <th>Payment ID</th>
-                                        <th>Appointment No</th>
-                                        <th>Patient</th>
                                         <th>Payment Amount</th>
                                         <th>Date</th>
                                     </tr>
@@ -669,16 +667,12 @@ if ($user_type == 'D') {
                                     <?php
                                     while ($row = $result->fetch_array()) {
 
-                                        $payment_id = $row['p_payment_id'];
-                                        $appointment = $row['appoinment_id'];
-                                        $patient = $row['user_id'];
+                                        $payment_id = $row['sal_id'];
                                         $amount = $row['amount'];
                                         $time = $row['date'];
                                         ?>
                                         <tr>
                                             <td><?php echo $payment_id; ?></td>
-                                            <td><?php echo $appointment; ?></td>
-                                            <td><?php echo $patient; ?></td>
                                             <td><?php echo $amount; ?></td>
                                             <td><?php echo $time; ?></td>
 
@@ -815,13 +809,13 @@ if ($user_type == 'D') {
                                 include_once("includes/sql.php");
                                 $conexion = db_connect();
 
-                                $sqlgp = "SELECT gp_payment_id, amount, date_added FROM `gp_payments`";
+                                $sqlgp = "SELECT mc_payment_id, amount, date_added FROM `mc_payments`";
                                 $resultgp = $conexion->query($sqlgp);
 
                                 while ($rowgp = $resultgp->fetch_array()) {
                                     ?>
                                     <tr>
-                                        <td><?php echo $rowgp['gp_payment_id']; ?></td>
+                                        <td><?php echo $rowgp['mc_payment_id']; ?></td>
                                         <td><?php echo $rowgp['amount']; ?></td>
                                         <td><?php echo $rowgp['date_added']; ?></td>
 
