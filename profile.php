@@ -64,7 +64,7 @@ if ($result->num_rows > 0) {
         $user_id = $row['user_id'];
         $first_name = $row['first_name'];
         $last_name = $row['last_name'];
-        $name_with_initials = $first_name." ".$last_name;
+        $name_with_initials = $row['name_with_initials'];
         $email = $row['email'];
         $profile_img = $row['profile_img'];
         $gender = $row['gender'];
@@ -74,6 +74,7 @@ if ($result->num_rows > 0) {
         $contact_number = $row['contact_number'];
     }
 }
+
 
 if ($user_type == 'D') {
     $sql2 = "SELECT doctor.bank, doctor.account_no, doctor_charges.channeling_fee FROM doctor join doctor_charges on doctor.doctor_id=doctor_charges.doctor_id where doctor.user_id=" . $id;
@@ -188,14 +189,15 @@ if ($user_type == 'D') {
             $conexion = db_connect();
             $slot = $_SESSION['radioval'];
             $fee = $_SESSION['c_fee'];
-
+            $name = $_SESSION['first_name'] . " " . $_SESSION['last_name'];
+            $tpno = $_SESSION['tpno'];
 
             $sql = "SELECT reserved_time_slots,doctor_id FROM doctor where user_id=" . $id;
             $result = $conexion->query($sql);
             $rows = $result->fetch_array();
             $reserved = array();
             $reserved = explode(',', $rows[0]);
-            $doc_id=$rows[1];
+            $doc_id = $rows[1];
 
             array_push($reserved, $slot);
 
@@ -203,8 +205,7 @@ if ($user_type == 'D') {
 
             $sql2 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where user_id=$id";
             if ($result = $conexion->query($sql2)) {
-                
-                $sql3 = "insert into appoinments (user_id,doctor_id,time_slot) values('{$_SESSION['user_id']}','$doc_id','{$slot}')";
+                $sql3 = "insert into appoinments (user_id,doctor_id, patient_name, telephone_no, time_slot) values('{$_SESSION['user_id']}','$doc_id','$name','$tpno','{$slot}')";
                 if ($conexion->query($sql3)) {
                     $appointmentid = $conexion->insert_id;
                     $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$doc_id','$fee')";
@@ -233,7 +234,7 @@ if ($user_type == 'D') {
 
 //profile picture upload
                     $target_dir = "images/";
-                    $target_file = $target_dir .uniqid(). basename($_FILES["profile_img"]["name"]);
+                    $target_file = $target_dir . uniqid() . basename($_FILES["profile_img"]["name"]);
                     $uploadOk = 1;
                     $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
 
@@ -322,6 +323,52 @@ if ($user_type == 'D') {
         } else if (!isset($_POST)) {
             echo "<div class='alert alert-danger'>*All the feilds are mandatory</div>";
         }
+        $sql = "SELECT * FROM user where user_id = '$id'";
+$result = $conexion->query($sql);
+if ($result->num_rows > 0) {
+
+    while ($row = $result->fetch_array()) {
+
+        $user_id = $row['user_id'];
+        $first_name = $row['first_name'];
+        $last_name = $row['last_name'];
+        $name_with_initials = $row['name_with_initials'];
+        $email = $row['email'];
+        $profile_img = $row['profile_img'];
+        $gender = $row['gender'];
+        $user_type = $row['user_type'];
+        $is_active = $row['is_active'];
+        $password = $row['password'];
+        $contact_number = $row['contact_number'];
+    }
+}
+if ($user_type == 'D') {
+    $sql2 = "SELECT doctor.bank, doctor.account_no, doctor_charges.channeling_fee FROM doctor join doctor_charges on doctor.doctor_id=doctor_charges.doctor_id where doctor.user_id=" . $id;
+    $result2 = $conexion->query($sql2);
+
+    if ($result2->num_rows > 0) {
+
+        while ($row2 = $result2->fetch_array()) {
+
+            $bank = $row2['bank'];
+            $accno = $row2['account_no'];
+            $cfee = $row2['channeling_fee'];
+        }
+    }
+} elseif ($user_type == 'G') {
+
+    $sql3 = "SELECT acc_no, bank FROM `medical_c` where user_id='$id'";
+    $result3 = $conexion->query($sql3);
+    $bank = $id;
+    if ($result3->num_rows > 0) {
+
+        while ($row3 = $result3->fetch_array()) {
+
+            $bank = $row3['bank'];
+            $accno = $row3['acc_no'];
+        }
+    }
+}
         ?>
     </div>
     <div class="row">
@@ -340,7 +387,7 @@ if ($user_type == 'D') {
         ?>
         <div id="alert-container"></div>
         <div class="col-md-3"   style="background-color: rgba(210, 210, 210, 0.09);  min-height: 553px" >
-            <div class="col-md-offset-1 col-md-10" ><h3 class="text-center"><?php echo $name_with_initials; ?></h3></div>
+            <div class="col-md-offset-1 col-md-10" ><h3 class="text-center"><?php echo $first_name." ".$last_name; ?></h3></div>
             <div class="col-md-offset-1 col-md-10" style="padding-bottom: 25px; border-bottom: 1px solid #ddd; align-content:center; ">
                 <image style="width:80%;height: 80%; margin-left: 20px;" src="<?php
                 if (isset($profile_img) && (!empty($profile_img))) {
@@ -434,15 +481,15 @@ if ($user_type == 'D') {
                             <?php if ($user_type == 'D') { ?>
                                 <li role="presentation"><a href="#">Set Available Times</a></li>
                                 <li role="presentation"><a href="#">Payments</a></li>
-                            <?php
+                                <?php
                             }
                         }
                         ?>
-                        <?php if (($user_type == 'D') && ($_SESSION['user_type'])!='D' && ($_SESSION['user_type'])!='M') { ?>
+                        <?php if (($user_type == 'D') && ($_SESSION['user_type']) != 'D' && ($_SESSION['user_type']) != 'M') { ?>
                             <li role="presentation" ><a href="#">Make An Appointment</a></li>
                         <?php }if (($user_type == 'G')) { ?>
                             <li role="presentation" ><a href="#">Payment Details</a></li>
-<?php } ?>
+                        <?php } ?>
                     </ul>
                 </div>
                 <!--end of Tabs-->
@@ -501,7 +548,7 @@ if ($user_type == 'D') {
                     <div class="clearfix"></div>
                 </div>
                 <!--end of tab content 1-->
-<?php if (isset($_SESSION['user_id']) && ($id == $_SESSION['user_id']) && ($user_type != 'G')) { ?>
+                <?php if (isset($_SESSION['user_id']) && ($id == $_SESSION['user_id']) && ($user_type != 'G')) { ?>
                     <!--tab content 2:appointment details-->
                     <div class="bhoechie-tab-content hide">
                         <br>
@@ -543,7 +590,7 @@ if ($user_type == 'D') {
                                                     <td><a href="<?php echo "profile.php?key=" . $appintment_id; ?>"  class="btn btn-sm btn-danger" title="view"><button class="btn btn-sm btn-danger" >Cancel</button></a>&nbsp;</td>
 
                                                 </tr>
-            <?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
 
@@ -552,7 +599,7 @@ if ($user_type == 'D') {
                             } else if ($user_type == 'D') {// Apointment details for:doctors
                                 $conexion = db_connect();
 
-                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and d.user_id = '$id'";
+                                $sql = "SELECT a.appoinment_id, a.time_slot,a.patient_name,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and d.user_id = '$id'";
                                 $result = $conexion->query($sql);
                                 if ($result->num_rows > 0) {
                                     ?>
@@ -563,7 +610,7 @@ if ($user_type == 'D') {
                                                 <th>Appointment No</th>
                                                 <th>Patient</th>
                                                 <th>Time Slot</th>
-                                               
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -571,39 +618,44 @@ if ($user_type == 'D') {
                                             while ($row = $result->fetch_array()) {
 
                                                 $appintment_id = $row['appoinment_id'];
-                                                $patient_is = $row['first_name'] . "" . $row['last_name'];
+                                                $patient_is = $row['patient_name'];
                                                 $time_slot = $row['time_slot'];
+                                                $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
+                                                $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $appintment_id; ?></td>
                                                     <td><?php echo $patient_is; ?></td>
-                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $time_slot; ?></p><br></td>
-                                                   
+                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $times[$time_slot[1]] . " " . substr($time_slot, 2); ?></p><br></td>
+
                                                 </tr>
-            <?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
-                                <?php
+
+                                    <?php
                                 }
                             }
                             ?>
                         </div>
                     </div>
                     <!--end of tab content 2-->
-    <?php if ($user_type == 'D') { ?>
+                    <?php if ($user_type == 'D') { ?>
                         <!--tab content 3:For doctors select available time slots-->
                         <div class="col-md-12 bhoechie-tab-content hide">
                             <br>
+
                             <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
                                 <table class="table-striped" style="width:100%">
                                     <tr>
-                                        <th>Monday</th>
-                                        <th>Tuesday</th>
-                                        <th>Wednesday</th>
-                                        <th>Thursday</th>
-                                        <th>Friday</th>
-                                        <th>Satureday</th>
-                                        <th>Sunday</th>
+
+                                        <th>Monday <?PHP echo "<br>".date('d-m-Y', strtotime('monday this week')); ?></th>
+                                        <th>Tuesday <?PHP echo "<br>".date('d-m-Y', strtotime('tuesday this week')); ?></th>
+                                        <th>Wednesday <?PHP echo "<br>".date('d-m-Y', strtotime('wednesday this week')); ?></th>
+                                        <th>Thursday <?PHP echo "<br>".date('d-m-Y', strtotime('thursday this week')); ?></th>
+                                        <th>Friday <?PHP echo "<br>".date('d-m-Y', strtotime('friday this week')); ?></th>
+                                        <th>Saturday <?PHP echo "<br>".date('d-m-Y', strtotime('saturday this week')); ?></th>
+                                        <th>Sunday <?PHP echo "<br>".date('d-m-Y', strtotime('sunday this week')); ?></th>
                                     </tr>
 
                                     <?php
@@ -617,7 +669,7 @@ if ($user_type == 'D') {
                                     $appDates = explode(',', $rows[0]);
 
                                     $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
-                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
 
                                     for ($x = 0; $x < 24; $x++) {
                                         echo '<tr>';
@@ -677,20 +729,20 @@ if ($user_type == 'D') {
                                             <td><?php echo $time; ?></td>
 
                                         </tr>
-        <?php } ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
 
 
                         </div>
                         <!--end of tab content 4-->
-                    <?php
+                        <?php
                     }
                 } if (($user_type == 'D')) {
                     ?>
                     <!--tab content 5:For patients to select a appointment time of a doctor-->
                     <div class="bhoechie-tab-content hide">
-                                <?php if ($id != $_SESSION['user_id']) { ?>
+                        <?php if ($id != $_SESSION['user_id']) { ?>
                             <form id="loginForm" name="radiofrm" action="" method="post" style="margin:auto; margin-top: 40px">
                                 <b>   <?php
                                     $sql1 = "SELECT * from doctor_charges c ,doctor d where d.doctor_id=c.doctor_id and d.user_id=" . $user_id;
@@ -720,42 +772,42 @@ if ($user_type == 'D') {
                                     $reservedx = explode(',', $rows[1]);
                                     $reserved = array();
 
-                                    $today   = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
-                                    $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
-                                    $tomorrow1  = mktime(0, 0, 0, date("m")  , date("d")+2, date("Y"));
-                                    $tomorrow2  = mktime(0, 0, 0, date("m")  , date("d")+3, date("Y"));
-                                    $tomorrow3  = mktime(0, 0, 0, date("m")  , date("d")+4, date("Y"));
-                                    $tomorrow4  = mktime(0, 0, 0, date("m")  , date("d")+5, date("Y"));
-                                    $tomorrow5  = mktime(0, 0, 0, date("m")  , date("d")+6, date("Y"));
+                                    $today = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+                                    $tomorrow = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
+                                    $tomorrow1 = mktime(0, 0, 0, date("m"), date("d") + 2, date("Y"));
+                                    $tomorrow2 = mktime(0, 0, 0, date("m"), date("d") + 3, date("Y"));
+                                    $tomorrow3 = mktime(0, 0, 0, date("m"), date("d") + 4, date("Y"));
+                                    $tomorrow4 = mktime(0, 0, 0, date("m"), date("d") + 5, date("Y"));
+                                    $tomorrow5 = mktime(0, 0, 0, date("m"), date("d") + 6, date("Y"));
 
-                                    $dates = [date("D d-m-Y",$today),date("D d-m-Y",$tomorrow),date("D d-m-Y",$tomorrow1),date("D d-m-Y",$tomorrow2),date("D d-m-Y",$tomorrow3),date("D d-m-Y",$tomorrow4),date("D d-m-Y",$tomorrow5)];
-                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 PM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                    $dates = [date("D d-m-Y", $today), date("D d-m-Y", $tomorrow), date("D d-m-Y", $tomorrow1), date("D d-m-Y", $tomorrow2), date("D d-m-Y", $tomorrow3), date("D d-m-Y", $tomorrow4), date("D d-m-Y", $tomorrow5)];
+                                    $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
                                     $days = array();
-                                    foreach($dates as $date){
+                                    foreach ($dates as $date) {
 
-                                        $day = substr($date,0,3);
-                                        if($day == "Mon"){
-                                            array_push($days,'M');
-                                        }else if($day == "Tue"){
-                                            array_push($days,'T');
-                                        }else if($day == "Wed"){
-                                            array_push($days,'W');
-                                        }else if($day == "Thu"){
-                                            array_push($days,'L');
-                                        }else if($day == "Fri"){
-                                            array_push($days,'F');
-                                        }else if($day == "Sat"){
-                                            array_push($days,'S');
-                                        }else if($day == "Sun"){
-                                            array_push($days,'Z');
+                                        $day = substr($date, 0, 3);
+                                        if ($day == "Mon") {
+                                            array_push($days, 'M');
+                                        } else if ($day == "Tue") {
+                                            array_push($days, 'T');
+                                        } else if ($day == "Wed") {
+                                            array_push($days, 'W');
+                                        } else if ($day == "Thu") {
+                                            array_push($days, 'L');
+                                        } else if ($day == "Fri") {
+                                            array_push($days, 'F');
+                                        } else if ($day == "Sat") {
+                                            array_push($days, 'S');
+                                        } else if ($day == "Sun") {
+                                            array_push($days, 'Z');
                                         }
                                     }
 
                                     foreach ($reservedx as $res) {
-                                        if (in_array(substr($res,2,14), $dates)) {
-                                            array_push($reserved,substr($res,0,2));
-                                        }else if(in_array(substr($res,3,14), $dates)) {
-                                            array_push($reserved,substr($res,0,3));
+                                        if (in_array(substr($res, 2, 14), $dates)) {
+                                            array_push($reserved, substr($res, 0, 2));
+                                        } else if (in_array(substr($res, 3, 14), $dates)) {
+                                            array_push($reserved, substr($res, 0, 3));
                                         }
                                     }
 
@@ -775,7 +827,7 @@ if ($user_type == 'D') {
                                                         $color = 'background:#EE2C2C;color:#fff;';
                                                     }
 
-                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . $dates[$y] . '">'. $times[$x] . '</input></td>';
+                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input ' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . $dates[$y] . '">' . $times[$x] . '</input></td>';
                                                 }
                                             }
                                         }
@@ -790,11 +842,11 @@ if ($user_type == 'D') {
                             <div class="col-md-12" style="margin: 10px 0">
                                 <button class='btn-primary btn pull-right' data-toggle="modal" data-target="#cardModal">Reserve this time slot</button>
                             </div>
-                    <?php } ?>
+                        <?php } ?>
                     </div>
                     <!--end of tab content 5-->
                     <!--tab content 6:For Consultant-->
-<?php }if ($user_type == 'G') { ?>
+                <?php }if ($user_type == 'G') { ?>
                     <div class="bhoechie-tab-content hide">
                         <table id="payments_tab" class="display col-md-12" style="width:80%">
                             <thead>
@@ -821,12 +873,12 @@ if ($user_type == 'D') {
 
 
                                     </tr>
-    <?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
                     <!--end of tab content 6-->
-<?php } ?>
+                <?php } ?>
             </div>
         </div>
 
@@ -862,54 +914,96 @@ if ($user_type == 'D') {
                         </div>
                         <div class="form-group">
                             <label for="first_name">First Name</label>
-                            <input type="text" name="first_name" id="first_name" class="form-control" value="<?php echo $first_name; ?>">
+                            <input required type="text" name="first_name" id="first_name" class="form-control" value="<?php echo $first_name; ?>">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="last_name">Last Name</label>
-                            <input type="text" name="last_name" id="last_name" class="form-control" value="<?php echo $last_name; ?>">
+                            <input required type="text" name="last_name" id="last_name" class="form-control" value="<?php echo $last_name; ?>">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="last_name">Name With Initials</label>
-                            <input type="text" name="initials" id="initials" class="form-control" value="<?php echo $name_with_initials; ?>">
+                            <input required type="text" name="initials" id="initials" class="form-control" value="<?php echo $name_with_initials; ?>">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="last_name">Contact Number</label>
-                            <input type="text" name="contact_no" id="contact_no" class="form-control" value="<?php echo $contact_number; ?>">
+                            <input required type="text" name="contact_no" id="contact_no" class="form-control" value="<?php echo $contact_number; ?>">
                             <p class="help-block"></p>
                         </div>
-<?php if ($user_type == 'D') { ?>
+                        <?php if ($user_type == 'D') { ?>
                             <div class="form-group">
                                 <label for="last_name">Bank</label>
-                                <input type="text" name="bank" id="bank" class="form-control" value="<?php echo $bank; ?>">
+                                <input required type="text" name="bank" id="bank" class="form-control" value="<?php echo $bank; ?>">
                                 <p class="help-block"></p>
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Bank account number</label>
-                                <input type="text" name="accno" id="accno" class="form-control" value="<?php echo $accno; ?>">
+                                <input required type="text" name="accno" id="accno" class="form-control" value="<?php echo $accno; ?>">
                                 <p class="help-block"></p>
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Channeling fee.(Rs.)</label>
-                                <input type="number" name="chfee" id="chfee" class="form-control" value="<?php echo $cfee; ?>">
+                                <input required type="number" name="chfee" id="chfee" class="form-control" value="<?php echo $cfee; ?>">
                                 <p class="help-block"></p>
                             </div>
-<?php } elseif ($user_type == 'G') { ?>
+                        <?php } elseif ($user_type == 'G') { ?>
                             <div class="form-group">
                                 <label for="last_name">Bank</label>
-                                <input type="text" name="bank" id="bank" class="form-control" value="<?php echo $bank; ?>">
+                                <input required type="text" name="bank" id="bank" class="form-control" value="<?php echo $bank; ?>">
                                 <p class="help-block"></p>
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Bank account number</label>
-                                <input type="text" name="accno" id="accno" class="form-control" value="<?php echo $accno; ?>">
+                                <input required type="text" name="accno" id="accno" class="form-control" value="<?php echo $accno; ?>">
                                 <p class="help-block"></p>
                             </div>
-<?php } ?>
+                        <?php } ?>
                         <input type="submit" class="btn btn-success" value="Change Settings" name="submit1">
 
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- end of edit profile -->
+
+
+<!--change password popup-->
+<div class="modal fade bs-modal-lg" id="passModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <center>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">Change your password</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="frmChange" method="post" action="" onSubmit="return validatePassword()">
+                        <div style="width:500px;">
+                            <div class="form-group">
+                                <label for="first_name">Current Password</label>
+                                <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">New Password</label>
+                                <input type="password" name="newPassword" id="newPassword" class="form-control" required>
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Confirm Password</label>
+                                <input type="password" name="confirmPassword"  id="confirmPassword" class="form-control" required >
+                                <p class="help-block"></p>
+                            </div>
+                            <input type="submit" class="btn btn-success" value="Change Password" name="submit2">
                         </div>
                     </form>
                 </div>
@@ -918,212 +1012,171 @@ if ($user_type == 'D') {
                     <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
                 </div>
             </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- end of edit profile -->
-
-
-    <!--change password popup-->
-    <div class="modal fade bs-modal-lg" id="passModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <center>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="gridSystemModalLabel">Change your password</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form name="frmChange" method="post" action="" onSubmit="return validatePassword()">
-                            <div style="width:500px;">
-                                <div class="form-group">
-                                    <label for="first_name">Current Password</label>
-                                    <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
-                                    <p class="help-block"></p>
-                                </div>
-                                <div class="form-group">
-                                    <label for="last_name">New Password</label>
-                                    <input type="password" name="newPassword" id="newPassword" class="form-control" required>
-                                    <p class="help-block"></p>
-                                </div>
-                                <div class="form-group">
-                                    <label for="last_name">Confirm Password</label>
-                                    <input type="password" name="confirmPassword"  id="confirmPassword" class="form-control" required >
-                                    <p class="help-block"></p>
-                                </div>
-                                <input type="submit" class="btn btn-success" value="Change Password" name="submit2">
+        </center>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--end of change password-->
+<!--Card payment popup-->
+<div class="modal fade bs-modal-sm" id="cardModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <center>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">Card Payments</h4>
+                </div>
+                <div class="panel panel-default credit-card-box">
+                    <div class="panel-heading display-table" >
+                        <div class="row display-tr" >
+                            <h3 class="panel-title display-td" >Payment Details</h3>
+                            <div class="display-td" >                            
+                                <img class="img-responsive" src="http://i76.imgup.net/accepted_c22e0.png">
                             </div>
+                        </div>                    
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" name="payment-form" method="POST" action="">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="cardNumber">CARD NUMBER</label>
+                                        <div class="input-group">
+                                            <input 
+                                                type="tel"
+                                                class="form-control"
+                                                name="cardNumber"
+                                                placeholder="Valid Card Number"
+                                                autocomplete="cc-number"
+                                                required autofocus 
+                                                />
+                                            <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                        </div>
+                                    </div>                            
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-7 col-md-7">
+                                    <div class="form-group">
+                                        <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+                                        <input 
+                                            type="tel" 
+                                            class="form-control" 
+                                            name="cardExpiry"
+                                            placeholder="MM / YY"
+                                            autocomplete="cc-exp"
+                                            required 
+                                            />
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 col-md-5 pull-right">
+                                    <div class="form-group">
+                                        <label for="cardCVC">CV CODE</label>
+                                        <input 
+                                            type="tel" 
+                                            class="form-control"
+                                            name="cardCVC"
+                                            placeholder="CVC"
+                                            autocomplete="cc-csc"
+                                            required
+                                            />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+
+                                    <input type="submit" name="reserve"   class="btn-primary btn pull-right" value="Reserve this time slot"/>
+                                </div>
+                            </div>
+
                         </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
-                    </div>
-                </div><!-- /.modal-content -->
-            </center>
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!--end of change password-->
-    <!--Card payment popup-->
-    <div class="modal fade bs-modal-sm" id="cardModal"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
-        <div class="modal-dialog modal-sm" role="document">
-            <center>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="gridSystemModalLabel">Card Payments</h4>
-                    </div>
-                    <div class="panel panel-default credit-card-box">
-                        <div class="panel-heading display-table" >
-                            <div class="row display-tr" >
-                                <h3 class="panel-title display-td" >Payment Details</h3>
-                                <div class="display-td" >                            
-                                    <img class="img-responsive" src="http://i76.imgup.net/accepted_c22e0.png">
-                                </div>
-                            </div>                    
-                        </div>
-                        <div class="panel-body">
-                            <form role="form" name="payment-form" method="POST" action="">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="form-group">
-                                            <label for="cardNumber">CARD NUMBER</label>
-                                            <div class="input-group">
-                                                <input 
-                                                    type="tel"
-                                                    class="form-control"
-                                                    name="cardNumber"
-                                                    placeholder="Valid Card Number"
-                                                    autocomplete="cc-number"
-                                                    required autofocus 
-                                                    />
-                                                <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
-                                            </div>
-                                        </div>                            
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-7 col-md-7">
-                                        <div class="form-group">
-                                            <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
-                                            <input 
-                                                type="tel" 
-                                                class="form-control" 
-                                                name="cardExpiry"
-                                                placeholder="MM / YY"
-                                                autocomplete="cc-exp"
-                                                required 
-                                                />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-5 col-md-5 pull-right">
-                                        <div class="form-group">
-                                            <label for="cardCVC">CV CODE</label>
-                                            <input 
-                                                type="tel" 
-                                                class="form-control"
-                                                name="cardCVC"
-                                                placeholder="CVC"
-                                                autocomplete="cc-csc"
-                                                required
-                                                />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-xs-12">
-
-                                        <input type="submit" name="reserve"   class="btn-primary btn pull-right" value="Reserve this time slot"/>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>  
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
-                    </div>
-                </div><!-- /.modal-content -->
-            </center>
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!--end of Card payment-->
+                </div>  
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <!--        <button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div><!-- /.modal-content -->
+        </center>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--end of Card payment-->
 <?php include 'includes/footer.php'; ?>
 
-    <script>
-        $(document).ready(function () {
-            //tab change script
-            $("div.bhoechie-tab-menu>ul>li").click(function (e) {
-                e.preventDefault();
-                $(this).siblings('li.active').removeClass("active");
-                $(this).addClass("active");
-                var index = $(this).index();
-                $("div.bhoechie-tab-content").addClass("hide");
-                $("div.bhoechie-tab-content").eq(index).removeClass("hide");
-            });
+<script>
+    $(document).ready(function () {
+        //tab change script
+        $("div.bhoechie-tab-menu>ul>li").click(function (e) {
+            e.preventDefault();
+            $(this).siblings('li.active').removeClass("active");
+            $(this).addClass("active");
+            var index = $(this).index();
+            $("div.bhoechie-tab-content").addClass("hide");
+            $("div.bhoechie-tab-content").eq(index).removeClass("hide");
+        });
 
-            //radio button value save in session 
-            $("input[name='radio']").click(function ()
-            {
-                var radioVal = $(this).val();
+        //radio button value save in session 
+        $("input[name='radio']").click(function ()
+        {
+            var radioVal = $(this).val();
 
 
-                $.ajax({
-                    type: "POST",
-                    url: "includes/profile_functions.php",
-                    data: {radioval: radioVal}, //pass txtarea input with cssrf tolcke
-                    dataType: "json"
-
-                });
+            $.ajax({
+                type: "POST",
+                url: "includes/profile_functions.php",
+                data: {radioval: radioVal}, //pass txtarea input with cssrf tolcke
+                dataType: "json"
 
             });
 
-            //patient table script
-            $('input:radio[id^="option"]').on('change', function (event) {
-                var status = $('input[name=availability]:checked', '#statusform').val();
-                var uid = document.getElementById("uid").value;
+        });
 
-                $.ajax({
-                    type: "POST",
-                    url: "includes/profile_functions.php",
-                    data: {status: status, id: uid}, //pass txtarea input with cssrf tolcke
-                    dataType: "json",
-                    success: function (result) {
+        //patient table script
+        $('input:radio[id^="option"]').on('change', function (event) {
+            var status = $('input[name=availability]:checked', '#statusform').val();
+            var uid = document.getElementById("uid").value;
+
+            $.ajax({
+                type: "POST",
+                url: "includes/profile_functions.php",
+                data: {status: status, id: uid}, //pass txtarea input with cssrf tolcke
+                dataType: "json",
+                success: function (result) {
 //                                alert(result['result']);
-                        $("#alert-container").html(result['result']);
-                        $(".alert").delay(3000).slideUp(200);
-                    }
-                });
+                    $("#alert-container").html(result['result']);
+                    $(".alert").delay(3000).slideUp(200);
+                }
             });
         });
+    });
 
-        //load profile to the picture box  when uploading 
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+    //load profile to the picture box  when uploading 
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    $('#profile-img').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
+            reader.onload = function (e) {
+                $('#profile-img').attr('src', e.target.result);
             }
-        }
 
-        $("#profile_img").change(function () {
-            readURL(this);
-        });
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#profile_img").change(function () {
+        readURL(this);
+    });
 
 
 // for datatables
-        $(document).ready(function () {
-            $('#patient_tab').DataTable();
-            $('#patient_tab2').DataTable();
-            $('#payments_tab2').DataTable();
-            $('#payments_tab').DataTable();
+    $(document).ready(function () {
+        $('#patient_tab').DataTable();
+        $('#patient_tab2').DataTable();
+        $('#payments_tab2').DataTable();
+        $('#payments_tab').DataTable();
 
-        });
+    });
 
 
-    </script>
+</script>

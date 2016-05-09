@@ -19,21 +19,9 @@ if (isset($_POST['submit1'])) {
     $add = sql_escape($_POST['add']);
     $dob = sql_escape($_POST['year']) . '-' . sql_escape($_POST['month']) . '-' . sql_escape($_POST['day']);
 
-    if ($email != $email2) {
-        echo "<div>";
-        echo " <h3 style='text-align: center;top: 315px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h3>";
-        echo "</div>";
-    } else if ($password != $password2) {
-        echo "<div>";
-        echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
-        echo "</div>";
-    } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`,`Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno','$add','$dob')";
-        $result = register($insert);
-        echo "<div>";
-        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=green>" . $result[1] . "</font></h5>";
-        echo "</div>";
-    }
+    $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`,`Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'P', '1', '$password', '$cno','$add','$dob')";
+    $result = register($insert);
+    echo "<script type='text/javascript'>alert('" . $result[1] . "')</script>";
 } elseif (isset($_POST['submit2'])) {
     $email = sql_escape($_POST['email']);
     $password = md5(sql_escape($_POST['password']));
@@ -51,31 +39,21 @@ if (isset($_POST['submit1'])) {
     $cadd = sql_escape($_POST['cadd']);
     $dob = sql_escape($_POST['year']) . '-' . sql_escape($_POST['month']) . '-' . sql_escape($_POST['day']);
 
-    if ($email != $email2) {
-        echo "<div>";
-        echo " <h3 style='text-align: center;top: 315px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h3>";
-        echo "</div>";
-    } else if ($password != $password2) {
-        echo "<div>";
-        echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
-        echo "</div>";
-    } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`, `dob`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add','$dob')";
-        $result = register($insert);
-        $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `account_no`, `bank`,`address`) VALUES ('$result[0]', '$sp', '$accno','$bank','$cadd')";
-        $result2 = registerd($doctor);
-        $name = $fname . " " . $lname;
-        $insert2 = "INSERT INTO `doc_pay`(`doc_id`, `doc_name`, `user_id`) VALUES ('$result2[0]', '$name', '$result[0]')";
-        docpay($insert2);
-        $charges = "INSERT INTO `doctor_charges`( `doctor_id`, `channeling_fee`) VALUES ('$result2[0]', '$cf')";
-        $result3 = registerd($charges);
-        $ch_id = $result3[0];
-        $dc_id = $result2[0];
-        update_cid($ch_id, $dc_id);
-        echo "<div>";
-        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=green>" . $result3[1] . "</font></h5>";
-        echo "</div>";
-    }
+
+    $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`, `dob`) VALUES ('$fname', '$lname','$email','$sex', 'D', '2', '$password', '$cno','$add','$dob')";
+    $result = register($insert);
+    $doctor = "INSERT INTO `doctor`(`user_id`, `specialization`, `account_no`, `bank`,`address`) VALUES ('$result[0]', '$sp', '$accno','$bank','$cadd')";
+    $result2 = registerd($doctor);
+    $name = $fname . " " . $lname;
+    $insert2 = "INSERT INTO `doc_pay`(`doc_id`, `doc_name`, `user_id`) VALUES ('$result2[0]', '$name', '$result[0]')";
+    docpay($insert2);
+    $charges = "INSERT INTO `doctor_charges`( `doctor_id`, `channeling_fee`) VALUES ('$result2[0]', '$cf')";
+    $result3 = registerd($charges);
+    $ch_id = $result3[0];
+    $dc_id = $result2[0];
+    update_cid($ch_id, $dc_id);
+    echo "<script type='text/javascript'>alert('" . $result3[1] . "')</script>";
+    
 } elseif (isset($_POST['submit3'])) {
     $email = sql_escape($_POST['email']);
     $password = md5(sql_escape($_POST['password']));
@@ -91,30 +69,193 @@ if (isset($_POST['submit1'])) {
     $accno = sql_escape($_POST['accno']);
     $dob = sql_escape($_POST['year']) . '-' . sql_escape($_POST['month']) . '-' . sql_escape($_POST['day']);
 
-    if ($email != $email2) {
-        echo "<div>";
-        echo " <h3 style='text-align: center;top: 315px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h3>";
-        echo "</div>";
-    } else if ($password != $password2) {
-        echo "<div>";
-        echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
-        echo "</div>";
-    } else {
-        $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add','$dob')";
-        $result = register($insert);
-        $medcon = "INSERT INTO `medical_c`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
-        $result2 = registerc($medcon);
 
-        echo "<div>";
-        echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=green>" . $result2[1] . "</font></h5>";
-        echo "</div>";
-    }
+    $insert = "INSERT INTO `user`(`first_name`, `last_name`, `email`, `gender`, `user_type`, `is_active`, `password`, `contact_number`, `Address`,`dob`) VALUES ('$fname', '$lname','$email','$sex', 'G', '2', '$password', '$cno', '$add','$dob')";
+    $result = register($insert);
+    $medcon = "INSERT INTO `medical_c`( `user_id`, `qualifications`, `acc_no`, `bank`) VALUES ('$result[0]', '$quali','$accno','$bank')";
+    $result2 = registerc($medcon);
+
+    echo "<script type='text/javascript'>alert('" . $result2[1] . "')</script>";
 }
 require_once("includes/header.php");
 //require_once("includes/header2.php");
 ?>
 <!--=========== END HEADER SECTION ================-->
+<script type="text/javascript" language="JavaScript">
+    $(document).ready(function () {
+        $('#submit1').click(function (e) {
+            var input = new Array();
+            $('#patform input, #patform select').each(function (index) {
 
+                input[index] = $(this);
+//                        alert('Type: ' + input.attr('type') + '      Name: ' + input.attr('name') + '     Value: ' + input.val());
+            });
+            var flag;
+            flag = true;
+            if (input[0].val() != input[1].val()) {
+                alert('Emails do not match. Please re-check!');
+                input[0].addClass("red-border");
+                input[1].addClass("red-border");
+                flag = false;
+            } else {
+                input[0].removeClass("red-border");
+                input[1].removeClass("red-border");
+            }
+            if (input[2].val() != input[3].val()) {
+                alert('Passwords do not match. Please re-check!');
+                input[2].addClass("red-border");
+                input[3].addClass("red-border");
+                flag = false;
+            } else {
+                input[2].removeClass("red-border");
+                input[3].removeClass("red-border");
+            }
+            var cno = input[6].val();
+            if (cno.length != 10) {
+                alert('Contact number doesnt contain 10 digits. Please re-check!');
+                input[6].addClass("red-border");
+                flag = false;
+            } else {
+                input[6].removeClass("red-border");
+            }
+
+            if (input[8].val() == 'm' || input[9].val() == 'd' || input[10].val() == 'y') {
+                alert('Date of birthday is invalid. Please re-check!');
+                input[8].addClass("red-border");
+                input[9].addClass("red-border");
+                input[10].addClass("red-border");
+                flag = false;
+            } else {
+                input[8].removeClass("red-border");
+                input[9].removeClass("red-border");
+                input[10].removeClass("red-border");
+            }
+
+            if (flag == false) {
+                e.preventDefault();
+            }
+
+        });
+
+        $('#submit2').click(function (e) {
+            var input = new Array();
+            $('#docForm input, #docForm select').each(function (index) {
+
+                input[index] = $(this);
+//                        alert('Type: ' + input.attr('type') + '      Name: ' + input.attr('name') + '     Value: ' + input.val());
+            });
+            var flag;
+            flag = true;
+
+            if (input[0].val() != input[1].val()) {
+                alert('Emails do not match. Please re-check!');
+                input[0].addClass("red-border");
+                input[1].addClass("red-border");
+                flag = false;
+            } else {
+                input[0].removeClass("red-border");
+                input[1].removeClass("red-border");
+            }
+            if (input[2].val() != input[3].val()) {
+                alert('Passwords do not match. Please re-check!');
+                input[2].addClass("red-border");
+                input[3].addClass("red-border");
+                flag = false;
+            } else {
+                input[2].removeClass("red-border");
+                input[3].removeClass("red-border");
+            }
+            var cno = input[10].val();
+            if (cno.length != 10) {
+                alert('Contact number doesnt contain 10 digits. Please re-check!');
+                input[12].addClass("red-border");
+                flag = false;
+            } else {
+                input[12].removeClass("red-border");
+            }
+
+            if (input[13].val() == 'm' || input[14].val() == 'd' || input[15].val() == 'y') {
+                alert('Date of birthday is invalid. Please re-check!');
+                input[13].addClass("red-border");
+                input[14].addClass("red-border");
+                input[15].addClass("red-border");
+                flag = false;
+            } else {
+                input[13].removeClass("red-border");
+                input[14].removeClass("red-border");
+                input[15].removeClass("red-border");
+            }
+            if (flag == false) {
+                e.preventDefault();
+            }
+
+        });
+
+        $('#submit3').click(function (e) {
+            var input = new Array();
+            $('#mediForm input, #mediForm select').each(function (index) {
+
+                input[index] = $(this);
+//                        alert('Type: ' + input.attr('type') + '      Name: ' + input.attr('name') + '     Value: ' + input.val());
+            });
+            var flag;
+            flag = true;
+            if (input[0].val() != input[1].val()) {
+                alert('Emails do not match. Please re-check!');
+                input[0].addClass("red-border");
+                input[1].addClass("red-border");
+                flag = false;
+            } else {
+                input[0].removeClass("red-border");
+                input[1].removeClass("red-border");
+            }
+            if (input[2].val() != input[3].val()) {
+                alert('Passwords do not match. Please re-check!');
+                input[2].addClass("red-border");
+                input[3].addClass("red-border");
+                flag = false;
+            } else {
+                input[2].removeClass("red-border");
+                input[3].removeClass("red-border");
+            }
+            var cno = input[7].val();
+            if (cno.length != 10) {
+                alert('Contact number doesnt contain 10 digits. Please re-check!');
+                input[7].addClass("red-border");
+                flag = false;
+            } else {
+                input[7].removeClass("red-border");
+            }
+
+            if (input[11].val() == 'm' || input[12].val() == 'd' || input[13].val() == 'y') {
+                alert('Date of birthday is invalid. Please re-check!');
+                input[11].addClass("red-border");
+                input[12].addClass("red-border");
+                input[13].addClass("red-border");
+                flag = false;
+            } else {
+                input[11].removeClass("red-border");
+                input[12].removeClass("red-border");
+                input[13].removeClass("red-border");
+            }
+            if (flag == false) {
+                e.preventDefault();
+            }
+
+        });
+    });
+
+//function submit1(){
+//    alert('ok');
+//    
+//}
+
+</script>
+<style>
+    .red-border{
+        border: 1px solid red;
+    }
+</style>
 <section id="blogArchive">      
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -147,7 +288,7 @@ require_once("includes/header.php");
     </div>
     <div class='tab-content'>
         <div id="home" class="tab-pane fade in active">
-            <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+            <form id="patform" action="" method="post" style="margin:auto; margin-top: 40px">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
@@ -226,7 +367,7 @@ require_once("includes/header.php");
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <select id="day" name="day" data-rel="chosen" required="" class="form-control">
-                                        <option value="m">Day</option>
+                                        <option value="d">Day</option>
                                         <?php for ($x = 1; $x < 32; $x++) { ?>
                                             <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
                                         <?php } ?>
@@ -266,12 +407,12 @@ require_once("includes/header.php");
                 </div>
 
                 <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2" style="margin-top: 20px">
-                    <input class="btn btn-success" type="submit" value="Register" name="submit1">
+                    <input class="btn btn-success" type="submit" value="Register" name="submit1" id="submit1">
                 </div>
             </form>
         </div>
         <div id="menu1" class="tab-pane fade">
-            <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+            <form id="docForm" action="" method="post" style="margin:auto; margin-top: 40px">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
@@ -352,12 +493,12 @@ require_once("includes/header.php");
                         </div>
                     </div>
                     <div class="row">
-                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
+                        <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
                             <label class="control-label">Clinic Address<span class="required">*</span>
                             </label>
                             <input type="text" name="cadd" id="cadd" class="wp-form-control wpcf7-text" placeholder="Your Clinic Address" required>
                         </div>
-                        
+
                         <div class="col-md-4 col-sm4 ">
                             <label class="control-label">Contact Number<span class="required">*</span>
                             </label>
@@ -365,7 +506,7 @@ require_once("includes/header.php");
                         </div>
 
 
-                       
+
                     </div>
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
@@ -393,7 +534,7 @@ require_once("includes/header.php");
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <select id="day" name="day" data-rel="chosen" required="" class="form-control">
-                                        <option value="m">Day</option>
+                                        <option value="d">Day</option>
                                         <?php for ($x = 1; $x < 32; $x++) { ?>
                                             <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
                                         <?php } ?>
@@ -433,12 +574,12 @@ require_once("includes/header.php");
                 </div>
 
                 <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2" style="margin-top: 20px">
-                    <input class="btn btn-success" type="submit" value="Register" name="submit2">
+                    <input class="btn btn-success" type="submit" value="Register" name="submit2" id="submit2">
                 </div>
             </form>
         </div>
         <div id="menu2" class="tab-pane fade">
-            <form id="loginForm" action="" method="post" style="margin:auto; margin-top: 40px">
+            <form id="mediForm" action="" method="post" style="margin:auto; margin-top: 40px">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
@@ -538,7 +679,7 @@ require_once("includes/header.php");
                                 </div>
                                 <div class="col-md-4 col-sm-4">
                                     <select id="day" name="day" data-rel="chosen" required="" class="form-control">
-                                        <option value="m">Day</option>
+                                        <option value="d">Day</option>
                                         <?php for ($x = 1; $x < 32; $x++) { ?>
                                             <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
                                         <?php } ?>
@@ -579,7 +720,7 @@ require_once("includes/header.php");
 
 
                 <div class="col-md-10 col-sm-10 col-md-offset-6 col-sm-offset-2" style="margin-top: 20px">
-                    <input  class="btn btn-success" type="submit" value="Register" name="submit3">
+                    <input class="btn btn-success" type="submit" value="Register" name="submit3" id="submit3">
                 </div>
             </form>
         </div>

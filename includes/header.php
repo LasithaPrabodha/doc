@@ -41,6 +41,8 @@
         <link href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.bootstrap.min.css" rel="stylesheet">
         
         
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        
     </head>
     <body> 
         <!-- BEGAIN PRELOADER -->
@@ -112,7 +114,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?PHP echo $_SESSION['first_name']; ?> <span class="fa fa-angle-down"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="profile.php">Profile</a></li>
-                    <li><a href="messages.php">Messages</a></li>
+                    <?PHP if($_SESSION['user_type']!='D') echo '<li><a href="messages.php">Messages</a></li>'; ?>
                     <li><a href="signout.php">Sign out</a></li>
                   </ul>
                 </li>

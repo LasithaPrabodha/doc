@@ -3,7 +3,6 @@ $editId = $_POST['EID'];
 require '../includes/sql.php';
 
 $con = db_connect();
-
 $sql = 'select * from feedbacks where f_id=' . $editId;
 $resultSet = $con->query($sql);
 while ($row = $resultSet->fetch_array()) {
