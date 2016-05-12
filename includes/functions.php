@@ -50,6 +50,22 @@ function emailcheck($email){
         return "e2";
     }
 }
+
+function numbercheck($no){
+    $conexion = db_connect();
+    $sqlStr = "SELECT contact_number as count FROM user WHERE contact_number='" . $no . "'";
+    if ($resultSet = $conexion->query($sqlStr)) {
+        if ($resultSet->num_rows > 0) {
+           
+            return "yes";
+        } else {
+            return "e1";
+        }
+    } else {
+        return "e2";
+    }
+}
+
 function usercheck($email){
     $conexion = db_connect();
     $sqlStr = "SELECT user_id FROM user WHERE email='" . $email . "'";

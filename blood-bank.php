@@ -9,14 +9,25 @@ if (isset($_POST['submit'])) {
     $dt = $_POST['donatetype'];
     $bt = $_POST['bloodtype'];
     $og = $_POST['organ'];
+    if ($og == '1') {
+        $og = 'Kidney';
+    } else if ($og == '2') {
+        $og = 'Liver Tissues';
+    }
     $details = $_POST['details'];
     $uid = $_SESSION['user_id'];
-    if ($dt == 'b' && $bt != '0' || $dt == 'o' && $og != '0') {
+
+    $sql = "SELECT donation_id FROM donations WHERE user_id = '$uid' AND organ='$og' ";
+    $result = $conexion->query($sql);
+    $resultSet[] = null;
+    if ($result->num_rows > 0) {
+        echo '<script>alert("You have already decided to donate this organ/blood");</script>';
+    } else if ($dt == 'b' && $bt != '0' || $dt == 'o' && $og != '0') {
         if ($dt == 'o') {
             $sqldnt = "INSERT INTO `donations`( `user_id`, `user_name`,`user_loc`,`blood_group`, `organ`,`details`) VALUES ('$uid',(select first_name from user where user.user_id ='$uid'),(select Address from user where user.user_id ='$uid'),'$bt','$og','$details')";
             $conexion->query($sqldnt);
         } else {
-            $sqldnt2 = "INSERT INTO `donations`( `user_id`,`user_name`,`user_loc`, `blood_group`, `organ`,`details`) VALUES ('$uid',(select first_name from user where user.user_id ='$uid'),(select Address from user where user.user_id ='$uid'),'$bt','no organ','$details')";
+            $sqldnt2 = "INSERT INTO `donations`( `user_id`,`user_name`,`user_loc`, `blood_group`, `organ`,`details`) VALUES ('$uid',(select first_name from user where user.user_id ='$uid'),(select Address from user where user.user_id ='$uid'),'$bt','blood','$details')";
             $conexion->query($sqldnt2);
         }
     }
@@ -32,9 +43,65 @@ if (isset($_POST['submit'])) {
         }
 
     }
+    $(document).ready(function () {
+        $('#send').click(function (e) {
+            var input = new Array();
+            $('#donation input, #donation select').each(function (index) {
+                input[index] = $(this);
+                //                        alert('Type: ' + input.attr('type') + '      Name: ' + input.attr('name') + '     Value: ' + input.val());
+            });
+            var flag;
+            flag = true;
+            if (input[0].val() == '0') {
+                alert('Select your donation.');
+                input[0].addClass("red-border");
+                flag = false;
+            } else {
+                input[0].removeClass("red-border");
+            }
+            if (input[0].val() == 'o') {
+                if (input[1].val() == '0') {
+                    alert('Select your blood group.');
+                    input[1].addClass("red-border");
+                    flag = false;
+                } else {
+                    input[1].removeClass("red-border");
+                }
 
+                if (input[2].val() == '0') {
+                    alert('Select your organ.');
+                    input[2].addClass("red-border");
+                    flag = false;
+                } else {
+                    input[2].removeClass("red-border");
+                }
+
+            } else if (input[0].val() == 'b') {
+                if (input[1].val() == '0') {
+                    alert('Select your blood group.');
+                    input[1].addClass("red-border");
+
+                    flag = false;
+                } else {
+                    input[1].removeClass("red-border");
+
+                }
+            }
+
+
+            if (flag == false) {
+                e.preventDefault();
+            }
+
+        });
+    });
 
 </script>
+<style>
+    .red-border{
+        border: 1px solid red;
+    }
+</style>
 <!--=========== END HEADER SECTION ================-->        
 <section id="blogArchive">      
     <div class="row">
@@ -90,7 +157,15 @@ if (isset($_POST['submit'])) {
                         </div>
                     </div>
                     <div class="col-lg-7 col-md-6 col-sm-6 col-xs-12">
-                        <?php if (!loggedin()) { ?>
+                        
+                        <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type']=='G'){?>
+                            <div class="form-group">
+                                    <label class="col-md-4 control-label" for="singlebutton">View Donations</label>
+                                    <div class="col-md-4">
+                                        <button id="donatebtn" onclick="location.href = 'donations.php';" name="donatebtn" class="btn btn-primary donatebtn">View</button>
+                                    </div>
+                                </div>
+                        <?PHP }else if (!loggedin()) { ?>
                             <?php
                             require_once("includes/functions.php");
 
@@ -182,6 +257,7 @@ if (isset($_POST['submit'])) {
                                         <label class="col-md-4 control-label" for="selectbasic">What would you like to donate</label>
                                         <div class="col-md-4">
                                             <select id="donatetype" name="donatetype" class="form-control" onchange="showDiv(this)">
+                                                <option value="0">Select your donation</option>
                                                 <option value="b">Blood</option>
                                                 <option value="o">Organs</option>
                                             </select>
@@ -209,7 +285,7 @@ if (isset($_POST['submit'])) {
                                     <div id="toggle" style="display: none;">
                                         <!-- Select Multiple -->
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label" for="selectmultiple">Select Multiple</label>
+                                            <label class="col-md-4 control-label" for="selectmultiple">Organ</label>
                                             <div class="col-md-4">
                                                 <select id="organ" name="organ" class="form-control">
                                                     <option value="0">Select the organ</option>
@@ -248,17 +324,17 @@ if (isset($_POST['submit'])) {
                                             Please confirm your donation within 3 days by an email.
                                         </div>
                                     </div>
-                                    </form>
-                                    <div class="clearfix"></div><br>
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="singlebutton">View Donations</label>
-                                        <div class="col-md-4">
-                                            <button id="donatebtn" onclick="location.href = 'donations.php';" name="donatebtn" class="btn btn-primary donatebtn">View</button>
-                                        </div>
+                                </form>
+                                <div class="clearfix"></div><br>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="singlebutton">View Donations</label>
+                                    <div class="col-md-4">
+                                        <button id="donatebtn" onclick="location.href = 'donations.php';" name="donatebtn" class="btn btn-primary donatebtn">View</button>
                                     </div>
+                                </div>
 
-                                <?php } ?>
-                            
+                            <?php } ?>
+
 
                         </div>
                     </div>

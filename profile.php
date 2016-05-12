@@ -2,8 +2,7 @@
 <?php
 include_once("includes/header.php");
 include_once("includes/sql.php");
-
-
+include_once("includes/clearSAT.php");
 if (!loggedin()) {
 
     die("<script>location.href = 'signin.php'</script>");
@@ -64,7 +63,6 @@ if ($result->num_rows > 0) {
         $user_id = $row['user_id'];
         $first_name = $row['first_name'];
         $last_name = $row['last_name'];
-        $name_with_initials = $row['name_with_initials'];
         $email = $row['email'];
         $profile_img = $row['profile_img'];
         $gender = $row['gender'];
@@ -179,7 +177,7 @@ if ($user_type == 'D') {
             $conexion = db_connect();
 
             $sql = "UPDATE doctor SET allocated_appointment_time='" . implode(',', $_POST['check_box']) . "' where user_id=$id";
-            var_dump($sql);
+
             if ($result = $conexion->query($sql)) {
                 echo "<div class='alert alert-success'>Alocation times saved successfully!</div>";
             };
@@ -222,13 +220,10 @@ if ($user_type == 'D') {
             $fname = $_POST['first_name'];
             $lname = $_POST['last_name'];
             $contact = $_POST['contact_no'];
-            $initials = $_POST['initials'];
-            $bank2 = $_POST['bank'];
-            $accno2 = $_POST['accno'];
             if (isset($_POST['chfee']))
                 $cfee2 = $_POST['chfee'];
 
-            if ((!empty($fname)) && (!empty($lname)) && (!empty($contact)) && (!empty($initials))) {
+            if ((!empty($fname)) && (!empty($lname)) && (!empty($contact))) {
 
                 if (preg_match("/^[0-9]{10}$/", $contact)) {
 
@@ -246,9 +241,14 @@ if ($user_type == 'D') {
                         $sqldoc_result = false;
                         $sqlmc_result = false;
                         //if file moved to the images folder update the user table
-                        $sql = "UPDATE user SET profile_img='$target_image',first_name='$fname',last_name='$lname', name_with_initials='$initials', contact_number='$contact' WHERE email='$email'";
+                        $sql = "UPDATE user SET profile_img='$target_image',first_name='$fname',last_name='$lname',  contact_number='$contact' WHERE email='$email'";
                         $result = $conexion->query($sql);
+
+                        $_SESSION['first_name'] = $fname;
                         if ($user_type == 'D') {
+
+                            $bank2 = $_POST['bank'];
+                            $accno2 = $_POST['accno'];
                             if ((!empty($bank2)) && (!empty($accno2)) && (!empty($cfee2))) {
                                 $sqldoc = "update doctor set account_no='$accno2', bank='$bank2' where user_id='$id'";
                                 $sqldoc_result = $conexion->query($sqldoc);
@@ -263,6 +263,9 @@ if ($user_type == 'D') {
                                 echo "<div class='alert alert-danger'>*All the fields are mandatory</div>";
                             }
                         } elseif ($user_type == 'G') {
+
+                            $bank2 = $_POST['bank'];
+                            $accno2 = $_POST['accno'];
                             if ((!empty($bank2)) && (!empty($accno2))) {
                                 $sqlmc = "update medical_c set acc_no='$accno2', bank='$bank2' where user_id='$id'";
                                 $sqlmc_result = $conexion->query($sqlmc);
@@ -324,51 +327,50 @@ if ($user_type == 'D') {
             echo "<div class='alert alert-danger'>*All the feilds are mandatory</div>";
         }
         $sql = "SELECT * FROM user where user_id = '$id'";
-$result = $conexion->query($sql);
-if ($result->num_rows > 0) {
+        $result = $conexion->query($sql);
+        if ($result->num_rows > 0) {
 
-    while ($row = $result->fetch_array()) {
+            while ($row = $result->fetch_array()) {
 
-        $user_id = $row['user_id'];
-        $first_name = $row['first_name'];
-        $last_name = $row['last_name'];
-        $name_with_initials = $row['name_with_initials'];
-        $email = $row['email'];
-        $profile_img = $row['profile_img'];
-        $gender = $row['gender'];
-        $user_type = $row['user_type'];
-        $is_active = $row['is_active'];
-        $password = $row['password'];
-        $contact_number = $row['contact_number'];
-    }
-}
-if ($user_type == 'D') {
-    $sql2 = "SELECT doctor.bank, doctor.account_no, doctor_charges.channeling_fee FROM doctor join doctor_charges on doctor.doctor_id=doctor_charges.doctor_id where doctor.user_id=" . $id;
-    $result2 = $conexion->query($sql2);
-
-    if ($result2->num_rows > 0) {
-
-        while ($row2 = $result2->fetch_array()) {
-
-            $bank = $row2['bank'];
-            $accno = $row2['account_no'];
-            $cfee = $row2['channeling_fee'];
+                $user_id = $row['user_id'];
+                $first_name = $row['first_name'];
+                $last_name = $row['last_name'];
+                $email = $row['email'];
+                $profile_img = $row['profile_img'];
+                $gender = $row['gender'];
+                $user_type = $row['user_type'];
+                $is_active = $row['is_active'];
+                $password = $row['password'];
+                $contact_number = $row['contact_number'];
+            }
         }
-    }
-} elseif ($user_type == 'G') {
+        if ($user_type == 'D') {
+            $sql2 = "SELECT doctor.bank, doctor.account_no, doctor_charges.channeling_fee FROM doctor join doctor_charges on doctor.doctor_id=doctor_charges.doctor_id where doctor.user_id=" . $id;
+            $result2 = $conexion->query($sql2);
 
-    $sql3 = "SELECT acc_no, bank FROM `medical_c` where user_id='$id'";
-    $result3 = $conexion->query($sql3);
-    $bank = $id;
-    if ($result3->num_rows > 0) {
+            if ($result2->num_rows > 0) {
 
-        while ($row3 = $result3->fetch_array()) {
+                while ($row2 = $result2->fetch_array()) {
 
-            $bank = $row3['bank'];
-            $accno = $row3['acc_no'];
+                    $bank = $row2['bank'];
+                    $accno = $row2['account_no'];
+                    $cfee = $row2['channeling_fee'];
+                }
+            }
+        } elseif ($user_type == 'G') {
+
+            $sql3 = "SELECT acc_no, bank FROM `medical_c` where user_id='$id'";
+            $result3 = $conexion->query($sql3);
+            $bank = $id;
+            if ($result3->num_rows > 0) {
+
+                while ($row3 = $result3->fetch_array()) {
+
+                    $bank = $row3['bank'];
+                    $accno = $row3['acc_no'];
+                }
+            }
         }
-    }
-}
         ?>
     </div>
     <div class="row">
@@ -387,7 +389,7 @@ if ($user_type == 'D') {
         ?>
         <div id="alert-container"></div>
         <div class="col-md-3"   style="background-color: rgba(210, 210, 210, 0.09);  min-height: 553px" >
-            <div class="col-md-offset-1 col-md-10" ><h3 class="text-center"><?php echo $first_name." ".$last_name; ?></h3></div>
+            <div class="col-md-offset-1 col-md-10" ><h3 class="text-center"><?php echo $first_name . " " . $last_name; ?></h3></div>
             <div class="col-md-offset-1 col-md-10" style="padding-bottom: 25px; border-bottom: 1px solid #ddd; align-content:center; ">
                 <image style="width:80%;height: 80%; margin-left: 20px;" src="<?php
                 if (isset($profile_img) && (!empty($profile_img))) {
@@ -505,7 +507,7 @@ if ($user_type == 'D') {
                             </tr>
                             <tr>
                                 <td class="subheadng">Name</td>
-                                <td class="normal"><?php echo $name_with_initials; ?></td>
+                                <td class="normal"><?php echo $first_name." ".$last_name; ?></td>
                                 <td class="subheadng">&nbsp;  </td>
                                 <td class="normal">&nbsp; </td>   
                             </tr>
@@ -527,7 +529,7 @@ if ($user_type == 'D') {
                                     } elseif ($user_type == 'P') {
                                         echo 'Patient';
                                     } elseif ($user_type == 'G') {
-                                        echo 'General Pysicient';
+                                        echo 'Medical Consultant';
                                     }
                                     ?></td>
                                 <td class="subheadng">&nbsp;  </td>
@@ -640,7 +642,9 @@ if ($user_type == 'D') {
                         </div>
                     </div>
                     <!--end of tab content 2-->
-                    <?php if ($user_type == 'D') { ?>
+                    <?php
+                    if ($user_type == 'D') {
+                        ?>
                         <!--tab content 3:For doctors select available time slots-->
                         <div class="col-md-12 bhoechie-tab-content hide">
                             <br>
@@ -649,17 +653,16 @@ if ($user_type == 'D') {
                                 <table class="table-striped" style="width:100%">
                                     <tr>
 
-                                        <th>Monday <?PHP echo "<br>".date('d-m-Y', strtotime('monday this week')); ?></th>
-                                        <th>Tuesday <?PHP echo "<br>".date('d-m-Y', strtotime('tuesday this week')); ?></th>
-                                        <th>Wednesday <?PHP echo "<br>".date('d-m-Y', strtotime('wednesday this week')); ?></th>
-                                        <th>Thursday <?PHP echo "<br>".date('d-m-Y', strtotime('thursday this week')); ?></th>
-                                        <th>Friday <?PHP echo "<br>".date('d-m-Y', strtotime('friday this week')); ?></th>
-                                        <th>Saturday <?PHP echo "<br>".date('d-m-Y', strtotime('saturday this week')); ?></th>
-                                        <th>Sunday <?PHP echo "<br>".date('d-m-Y', strtotime('sunday this week')); ?></th>
+                                        <th>Monday <?PHP echo "<br>" . date('d-m-Y', strtotime('monday this week')); ?></th>
+                                        <th>Tuesday <?PHP echo "<br>" . date('d-m-Y', strtotime('tuesday this week')); ?></th>
+                                        <th>Wednesday <?PHP echo "<br>" . date('d-m-Y', strtotime('wednesday this week')); ?></th>
+                                        <th>Thursday <?PHP echo "<br>" . date('d-m-Y', strtotime('thursday this week')); ?></th>
+                                        <th>Friday <?PHP echo "<br>" . date('d-m-Y', strtotime('friday this week')); ?></th>
+                                        <th>Saturday <?PHP echo "<br>" . date('d-m-Y', strtotime('saturday this week')); ?></th>
+                                        <th>Sunday <?PHP echo "<br>" . date('d-m-Y', strtotime('sunday this week')); ?></th>
                                     </tr>
 
                                     <?php
-                                    $conexion = db_connect();
                                     $user_id = $_SESSION['user_id'];
 
                                     $sql = "SELECT allocated_appointment_time FROM doctor where user_id=" . $user_id;
@@ -923,13 +926,8 @@ if ($user_type == 'D') {
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
-                            <label for="last_name">Name With Initials</label>
-                            <input required type="text" name="initials" id="initials" class="form-control" value="<?php echo $name_with_initials; ?>">
-                            <p class="help-block"></p>
-                        </div>
-                        <div class="form-group">
                             <label for="last_name">Contact Number</label>
-                            <input required type="text" name="contact_no" id="contact_no" class="form-control" value="<?php echo $contact_number; ?>">
+                            <input required type="text" name="contact_no" id="contact_no" class="form-control" pattern="[0-9]{10}" title="Please enter exactly 10 digits" value="<?php echo $contact_number; ?>">
                             <p class="help-block"></p>
                         </div>
                         <?php if ($user_type == 'D') { ?>

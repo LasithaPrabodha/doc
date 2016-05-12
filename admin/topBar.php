@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="index.php"> <img alt="Charisma Logo" src="img/logo20.png" class="hidden-xs"/>
-                <span>DocAdmin</span></a>
+                <span>DocResAdmin</span></a>
 
             <!-- user dropdown starts -->
             <div class="btn-group pull-right">
