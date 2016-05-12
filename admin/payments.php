@@ -38,7 +38,7 @@
 //        $result = $conexion->query($sql) or die("oopsy, error when tryin to delete ");
 
         $sql = "update doc_pay set appoi_no='0', tot_amnt='0' where doc_id='$no'";
-        $sql1= "insert into doc_salary(doc_id, amount) values('$doc_id','$amount')";
+        $sql1 = "insert into doc_salary(doc_id, amount) values('$doc_id','$amount')";
         $conexion->query($sql) or die("oopsy, error when tryin to delete ");
         $conexion->query($sql1) or die("oopsy, error when tryin to delete ");
         $message = 'Rs. ' . $amount . ' has been paid to Doctor ' . $no;
@@ -47,27 +47,28 @@
     ?>
     <script>
 
-        
+
         function pay(id)
         {
-            var amount = $('#textinput'+id).val();
+            var amount = $('#textinput' + id).val();
             if (confirm("Are you sure you want to pay to this employee?") == true)
                 window.location = "payments.php?id=" + id + "&pay=" + amount;
             return false;
         }
 
-        function paydc(id, count)
-        {
-
-
-            var Row = document.getElementById(count);
-            var Cells = Row.getElementsByTagName("td");
-            var amount = Cells[4].textContent;
-            var doc_id = Cells[0].textContent;
-           
-            if (confirm("Are you sure you want to pay to this employee?") == true)
-                window.location = "payments.php?id=" + id + "&doc_id="+doc_id+"&paydc=" + amount;
-            return false;
+        
+        function setcfee(){
+            var x = document.getElementById("cfee").value;
+            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: 'cfee.php',
+                                data: 'cfee=' + x,
+                                success: function (data)
+                                {
+                                    alert(data);
+                                }
+                            });
         }
     </script>
     <body>
@@ -146,9 +147,7 @@
                                             <tr>
                                                 <th>Appointment ID</th>
                                                 <th>User ID</th>
-                                                <th></th>
                                                 <th>Doctor ID</th>
-                                                <th></th>
                                                 <th>User telephone no</th>
                                                 <th>Time slot</th>
                                                 <th>Amount</th>
@@ -166,18 +165,8 @@
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $row['appoinment_id']; ?> </td>
-                                                    <td><?php echo $row['user_id']; ?></td>
-                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
-                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                            View User
-                                                        </a>
-                                                    </td>
-                                                    <td><?php echo $row['doctor_id']; ?></td>
-                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['doc_user_id']; ?>" target="_blank">
-                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                            View Doctor
-                                                        </a>
-                                                    </td>
+                                                    <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['user_id']; ?></td>
+                                                    <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['doc_user_id']; ?>"><?php echo $row['doctor_id']; ?></td>
                                                     <td><?php echo $row['telephone_no']; ?></td>
                                                     <td><?php echo $row['time_slot']; ?></td>
                                                     <td><?php echo $row['amount']; ?></td>
@@ -189,16 +178,34 @@
                                 </div>
                                 <hr>
                                 <div class="box-content">
-                                    <h3>Channeling fee for Doctor</h3>
+                                    <h3>Doctor fee for Doctor</h3>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Channeling fee</label>  
+                                        <div class="col-md-4">
+                                            <input id="cfee" name="cfee" type="text" class="form-control input-md" value="<?PHP 
+                                            include_once("../includes/sql.php");
+                                            $conexion = db_connect();
+                                            $sqql="select fee from channeling_fee order by date_added desc limit 1";
+                                            $result=$conexion->query($sqql);
+                                            $rows = $result->fetch_array();
+                                            echo $rows[0];
+                                            ?>">
+                                            <span class="help-block">in Rs.</span>  
+                                        </div>
+                                         <a class="btn btn-default" href="#" onclick="return setcfee()" >
+                                        <i class="glyphicon glyphicon-ok-sign icon-white"></i>
+                                        Set
+                                    </a>
+                                    </div>
+                                   
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
                                                 <th>Doctor ID</th>
-                                                <th></th>
                                                 <th>Doctor name</th>
                                                 <th>Total number of appointments</th>
                                                 <th>Doctor fee</th>
-                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -206,7 +213,7 @@
                                             include_once("../includes/sql.php");
                                             $conexion = db_connect();
 
-                                            $sql = "SELECT * FROM `doc_pay`";
+                                            $sql = "SELECT doc_pay.*, doctor.user_id FROM doc_pay join doctor on doc_pay.doc_id = doctor.doctor_id";
                                             $result = $conexion->query($sql);
                                             $count = 0;
                                             while ($row = $result->fetch_array()) {
@@ -214,24 +221,58 @@
                                                 <tr id='somerow<?PHP
                                                 echo $count;
                                                 ?>'>
-                                                    <td><?php echo $row['doc_id']; ?> </td>
-                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
-                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                            View User
-                                                        </a>
-                                                    </td>
+                                                    <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['doc_id']; ?> </td>
+                                                    
                                                     <td><?php echo $row['doc_name']; ?></td>
                                                     <td><?php echo $row['appoi_no']; ?></td>
                                                     <td><?php echo $row['tot_amnt']; ?></td>
-                                                    <td><a class="btn btn-default" href="#" onclick="return paydc(<?php echo $row['doc_id'] . ", 'somerow" . $count."'";
-                                                $count++; ?>)" >
-                                                            <i class="glyphicon glyphicon-ok-sign icon-white"></i>
-                                                            Pay
-                                                        </a></td>
 
 
                                                 </tr>
-                                            <?php } ?>
+<?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <hr>
+                                 <div class="box-content">
+                                    <h3>Channeling fee from patients</h3>
+                                    <br>
+                                    
+                                   
+                                    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Payment ID</th>
+                                                <th>User ID</th>
+                                                <th>Appointment ID</th>
+                                                <th>Doctor ID</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            include_once("../includes/sql.php");
+                                            $conexion = db_connect();
+
+                                            $sql = "SELECT patient_payments.*, doctor.user_id FROM patient_payments join doctor on patient_payments.doctor_id = doctor.doctor_id";
+                                            $result = $conexion->query($sql);
+                                            $count = 0;
+                                            while ($row = $result->fetch_array()) {
+                                                ?>
+                                                <tr id='somerow<?PHP
+                                                echo $count;
+                                                ?>'>
+                                                    <td><?php echo $row['p_payment_id']; ?> </td>
+                                                    <td><?php echo $row['user_id']; ?> </td>
+                                                    <td><?php echo $row['appoinment_id']; ?> </td>
+                                                    <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['doctor_id']; ?></a> </td>
+                                                    <td><?php echo $row['amount']; ?></td>
+                                                    <td><?php echo $row['date']; ?></td>
+
+
+                                                </tr>
+<?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -242,7 +283,6 @@
                                         <thead>
                                             <tr>
                                                 <th>User ID</th>
-                                                <th></th>
                                                 <th>Medical Consultant ID</th>
                                                 <th>Medical Consultant name</th>
                                                 <th>Last paid date</th>
@@ -263,12 +303,8 @@
                                             while ($row = $result->fetch_array()) {
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo $row['user_id']; ?> </td>
-                                                    <td>  <a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
-                                                            <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                            View User
-                                                        </a>
-                                                    </td>
+                                                    <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['user_id']; ?></a></td>
+                                                    
                                                     <td><?php echo $row['mc_id']; ?></td>
                                                     <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
                                                     <td><?php
@@ -290,7 +326,7 @@
                                                     </td>
 
                                                 </tr>
-                                            <?php } ?>
+<?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

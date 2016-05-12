@@ -24,6 +24,8 @@ if (isset($_GET['key'])) {
         while ($row = $result->fetch_array()) {
 
             $user_id = $row['user_id'];
+            $telephone_no = $row['telephone_no'];
+            $patient_name = $row['patient_name'];
             $doctor_id = $row['doctor_id'];
             $time_slot = $row['time_slot'];
         }
@@ -42,6 +44,14 @@ if (isset($_GET['key'])) {
             $sql4 = "delete from appoinments where appoinment_id='$appointment_id'";
             if ($conexion->query($sql4)) {
                 echo "<div class='alert alert-success'>Appointment canceled!</div>";
+                $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
+                $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 2);
+                
+                $_POST['email'] = 'lasiprabo@gmail.com';
+                $_POST['subject'] = 'Appointment Cancelled';
+                $_POST['message'] = 'Appointment #'.$appointment_id.' which was booked by ' . $patient_name . ' at '. $ts. ' was cancelled. TP. '.$telephone_no;
+                include_once 'email.php';
                 die("<script>location.href = 'profile.php'</script>");
             }
         };
@@ -183,10 +193,11 @@ if ($user_type == 'D') {
             };
         }
 
-        if ((isset($_POST['reserve'])) && (!empty($_SESSION['c_fee'])) && (!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
+        if ((isset($_POST['reserve'])) && (!empty($_SESSION['c_fee'])) && (!empty($_SESSION['d_fee'])) && (!empty($_SESSION['radioval']))) { //Save an apointment : For Patients
             $conexion = db_connect();
             $slot = $_SESSION['radioval'];
             $fee = $_SESSION['c_fee'];
+            $dfee = $_SESSION['d_fee'];
             $name = $_SESSION['first_name'] . " " . $_SESSION['last_name'];
             $tpno = $_SESSION['tpno'];
 
@@ -208,7 +219,7 @@ if ($user_type == 'D') {
                     $appointmentid = $conexion->insert_id;
                     $sql = "INSERT INTO `patient_payments`(`user_id`, `appoinment_id`, `doctor_id`, `amount`) VALUES ('{$_SESSION['user_id']}','$appointmentid','$doc_id','$fee')";
                     $conexion->query($sql);
-                    $updt_pay = "update doc_pay set appoi_no=appoi_no+1, tot_amnt=tot_amnt+$fee where doc_id='$doc_id'";
+                    $updt_pay = "update doc_pay set appoi_no=appoi_no+1, tot_amnt=tot_amnt+$dfee where doc_id='$doc_id'";
                     $conexion->query($updt_pay);
                     echo "<div class='alert alert-success'>Appointment saved successfully!</div>";
                     $_SESSION['radioval'] = '';
@@ -507,7 +518,7 @@ if ($user_type == 'D') {
                             </tr>
                             <tr>
                                 <td class="subheadng">Name</td>
-                                <td class="normal"><?php echo $first_name." ".$last_name; ?></td>
+                                <td class="normal"><?php echo $first_name . " " . $last_name; ?></td>
                                 <td class="subheadng">&nbsp;  </td>
                                 <td class="normal">&nbsp; </td>   
                             </tr>
@@ -560,7 +571,7 @@ if ($user_type == 'D') {
                                 $conexion = db_connect();
 //                                  $sql = "SELECT d.address FROM  user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
 //                                $result = $conexion->query($sql);
-                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
+                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address, d.user_id FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
                                 $result = $conexion->query($sql);
                                 if ($result->num_rows > 0) {
                                     ?>
@@ -583,13 +594,16 @@ if ($user_type == 'D') {
                                                 $doctor_is = "Dr " . $row['first_name'] . "" . $row['last_name'];
                                                 $address = $row['Address'];
                                                 $time_slot = $row['time_slot'];
+                                                $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
+                                                $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 2);
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $appintment_id; ?></td>
                                                     <td><?php echo $doctor_is; ?></td>
-                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $time_slot; ?></p><br></td>
+                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $ts; ?></p><br></td>
                                                     <td><?php echo $address; ?></td>
-                                                    <td><a href="<?php echo "profile.php?key=" . $appintment_id; ?>"  class="btn btn-sm btn-danger" title="view"><button class="btn btn-sm btn-danger" >Cancel</button></a>&nbsp;</td>
+                                                    <td><a href="<?php echo "profile.php?key=" . $appintment_id; ?>&add=<?php echo $address; ?>&ts=<?php echo $ts; ?>&dc=<?php echo $row['user_id']; ?>"  class="btn btn-sm btn-danger" title="view"><button class="btn btn-sm btn-danger" >Cancel</button></a>&nbsp;</td>
 
                                                 </tr>
                                             <?php } ?>
@@ -753,11 +767,17 @@ if ($user_type == 'D') {
                                     $row = $result->fetch_array();
 
                                     $fee = $row[2];
-                                    $tot = $fee + 200;
+                                    $sqlcfee = "select fee from channeling_fee order by date_added desc limit 1";
+                                    $resultcfee = $conexion->query($sqlcfee);
+                                    $rowcfee = $resultcfee->fetch_array();
+
+                                    $tot = $fee + $rowcfee[0];
 
                                     echo "Doctor fee is : Rs." . $fee . ".00/= <br>";
-                                    echo "Channeling fee is : Rs." . $tot . ".00/=";
-                                    $_SESSION['c_fee'] = $tot;
+                                    echo "Channeling fee is : Rs." . $rowcfee[0] . ".00/= <br>";
+                                    echo "Total fee is : Rs." . $tot . ".00/=";
+                                    $_SESSION['c_fee'] = $rowcfee[0];
+                                    $_SESSION['d_fee'] = $fee;
                                     ?>
                                 </b> <br>
                                 <hr/>

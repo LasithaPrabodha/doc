@@ -92,7 +92,6 @@
                                             <th>Organ</th>
                                             <th>Details</th>
                                             <th>Date</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -107,17 +106,13 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $row['donation_id']; ?> </td>
-                                                <td><?php echo $row['user_id']; ?></td>
+                                                <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['user_id']; ?></td>
                                                 <td><?php echo $row['user_name']; ?></td>
                                                 <td><?php echo $row['user_loc']; ?></td>
                                                 <td><?php echo $row['blood_group']; ?></td>
                                                 <td><?php echo $row['organ']; ?></td>
                                                 <td><?php echo $row['details']; ?></td>
                                                 <td><?php echo $row['date']; ?></td>
-                                                <td><a class="btn btn-info" href="../profile.php?id=<?php echo $row['user_id']; ?>" target="_blank">
-                                                        <i class="glyphicon glyphicon-edit icon-white"></i>
-                                                        View Donor
-                                                    </a></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>

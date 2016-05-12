@@ -162,7 +162,6 @@
                                                 $user_id = $row['user_id'];
                                                 $first_name = $row['first_name'];
                                                 $last_name = $row['last_name'];
-                                                $name_with_initials = $row['name_with_initials'];
                                                 $email = $row['email'];
                                                 $profile_img = $row['profile_img'];
                                                 $gender = $row['gender'];
@@ -176,10 +175,12 @@
                                                     <td class="center"><?php
                                                         if ($user_type == 'D')
                                                             echo 'Doctor';
-                                                        if ($user_type == 'P')
+                                                        elseif ($user_type == 'P')
                                                             echo 'Patient';
-                                                        if ($user_type == 'G')
+                                                        elseif ($user_type == 'G')
                                                             echo 'Medical Consult';
+                                                        else 
+                                                            echo 'Admin';
                                                         ?></td>
                                                     <td class="center">
                                                         <?php

@@ -26,8 +26,8 @@ if(isset($_POST['username']) && isset($_POST['password']))
             $resultSet = $result->fetch_assoc();
             $filteredID = sql_escape($resultSet['email']);
             $filteredPW = sql_escape($resultSet['password']);
-            if($resultSet['is_active'] == 0){
-                $message = '<div class="alert alert-danger">  <strong></strong> User Has Not Been Activatied yet!</div>';
+            if($resultSet['is_active'] == 0 || $resultSet['is_active'] == 2){
+                $message = '<div class="alert alert-danger">  <strong></strong>User Has Not Been Activated.</div>';
 
             }else if((($filteredID == $LUsername)) && ($filteredPW == $hashPassword))
             {
@@ -36,7 +36,6 @@ if(isset($_POST['username']) && isset($_POST['password']))
                 $_SESSION['user_id']=$resultSet['user_id'];
                 $_SESSION['first_name'] = $resultSet['first_name'];
                 $_SESSION['last_name'] = $resultSet['last_name'];
-                $_SESSION['name_with_initials'] = $resultSet['name_with_initials'];
                 $_SESSION['user_type'] = $resultSet['user_type'];
                 $_SESSION['is_active'] = $resultSet['is_active'];
                 $_SESSION['tpno'] = $resultSet['contact_number'];

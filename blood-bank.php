@@ -194,7 +194,6 @@ if (isset($_POST['submit'])) {
                                             $_SESSION['user_id'] = $resultSet['user_id'];
                                             $_SESSION['first_name'] = $resultSet['first_name'];
                                             $_SESSION['last_name'] = $resultSet['last_name'];
-                                            $_SESSION['name_with_initials'] = $resultSet['name_with_initials'];
                                             $_SESSION['user_type'] = $resultSet['user_type'];
                                             $_SESSION['is_active'] = $resultSet['is_active'];
 
