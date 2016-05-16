@@ -7,10 +7,9 @@
     if (!loggedinadmin()) {
         die("<script>location.href = 'login.php'</script>");
     }
-    if (isset($_GET['id']) && isset($_GET['pay'])) {
-        $no = $_GET['id'];
-        $amount = $_GET['pay'];
-        pay($no, $amount);
+    if (isset($_GET['mcid'])) {
+        $no = $_GET['mcid'];
+        pay($no);
     }
 
     if (isset($_GET['id']) && isset($_GET['paydc']) && isset($_GET['doc_id'])) {
@@ -20,13 +19,17 @@
         paydc($no, $amount, $doc_id);
     }
 
-    function pay($no, $amount) {
+    function pay($no) {
         require_once("../includes/sql.php");
 
         $conexion = db_connect();
-        $sql = "insert into mc_payments(mc_id, amount) values('$no','$amount')";
+        $sqql = "select fee from fees where type='mc'";
+        $result = $conexion->query($sqql);
+        $mSal = $result->fetch_array();
+        
+        $sql = "insert into mc_payments(mc_id, amount) values('$no','$mSal[0]')";
         $conexion->query($sql) or die("oopsy, error when tryin to delete ");
-        $message = 'Rs. ' . $amount . ' has been paid to Medical Consultant ' . $no;
+        $message = 'Rs. ' . $mSal[0] . ' has been paid to Medical Consultant ' . $no;
         echo "<script type='text/javascript'>alert('$message');</script>";
     }
 
@@ -50,25 +53,29 @@
 
         function pay(id)
         {
-            var amount = $('#textinput' + id).val();
+
             if (confirm("Are you sure you want to pay to this employee?") == true)
-                window.location = "payments.php?id=" + id + "&pay=" + amount;
+                window.location = "payments.php?mcid=" + id;
             return false;
         }
 
-        
-        function setcfee(){
-            var x = document.getElementById("cfee").value;
+
+        function setcfee(type) {
+            if (type == 'c') {
+                var x = document.getElementById("cfee").value;
+            } else {
+                var x = document.getElementById("msal").value;
+            }
             $.ajax({
-                                cache: false,
-                                type: 'POST',
-                                url: 'cfee.php',
-                                data: 'cfee=' + x,
-                                success: function (data)
-                                {
-                                    alert(data);
-                                }
-                            });
+                cache: false,
+                type: 'POST',
+                url: 'cfee.php',
+                data: {cfee: x, t: type},
+                success: function (data)
+                {
+                    alert(data);
+                }
+            });
         }
     </script>
     <body>
@@ -162,13 +169,16 @@
                                             $result = $conexion->query($sql);
 
                                             while ($row = $result->fetch_array()) {
+                                                $time_slot = $row['time_slot'];
+                                                $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
+                                                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 3);
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $row['appoinment_id']; ?> </td>
                                                     <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['user_id']; ?></td>
                                                     <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['doc_user_id']; ?>"><?php echo $row['doctor_id']; ?></td>
                                                     <td><?php echo $row['telephone_no']; ?></td>
-                                                    <td><?php echo $row['time_slot']; ?></td>
+                                                    <td><?php echo $ts; ?></td>
                                                     <td><?php echo $row['amount']; ?></td>
 
                                                 </tr>
@@ -180,25 +190,8 @@
                                 <div class="box-content">
                                     <h3>Doctor fee for Doctor</h3>
                                     <br>
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="textinput">Channeling fee</label>  
-                                        <div class="col-md-4">
-                                            <input id="cfee" name="cfee" type="text" class="form-control input-md" value="<?PHP 
-                                            include_once("../includes/sql.php");
-                                            $conexion = db_connect();
-                                            $sqql="select fee from channeling_fee order by date_added desc limit 1";
-                                            $result=$conexion->query($sqql);
-                                            $rows = $result->fetch_array();
-                                            echo $rows[0];
-                                            ?>">
-                                            <span class="help-block">in Rs.</span>  
-                                        </div>
-                                         <a class="btn btn-default" href="#" onclick="return setcfee()" >
-                                        <i class="glyphicon glyphicon-ok-sign icon-white"></i>
-                                        Set
-                                    </a>
-                                    </div>
-                                   
+
+
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
@@ -222,23 +215,40 @@
                                                 echo $count;
                                                 ?>'>
                                                     <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['doc_id']; ?> </td>
-                                                    
+
                                                     <td><?php echo $row['doc_name']; ?></td>
                                                     <td><?php echo $row['appoi_no']; ?></td>
                                                     <td><?php echo $row['tot_amnt']; ?></td>
 
 
                                                 </tr>
-<?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
                                 <hr>
-                                 <div class="box-content">
+                                <div class="box-content">
                                     <h3>Channeling fee from patients</h3>
                                     <br>
-                                    
-                                   
+
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Channeling fee</label>  
+                                        <div class="col-md-4">
+                                            <input id="cfee" name="cfee" type="text" class="form-control input-md" value="<?PHP
+                                            include_once("../includes/sql.php");
+                                            $conexion = db_connect();
+                                            $sqql = "select fee from fees where type='channelling'";
+                                            $result = $conexion->query($sqql);
+                                            $rows = $result->fetch_array();
+                                            echo $rows[0];
+                                            ?>">
+                                            <span class="help-block">in Rs.</span>  
+                                        </div>
+                                        <a class="btn btn-default" href="#" onclick="return setcfee('c')" >
+                                            <i class="glyphicon glyphicon-ok-sign icon-white"></i>
+                                            Set
+                                        </a>
+                                    </div>
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
@@ -272,13 +282,31 @@
 
 
                                                 </tr>
-<?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
                                 <hr>
                                 <div class="box-content">
                                     <h3>Medical Consultant salary</h3>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Medical Consultant salary</label>  
+                                        <div class="col-md-4">
+                                            <input id="msal" name="msal" type="text" class="form-control input-md" value="<?PHP
+                                            include_once("../includes/sql.php");
+                                            $conexion = db_connect();
+                                            $sqql = "select fee from fees where type='mc'";
+                                            $result = $conexion->query($sqql);
+                                            $mSal = $result->fetch_array();
+                                            echo $mSal[0];
+                                            ?>">
+                                            <span class="help-block">in Rs.</span>  
+                                        </div>
+                                        <a class="btn btn-default" href="#" onclick="return setcfee('mc')" >
+                                            <i class="glyphicon glyphicon-ok-sign icon-white"></i>
+                                            Set
+                                        </a>
+                                    </div>
                                     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
                                         <thead>
                                             <tr>
@@ -286,9 +314,7 @@
                                                 <th>Medical Consultant ID</th>
                                                 <th>Medical Consultant name</th>
                                                 <th>Last paid date</th>
-                                                <th>Last paid amount</th>
                                                 <th>This month salary</th>
-                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -304,7 +330,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><a target="_blank" href="http://localhost/doc/profile.php?id=<?php echo $row['user_id']; ?>"><?php echo $row['user_id']; ?></a></td>
-                                                    
+
                                                     <td><?php echo $row['mc_id']; ?></td>
                                                     <td><?php echo $row['first_name'] . " " . $row['last_name']; ?></td>
                                                     <td><?php
@@ -313,11 +339,9 @@
                                                         $result2 = $conexion->query($sql2);
                                                         while ($row2 = $result2->fetch_array()) {
                                                             echo $row2['date_added'];
-                                                            echo '</td><td>';
-                                                            echo $row2['amount'];
                                                         }
                                                         ?></td>
-                                                    <td><input id="textinput<?php echo $row['mc_id']; ?>" name="textinput<?php echo $row['mc_id']; ?>" type="number" placeholder="Salary" class="form-control input-md"></td>
+
                                                     <td>
                                                         <a class="btn btn-default" href="#" onclick="return pay(<?php echo $row['mc_id']; ?>)" >
                                                             <i class="glyphicon glyphicon-ok-sign icon-white"></i>
@@ -326,7 +350,7 @@
                                                     </td>
 
                                                 </tr>
-<?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

@@ -163,6 +163,7 @@
                                                 $first_name = $row['first_name'];
                                                 $last_name = $row['last_name'];
                                                 $email = $row['email'];
+                                                $date_reg = $row['date_reg'];
                                                 $profile_img = $row['profile_img'];
                                                 $gender = $row['gender'];
                                                 $user_type = $row['user_type'];
@@ -171,7 +172,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $first_name . ' ' . $last_name; ?> </td>
-                                                    <td class="center">2012/01/01</td>
+                                                    <td class="center"><?PHP echo $date_reg;?></td>
                                                     <td class="center"><?php
                                                         if ($user_type == 'D')
                                                             echo 'Doctor';

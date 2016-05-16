@@ -30,6 +30,7 @@ if (isset($_POST['submit'])) {
             $sqldnt2 = "INSERT INTO `donations`( `user_id`,`user_name`,`user_loc`, `blood_group`, `organ`,`details`) VALUES ('$uid',(select first_name from user where user.user_id ='$uid'),(select Address from user where user.user_id ='$uid'),'$bt','blood','$details')";
             $conexion->query($sqldnt2);
         }
+        echo '<script>alert("Thank you for your donation.");</script>';
     }
 }
 ?>
@@ -145,13 +146,13 @@ if (isset($_POST['submit'])) {
                         <div class="whyChoose-left">
                             <div class="whychoose-slider">
                                 <div class="whychoose-singleslide">
-                                    <img src="images/choose-us-img1.jpg" alt="img">
+                                    <img src="images/donation.jpg" alt="img">
                                 </div>
                                 <div class="whychoose-singleslide">
-                                    <img src="images/choose-us-img2.jpg" alt="img">
+                                    <img src="images/artmax_1480.jpg" alt="img">
                                 </div>
                                 <div class="whychoose-singleslide">
-                                    <img src="images/choose-us-img3.jpg" alt="img">
+                                    <img src="images/living_donations.jpg" alt="img">
                                 </div>
                             </div>
                         </div>

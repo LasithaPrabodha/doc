@@ -25,7 +25,7 @@
     if (isset($_POST['submit'])) {
 
         $userid = sql_escape($_POST['userid']);
-        $email = sql_escape($_POST['email']);
+        $email = sql_escape($_POST['email2']);
         $password = md5(sql_escape($_POST['password']));
         $email2 = sql_escape($_POST['email2']);
         $password2 = md5(sql_escape($_POST['password2']));
@@ -38,40 +38,42 @@
         $accno = sql_escape($_POST['accno']);
         $add = sql_escape($_POST['add']);
         $cadd = sql_escape($_POST['cadd']);
+        $quali = sql_escape($_POST['quali']);
         $re = emailcheck($email);
-        $us = usercheck($email);
 
-        if ($email != $email2) {
-            echo "<div>";
-            echo " <h3 style='text-align: center;top: 315px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Emails do not match</font></h3>";
-            echo "</div>";
-        } else if ($password != $password2) {
-            echo "<div>";
-            echo " <h3 style='text-align: center;top: 365px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Passwords do not match</font></h3>";
-            echo "</div>";
-        } elseif ($re == 'e1' || $us == $userid) {
-            $insert = "UPDATE `user` SET `first_name`='$fname',`last_name`='$lname',`email`='$email',`password`='$password',`contact_number`='$cno',`Address`='$add' WHERE user_id='$userid'";
-            registerd($insert);
-            $doctor = "UPDATE `doctor` SET `specialization`='$sp',`account_no`='$accno',`bank`='$bank',`address`='$cadd' WHERE `user_id`='$userid'";
+        if ($password != $password2) {
+            echo "<script type='text/javascript'>alert('Passwords do not match');</script>";
+        } elseif ($re != 'yes') {
+            if ($email == '') {
+                $insert = "UPDATE `user` SET `first_name`='$fname',`last_name`='$lname',`contact_number`='$cno',`Address`='$add' WHERE user_id='$userid'";
+                registerd($insert);
+            } else {
+                $insert = "UPDATE `user` SET `first_name`='$fname',`last_name`='$lname',`email`='$email',`contact_number`='$cno',`Address`='$add' WHERE user_id='$userid'";
+                registerd($insert);
+            }
+            if($_POST['password']!=''){
+                $insert = "UPDATE `user` SET `password`='$password' WHERE user_id='$userid'";
+                registerd($insert);
+            }
+            $doctor = "UPDATE `doctor` SET `specialization`='$sp',`account_no`='$accno',`bank`='$bank',`address`='$cadd', `quali`= '$quali' WHERE `user_id`='$userid'";
             registerd($doctor);
-            $seelctDcId="select doctor_id from doctor where user_id='$userid'";
-            $result=  fetchOne($seelctDcId);
+            $seelctDcId = "select doctor_id from doctor where user_id='$userid'";
+            $result = fetchOne($seelctDcId);
             $charges = "UPDATE `doctor_charges` SET `channeling_fee`='$cf' WHERE doctor_id='$result[0]'";
             registerd($charges);
-            $seelctDchrgesId="select charges_id from doctor_charges where user_id='$result[0]'";
-            $result3=  fetchOne($seelctDcId);
+            $seelctDchrgesId = "select charges_id from doctor_charges where user_id='$result[0]'";
+            $result3 = fetchOne($seelctDcId);
             $ch_id = $result3[0];
             $dc_id = $result[0];
             update_cid($ch_id, $dc_id);
-            $message='User id: '.$userid.' has been updated.';
+            $message = 'User id: ' . $userid . ' has been updated.';
             echo "<script type='text/javascript'>alert('$message');</script>";
+
 //            echo "<div>";
 //            echo " <h5 style='text-align: center;top: 210px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>" . $result3[1] . "</font></h5>";
 //            echo "</div>";
         } else {
-            echo "<div>";
-            echo " <h4 style='text-align: center;top: 305px;position: absolute;left: 0;margin: auto;width: 100%;'><font color=red>Email is already registered</font></h4>";
-            echo "</div>";
+            echo "<script type='text/javascript'>alert('Email is already registered');</script>";
         }
     }
 
@@ -212,7 +214,7 @@
                                         </div>
                                         <div class="modal-footer">
 
-                                            <a href="#" class="btn" data-dismiss="modal">Nah.</a>
+                                            <a href="#" class="btn" data-dismiss="modal">Close</a>
                                         </div>
                                     </div>
                                 </div>
@@ -256,6 +258,7 @@
                                                 $first_name = $row['first_name'];
                                                 $last_name = $row['last_name'];
                                                 $email = $row['email'];
+                                                $date_reg = $row['date_reg'];
                                                 $profile_img = $row['profile_img'];
                                                 $gender = $row['gender'];
                                                 $user_type = $row['user_type'];
@@ -264,7 +267,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $first_name . ' ' . $last_name; ?> </td>
-                                                    <td class="center">2012/01/01</td>
+                                                    <td class="center"><?PHP echo $date_reg;?></td>
                                                     <td class="center"><?php
                                                         echo 'Doctor';
                                                         ?></td>
@@ -331,7 +334,7 @@
                                     cache: false,
                                     type: 'POST',
                                     url: 'backend.php',
-                                    data: 'EID=' + essay_id,
+                                    data: 'DID=' + essay_id,
                                     success: function (data)
                                     {
                                         $modal.find('.edit-content').html(data);

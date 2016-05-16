@@ -183,6 +183,7 @@
                                                 $first_name = $row['first_name'];
                                                 $last_name = $row['last_name'];
                                                 $email = $row['email'];
+                                                $date_reg = $row['date_reg'];
                                                 $profile_img = $row['profile_img'];
                                                 $gender = $row['gender'];
                                                 $user_type = $row['user_type'];
@@ -192,7 +193,7 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $first_name . ' ' . $last_name; ?> </td>
-                                                        <td class="center">2012/01/01</td>
+                                                        <td class="center"><?PHP echo $date_reg; ?></td>
                                                         <td class="center"><?php
                                                             
                                                                 echo 'Patient';
@@ -210,7 +211,7 @@
                                                             ?>
                                                         </td>
                                                         <td class="center">
-                                                            <a class="btn btn-info" href="#" onclick="return view(<?php echo $user_id; ?>)">
+                                                            <a class="btn btn-info" href="http://localhost/doc/profile.php?id=<?PHP echo $user_id;?>" target="_blank">
                                                                 <i class="glyphicon glyphicon-edit icon-white"></i>
                                                                 View
                                                             </a>

@@ -3,7 +3,9 @@
 include_once("includes/sql.php");
 if ($_SESSION['user_type'] == 'D') {
     $conexion = db_connect();
+    
     $ssql = "SELECT cleared FROM doctor where user_id=" . $_SESSION['user_id'];
+    $id=$_SESSION['user_id'];
     $result = $conexion->query($ssql);
     $rows = $result->fetch_array();
 

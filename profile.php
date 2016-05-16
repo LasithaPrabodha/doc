@@ -16,7 +16,8 @@ $conexion = db_connect();
 if (isset($_GET['key'])) {
 
     $appointment_id = $_GET['key'];
-
+    $docEmail=$_GET['de'];
+    
     $sql = "SELECT * FROM appoinments where appoinment_id = '$appointment_id'";
     $result = $conexion->query($sql);
     if ($result->num_rows > 0) {
@@ -35,23 +36,24 @@ if (isset($_GET['key'])) {
     $rows = $result2->fetch_array();
 
     $reserved = explode(',', $rows[0]);
-
     if (($key = array_search($time_slot, $reserved)) !== false) {
+        
         unset($reserved[$key]);
 
         $sql3 = "UPDATE doctor SET reserved_time_slots='" . implode(',', $reserved) . "' where doctor_id=$doctor_id";
         if ($result = $conexion->query($sql3)) {
             $sql4 = "delete from appoinments where appoinment_id='$appointment_id'";
             if ($conexion->query($sql4)) {
-                echo "<div class='alert alert-success'>Appointment canceled!</div>";
+                
                 $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
                 $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
-                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 2);
-                
-                $_POST['email'] = 'lasiprabo@gmail.com';
+                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 3);
+
+                $_POST['email'] = $docEmail;
                 $_POST['subject'] = 'Appointment Cancelled';
-                $_POST['message'] = 'Appointment #'.$appointment_id.' which was booked by ' . $patient_name . ' at '. $ts. ' was cancelled. TP. '.$telephone_no;
+                $_POST['message'] = 'Appointment #' . $appointment_id . ' which was booked by ' . $patient_name . ' at ' . $ts . ' was cancelled. TP. ' . $telephone_no;
                 include_once 'email.php';
+                echo "<div class='alert alert-success'>Appointment canceled!</div>";
                 die("<script>location.href = 'profile.php'</script>");
             }
         };
@@ -571,7 +573,7 @@ if ($user_type == 'D') {
                                 $conexion = db_connect();
 //                                  $sql = "SELECT d.address FROM  user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
 //                                $result = $conexion->query($sql);
-                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, d.Address, d.user_id FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
+                                $sql = "SELECT a.appoinment_id, a.time_slot,u.first_name,u.last_name, u.email, d.Address, d.user_id FROM appoinments a , user u, doctor d where d.user_id=u.user_id and a.doctor_id=d.doctor_id and a.user_id = '$id'";
                                 $result = $conexion->query($sql);
                                 if ($result->num_rows > 0) {
                                     ?>
@@ -594,16 +596,17 @@ if ($user_type == 'D') {
                                                 $doctor_is = "Dr " . $row['first_name'] . "" . $row['last_name'];
                                                 $address = $row['Address'];
                                                 $time_slot = $row['time_slot'];
+                                                $docEmail=$row['email'];
                                                 $days = ['M', 'T', 'W', 'L', 'F', 'S', 'Z'];
                                                 $times = ['12 - 01 AM', '01 - 02 AM', '02 - 03 AM', '03 - 04 AM', '04 - 05 AM', '05 - 06 AM', '06 - 07 AM', '07 - 08 AM', '08 - 09 AM', '09 - 10 AM', '10 - 11 AM', '11 - 12 AM', '12 - 01 PM', '01 - 02 PM', '02 - 03 PM', '03 - 04 PM', '04 - 05 PM', '05 - 06 PM', '06 - 07 PM', '07 - 08 PM', '08 - 09 PM', '09 - 10 PM', '10 - 11 PM', '11 - 12 AM'];
-                                                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 2);
+                                                $ts = $times[$time_slot[1]] . " " . substr($time_slot, 3);
                                                 ?>
                                                 <tr>
                                                     <td><?php echo $appintment_id; ?></td>
                                                     <td><?php echo $doctor_is; ?></td>
                                                     <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $ts; ?></p><br></td>
                                                     <td><?php echo $address; ?></td>
-                                                    <td><a href="<?php echo "profile.php?key=" . $appintment_id; ?>&add=<?php echo $address; ?>&ts=<?php echo $ts; ?>&dc=<?php echo $row['user_id']; ?>"  class="btn btn-sm btn-danger" title="view"><button class="btn btn-sm btn-danger" >Cancel</button></a>&nbsp;</td>
+                                                    <td><a class="btn btn-sm btn-danger" title="view"><button onclick="cancelAp(<?PHP echo $appintment_id.",'".$docEmail."'";?>);" class="btn btn-sm btn-danger">Cancel</button></a>&nbsp;</td>
 
                                                 </tr>
                                             <?php } ?>
@@ -642,7 +645,7 @@ if ($user_type == 'D') {
                                                 <tr>
                                                     <td><?php echo $appintment_id; ?></td>
                                                     <td><?php echo $patient_is; ?></td>
-                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $times[$time_slot[1]] . " " . substr($time_slot, 2); ?></p><br></td>
+                                                    <td><br><p style="padding-top:1px"><?php echo "Time Slot: " . $times[$time_slot[1]] . " " . substr($time_slot, 3); ?></p><br></td>
 
                                                 </tr>
                                             <?php } ?>
@@ -692,13 +695,15 @@ if ($user_type == 'D') {
                                         echo '<tr>';
                                         for ($y = 0; $y < 7; $y++) {
                                             $chk = "";
+                                             $digit = $x + 1;
+                                            $digit = sprintf("%02d", $digit);
                                             foreach ($appDates as $val) {
-                                                if ($val == $days[$y] . ($x + 1)) {
+                                                if ($val == $days[$y] . ($digit)) {
                                                     $chk = 'checked';
                                                 }
                                             }
-
-                                            echo '<td><input type="checkbox" ' . $chk . ' name="check_box[]" value="' . $days[$y] . ($x + 1) . '">' . $times[$x] . '</input></td>';
+                                           
+                                            echo '<td><input type="checkbox" ' . $chk . ' name="check_box[]" value="' . $days[$y] . ($digit) . '">' . $times[$x] . '</input></td>';
                                         }
 
                                         echo '</tr>';
@@ -767,7 +772,7 @@ if ($user_type == 'D') {
                                     $row = $result->fetch_array();
 
                                     $fee = $row[2];
-                                    $sqlcfee = "select fee from channeling_fee order by date_added desc limit 1";
+                                    $sqlcfee = "select fee from fees where type='channelling'";
                                     $resultcfee = $conexion->query($sqlcfee);
                                     $rowcfee = $resultcfee->fetch_array();
 
@@ -849,8 +854,9 @@ if ($user_type == 'D') {
                                                         $dis = 'disabled="disabled"';
                                                         $color = 'background:#EE2C2C;color:#fff;';
                                                     }
-
-                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input ' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . ($x + 1) . $dates[$y] . '">' . $times[$x] . '</input></td>';
+                                                    $digit = $x + 1;
+                                                    $digit = sprintf("%02d", $digit);
+                                                    echo '<td style="padding:8px;margin:10px;' . $color . '"><input ' . $dis . ' type="radio" name="radio"  value="' . $days[$y] . $digit . $dates[$y] . '">' . $times[$x] . '</input></td>';
                                                 }
                                             }
                                         }
@@ -1180,6 +1186,13 @@ if ($user_type == 'D') {
 
             reader.readAsDataURL(input.files[0]);
         }
+    }
+    
+    function cancelAp(appointment_id,docEmail){
+        
+            if (confirm("Are you sure you want to cancel this appointment?") == true)
+                window.location = "profile.php?key=" + appointment_id+"&de="+docEmail;
+            return false;
     }
 
     $("#profile_img").change(function () {

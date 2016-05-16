@@ -121,7 +121,7 @@ require_once("includes/header.php");
                 $("<div id='emaillalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Emails do not match. Please re-check!</div>").prependTo("#patform");
                 setTimeout(function () {
                     $('#emaillalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[0].addClass("red-border");
                 input[1].addClass("red-border");
                 flag = false;
@@ -133,7 +133,7 @@ require_once("includes/header.php");
                 $("<div id='passwordalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Passwords do not match. Please re-check!</div>").prependTo("#patform");
                 setTimeout(function () {
                     $('#passwordalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[2].addClass("red-border");
                 input[3].addClass("red-border");
                 flag = false;
@@ -146,7 +146,7 @@ require_once("includes/header.php");
                 $("<div id='cnoalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Contact number doesnt contain 10 digits. Please re-check!</div>").prependTo("#patform");
                 setTimeout(function () {
                     $('#cnoalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[6].addClass("red-border");
                 flag = false;
             } else {
@@ -157,7 +157,7 @@ require_once("includes/header.php");
                 $("<div id='dobalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Date of birth is invalid. Please re-check!</div>").prependTo("#patform");
                 setTimeout(function () {
                     $('#dobalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
 
                 input[8].addClass("red-border");
                 input[9].addClass("red-border");
@@ -189,7 +189,7 @@ require_once("includes/header.php");
                 $("<div id='emaillalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Emails do not match. Please re-check!</div>").prependTo("#docForm");
                 setTimeout(function () {
                     $('#emaillalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
 
                 input[0].addClass("red-border");
                 input[1].addClass("red-border");
@@ -202,7 +202,7 @@ require_once("includes/header.php");
                 $("<div id='passwordalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Passwords do not match. Please re-check!</div>").prependTo("#docForm");
                 setTimeout(function () {
                     $('#passwordalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[2].addClass("red-border");
                 input[3].addClass("red-border");
                 flag = false;
@@ -215,7 +215,7 @@ require_once("includes/header.php");
                 $("<div id='cnoalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Contact number doesnt contain 10 digits. Please re-check!</div>").prependTo("#docForm");
                 setTimeout(function () {
                     $('#cnoalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[12].addClass("red-border");
                 flag = false;
             } else {
@@ -226,7 +226,7 @@ require_once("includes/header.php");
                 $("<div id='dobalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Date of birth is invalid. Please re-check!</div>").prependTo("#docForm");
                 setTimeout(function () {
                     $('#dobalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[14].addClass("red-border");
                 input[15].addClass("red-border");
                 input[16].addClass("red-border");
@@ -255,7 +255,7 @@ require_once("includes/header.php");
                 $("<div id='emaillalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Emails do not match. Please re-check!</div>").prependTo("#mediForm");
                 setTimeout(function () {
                     $('#emaillalert').fadeOut('fast');
-                }, 1000);
+                }, 100000);
                 input[0].addClass("red-border");
                 input[1].addClass("red-border");
                 flag = false;
@@ -267,7 +267,7 @@ require_once("includes/header.php");
                 $("<div id='passwordalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Passwords do not match. Please re-check!</div>").prependTo("#mediForm");
                 setTimeout(function () {
                     $('#passwordalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[2].addClass("red-border");
                 input[3].addClass("red-border");
                 flag = false;
@@ -280,7 +280,7 @@ require_once("includes/header.php");
                 $("<div id='cnoalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Contact number doesnt contain 10 digits. Please re-check!</div>").prependTo("#mediForm");
                 setTimeout(function () {
                     $('#cnoalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[7].addClass("red-border");
                 flag = false;
             } else {
@@ -291,7 +291,7 @@ require_once("includes/header.php");
                 $("<div id='dobalert' class='alert alert-danger' style='margin: 0 auto; width:65%;'>Date of birth is invalid. Please re-check!</div>").prependTo("#mediForm");
                 setTimeout(function () {
                     $('#dobalert').fadeOut('fast');
-                }, 1000);
+                }, 10000);
                 input[11].addClass("red-border");
                 input[12].addClass("red-border");
                 input[13].addClass("red-border");
